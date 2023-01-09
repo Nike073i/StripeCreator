@@ -11,6 +11,8 @@ namespace StripeCreator.WPF
 
         #endregion
 
+        #region Override lifecycles
+
         protected override async void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
@@ -23,5 +25,7 @@ namespace StripeCreator.WPF
             base.OnExit(e);
             await IoC.StopAsync();
         }
+
+        #endregion
     }
 }
