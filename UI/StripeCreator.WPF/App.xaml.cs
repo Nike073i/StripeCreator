@@ -1,17 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace StripeCreator.WPF
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
-    public partial class App : Application
+    public partial class App
     {
+        #region Public properties
+
+        public static string CurrentDirectory => Environment.CurrentDirectory;
+
+        #endregion
+
+        protected override async void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+            IoC.CreateHost(e.Args, CurrentDirectory, "appsettings.json");
+            await IoC.StartAsync();
+        }
+
+        protected override async void OnExit(ExitEventArgs e)
+        {
+            base.OnExit(e);
+            await IoC.StopAsync();
+        }
     }
 }
