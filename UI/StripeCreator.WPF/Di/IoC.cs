@@ -11,7 +11,21 @@ namespace StripeCreator.WPF
         #region Private fields
 
         private static readonly string HostNotCreatedError = "Ошибка взаимодействия с хостом. Хост не был создан";
-        private static IHost? _host;
+        private static IHost? _container;
+
+        #endregion
+
+        #region Public properties
+
+        public static IHost Container
+        {
+            get
+            {
+                if (_container == null) throw new Exception(HostNotCreatedError);
+                return _container;
+            }
+            private set => _container = value;
+        }
 
         #endregion
 
@@ -19,7 +33,7 @@ namespace StripeCreator.WPF
 
         public static void CreateHost(string[] args, string contentPath, string settingsFile)
         {
-            _host = Host.CreateDefaultBuilder(args)
+            Container = Host.CreateDefaultBuilder(args)
                         .UseContentRoot(contentPath)
                         .ConfigureAppConfiguration((host, cfg) =>
                             cfg.SetBasePath(contentPath)
@@ -37,33 +51,17 @@ namespace StripeCreator.WPF
 
         #region Host management
 
-        public static Task StartAsync()
-        {
-            if (_host == null) throw new Exception(HostNotCreatedError);
-            return _host.StartAsync();
-        }
+        public static Task StartAsync() => Container.StartAsync();
 
-        public static Task StopAsync()
-        {
-            if (_host == null) throw new Exception(HostNotCreatedError);
-            return _host.StopAsync();
-        }
+        public static Task StopAsync() => Container.StopAsync();
 
         #endregion
 
         #region Access methods
 
-        public static T GetRequiredService<T>()
-        {
-            if (_host == null) throw new Exception(HostNotCreatedError);
-            return _host.Services.GetRequiredService<T>();
-        }
+        public static T GetRequiredService<T>() => Container.Services.GetRequiredService<T>();
 
-        public static T GetService<T>()
-        {
-            if (_host == null) throw new Exception(HostNotCreatedError);
-            return _host.Services.GetService<T>();
-        }
+        public static T GetService<T>() => Container.Services.GetService<T>();
 
         #endregion
     }
