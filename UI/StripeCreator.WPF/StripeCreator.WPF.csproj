@@ -13,8 +13,8 @@
     <PackageReference Include="PropertyChanged.Fody" Version="4.0.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controls\" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="Controls\" />
+	</ItemGroup>
 
 </Project>
