@@ -4,6 +4,7 @@ obj/
 
 # IDE files
 .vs/
+.vscode/
 
 # User-specific files
 *.rsuser
