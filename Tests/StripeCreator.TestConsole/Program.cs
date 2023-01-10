@@ -1,4 +1,5 @@
 ﻿using ImageMagick;
+using System.Text.RegularExpressions;
 
 namespace StripeCreator.TestConsole
 {
@@ -14,6 +15,117 @@ namespace StripeCreator.TestConsole
             var imageProccesor = new ImageProccesor(image);
             imageProccesor.Trim();
             Task.Run(() => imageKeeper.SaveImageAsync(TestImageOutputPath, imageProccesor.Image)).Wait();
+        }
+    }
+
+    /// <summary>
+    /// Класс клетки схемы
+    /// </summary>
+    public class Cell
+    {
+        #region Public properties 
+
+        /// <summary>
+        /// Цвет клетки
+        /// </summary>
+        public CellColor Color { get; set; }
+
+        /// <summary>
+        /// Позиция клетки
+        /// </summary>
+        public CellPosition Position { get; }
+
+        #endregion
+
+        #region Constructors
+        
+        public Cell(CellColor color, CellPosition position)
+        {
+            Color = color;
+            Position = position;
+        }
+
+        #endregion
+    }
+
+    /// <summary>
+    /// Класс цвета клетки
+    /// </summary>
+    public class CellColor
+    {
+        #region Constants
+
+        /// <summary>
+        /// Паттерн кода цвета
+        /// </summary>
+        private static readonly string ColorPattern = @"^#[0-9A-F]{6}$";
+
+        /// <summary>
+        /// Базовый цвет в 16 с.с
+        /// </summary>
+        public static readonly string DefaultColor = "#FFFFFF";
+
+        #endregion
+
+        #region Private fields
+
+        /// <summary>
+        /// 16-ое представление цвета RGB
+        /// </summary>
+        private string _colorHex = DefaultColor;
+
+        #endregion
+
+        #region Public properties
+
+        /// <summary>
+        /// Цвет в 16 с.с представлении
+        /// </summary>
+        public string HexValue
+        {
+            get => _colorHex;
+            set => _colorHex = Regex.IsMatch(value, ColorPattern) ? value : DefaultColor;
+        }
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Инициализация объекта цвета клетки
+        /// </summary>
+        /// <param name="colorHex">цвет в 16 с.с</param>
+        public CellColor(string colorHex)
+        {
+            HexValue = colorHex;
+        }
+
+        #endregion
+    }
+
+    /// <summary>
+    /// Структура с координатами клетки
+    /// </summary>
+    public struct CellPosition
+    {
+        /// <summary>
+        /// Х координата от левого края
+        /// </summary>
+        public int X { get; }
+        /// <summary>
+        /// Y координата от верхнего края
+        /// </summary>
+        public int Y { get; }
+
+        /// <summary>
+        /// Инициализация координат
+        /// </summary>
+        /// <param name="x">x координата</param>
+        /// <param name="y">y координата</param>
+        public CellPosition(int x, int y)
+        {
+            X = x;
+            Y = y;
         }
     }
 
@@ -120,7 +232,7 @@ namespace StripeCreator.TestConsole
         }
 
         /// <summary>
-        /// Методы доступа к ширине изображения
+        /// Ширина изображения
         /// </summary>
         public int Width
         {
@@ -133,7 +245,7 @@ namespace StripeCreator.TestConsole
         }
 
         /// <summary>
-        /// Методы доступа к высоте изображения
+        /// Высота изображения
         /// </summary>
         public int Height
         {
