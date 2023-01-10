@@ -112,7 +112,7 @@ namespace StripeCreator.TestConsole
         public byte[] Data
         {
             get => (byte[])_data.Clone();
-            set
+            private set
             {
                 if (value.Length == 0) throw new ImageException("Бинарные данные изображения не могут быть пустыми");
                 _data = value;
