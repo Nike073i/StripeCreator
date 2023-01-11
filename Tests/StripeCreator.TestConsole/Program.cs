@@ -5,16 +5,19 @@ namespace StripeCreator.TestConsole
 {
     public class Program
     {
-        private static string TestImageInputPath = @"Images/Вольные.bmp";
+        private static string TestImageInputPath = @"Images/test.bmp";
         private static string TestImageOutputPath = @"Images/OutputImage.png";
 
         public static void Main(string[] args)
         {
             // Тест работы с изображением
-            //var imageKeeper = new ImageKeeper();
-            //var image = Task.Run(() => imageKeeper.LoadImageAsync(TestImageInputPath)).Result;
+            var imageKeeper = new ImageKeeper();
+            var image = Task.Run(() => imageKeeper.LoadImageAsync(TestImageInputPath)).Result;
+            var converter = new SchemeConverter();
+            var scheme = converter.CreateScheme(image);
             //var imageProccesor = new ImageProccesor(image);
             //imageProccesor.Trim();
+
             //Task.Run(() => imageKeeper.SaveImageAsync(TestImageOutputPath, imageProccesor.Image)).Wait();
 
             // Тест работы схемы
@@ -24,6 +27,37 @@ namespace StripeCreator.TestConsole
             //scheme.SetCell(color, position);
             //var cells = scheme.Cells;
         }
+    }
+
+    /// <summary>
+    /// Класс преобразователь схем
+    /// </summary>
+    public class SchemeConverter
+    {
+        #region Public methods
+
+        /// <summary>
+        /// Метод создания схемы по данным изображения <see cref="Image"/>
+        /// </summary>
+        /// <param name="image">Данные изображения</param>
+        /// <returns>Схема по изображению</returns>
+        public Scheme CreateScheme(Image image)
+        {
+            var scheme = new Scheme(image.Width, image.Height);
+            using var magickImage = new MagickImage(image.Data);
+            using var pixels = magickImage.GetPixels();
+            foreach (var pixel in pixels)
+            {
+                var color = pixel.ToColor();
+                // Если цвет распознать не удалось, то устанавливаем цвет по умолчанию
+                var colorHex = color?.ToHexString() ?? CellColor.DefaultColor;
+                scheme.SetCell(new CellColor(colorHex), new CellPosition(pixel.X, pixel.Y));
+            }
+
+            return scheme;
+        }
+
+        #endregion
     }
 
     /// <summary>
@@ -96,6 +130,7 @@ namespace StripeCreator.TestConsole
         /// <param name="height">Высота схемы в клетках</param>
         public Scheme(int width, int height)
         {
+            if (width <= 0 || height <= 0) throw new ArgumentException("Размеры схемы не могуть быть <= 0");
             Width = width;
             Height = height;
 
@@ -383,7 +418,7 @@ namespace StripeCreator.TestConsole
             private set
             {
                 if (value < 0) throw new ImageException("Значение высоты изображения не может быть <= 0");
-                _width = value;
+                _height = value;
             }
         }
 
