@@ -10,12 +10,142 @@ namespace StripeCreator.TestConsole
 
         public static void Main(string[] args)
         {
-            var imageKeeper = new ImageKeeper();
-            var image = Task.Run(() => imageKeeper.LoadImageAsync(TestImageInputPath)).Result;
-            var imageProccesor = new ImageProccesor(image);
-            imageProccesor.Trim();
-            Task.Run(() => imageKeeper.SaveImageAsync(TestImageOutputPath, imageProccesor.Image)).Wait();
+            // Тест работы с изображением
+            //var imageKeeper = new ImageKeeper();
+            //var image = Task.Run(() => imageKeeper.LoadImageAsync(TestImageInputPath)).Result;
+            //var imageProccesor = new ImageProccesor(image);
+            //imageProccesor.Trim();
+            //Task.Run(() => imageKeeper.SaveImageAsync(TestImageOutputPath, imageProccesor.Image)).Wait();
+
+            // Тест работы схемы
+            //var scheme = new Scheme(10, 10);
+            //var position = new CellPosition(9, 9);
+            //var color = new CellColor("#000000");
+            //scheme.SetCell(color, position);
+            //var cells = scheme.Cells;
         }
+    }
+
+    /// <summary>
+    /// Класс для расширений массивов <see cref="Array"/>
+    /// </summary>
+    public static class ArrayExtensions
+    {
+        /// <summary>
+        /// Метод преобразования многомерного массива в <see cref="IEnumerable{T}"/> 
+        /// </summary>
+        /// <typeparam name="T">Тип элементов многомерного массива</typeparam>
+        /// <param name="target">Многомерный массив</param>
+        /// <returns>Последовательность элементов многомерного массива</returns>
+        public static IEnumerable<T> ToEnumerable<T>(this T[,] target)
+        {
+            foreach (var item in target)
+                yield return item;
+        }
+    }
+
+    /// <summary>
+    /// Класс схемы вышивки
+    /// </summary>
+    public class Scheme
+    {
+        #region Private fields
+
+        /// <summary>
+        /// Словарь цветов схемы. Клетки схемы ссылаются на один из элементов словаря
+        /// </summary>
+        private Dictionary<string, CellColor> _colors;
+
+        /// <summary>
+        /// Клетки схемы. Многомерный массив размером <see cref="Width"/> на <see cref="Height"/>
+        /// </summary>
+        private Cell[,] _cells;
+
+        #endregion
+
+        #region Public properties 
+
+        /// <summary>
+        /// Ширина схемы в клетках
+        /// </summary>
+        public int Width { get; }
+
+        /// <summary>
+        /// Высота схемы в клетках
+        /// </summary>
+        public int Height { get; }
+
+        /// <summary>
+        /// Последовательность всех использованных цветов в схеме
+        /// </summary>
+        public IEnumerable<CellColor> Colors => _colors.Values;
+
+        /// <summary>
+        /// Последовательность всех клеток схемы
+        /// </summary>
+        public IEnumerable<Cell> Cells => _cells.ToEnumerable();
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Инициализация объекта схемы
+        /// </summary>
+        /// <param name="width">Ширина схемы в клетках</param>
+        /// <param name="height">Высота схемы в клетках</param>
+        public Scheme(int width, int height)
+        {
+            Width = width;
+            Height = height;
+
+            _colors = new Dictionary<string, CellColor>();
+            _cells = new Cell[width, height];
+        }
+
+        #endregion
+
+        #region Public methods
+
+        /// <summary>
+        /// Установка новой клетки по позиции
+        /// </summary>
+        /// <param name="color">Цвет клетки</param>
+        /// <param name="position">Позиция клетки в схеме</param>
+        /// <exception cref="ArgumentOutOfRangeException">Возникает, если указанная позиция выходит за границы схемы</exception>
+        public void SetCell(CellColor color, CellPosition position)
+        {
+            if (position.X >= Width || position.Y >= Height)
+                throw new ArgumentOutOfRangeException(nameof(position));
+            var colorHex = color.HexValue;
+            CellColor cellColor = GetColorFromDictionary(colorHex);
+            _cells[position.X, position.Y] = new Cell(cellColor, position);
+        }
+
+        #endregion
+
+        #region Private helper methods
+
+        /// <summary>
+        /// Вспомогательный метод получения цвета из словаря
+        /// Если цвет имеется в словаре, то возвращается соответствующий элемент <see cref="CellColor"/>
+        /// Иначе в словарь добавляется и возвращается новый элемент <see cref="CellColor"/> 
+        /// </summary>
+        /// <param name="colorHex">Цвет кода в 16 c.c</param>
+        /// <returns>Цвет клетки</returns>
+        private CellColor GetColorFromDictionary(string colorHex)
+        {
+            _colors.TryGetValue(colorHex, out var cellColor);
+            if (cellColor == null)
+            {
+                cellColor = new CellColor(colorHex);
+                _colors.Add(colorHex, cellColor);
+            }
+
+            return cellColor;
+        }
+
+        #endregion
     }
 
     /// <summary>
@@ -38,7 +168,7 @@ namespace StripeCreator.TestConsole
         #endregion
 
         #region Constructors
-        
+
         public Cell(CellColor color, CellPosition position)
         {
             Color = color;
