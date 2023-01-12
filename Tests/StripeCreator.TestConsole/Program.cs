@@ -1,4 +1,8 @@
 ﻿using ImageMagick;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Drawing;
+using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 
 namespace StripeCreator.TestConsole
@@ -15,6 +19,11 @@ namespace StripeCreator.TestConsole
             var image = Task.Run(() => imageKeeper.LoadImageAsync(TestImageInputPath)).Result;
             var converter = new SchemeConverter();
             var scheme = converter.CreateScheme(image);
+            var colors = scheme.GetColors();
+            var jsonSerializer = new JsonSerializer { Formatting = Formatting.Indented };
+            var json = JObject.FromObject(scheme).ToString();
+            Task.Run(() => File.WriteAllTextAsync("content.json", json)).Wait();
+            var newScheme = JObject.Parse(json).ToObject<Scheme>();
             //var imageProccesor = new ImageProccesor(image);
             //imageProccesor.Trim();
 
@@ -80,15 +89,22 @@ namespace StripeCreator.TestConsole
 
     /// <summary>
     /// Класс схемы вышивки
+    /// Реализует <see cref="ISerializable"/> для сериализации объекта схемы
     /// </summary>
-    public class Scheme
+    [Serializable]
+    public class Scheme : ISerializable
     {
         #region Private fields
 
         /// <summary>
-        /// Словарь цветов схемы. Клетки схемы ссылаются на один из элементов словаря
+        /// Ширина схемы в клетках
         /// </summary>
-        private Dictionary<string, CellColor> _colors;
+        public int _width;
+
+        /// <summary>
+        /// Высота схемы в клетках
+        /// </summary>
+        public int _height;
 
         /// <summary>
         /// Клетки схемы. Многомерный массив размером <see cref="Width"/> на <see cref="Height"/>
@@ -102,17 +118,28 @@ namespace StripeCreator.TestConsole
         /// <summary>
         /// Ширина схемы в клетках
         /// </summary>
-        public int Width { get; }
+        public int Width
+        {
+            get => _width;
+            set
+            {
+                if (value <= 0) throw new ArgumentOutOfRangeException();
+                _width = value;
+            }
+        }
 
         /// <summary>
         /// Высота схемы в клетках
         /// </summary>
-        public int Height { get; }
-
-        /// <summary>
-        /// Последовательность всех использованных цветов в схеме
-        /// </summary>
-        public IEnumerable<CellColor> Colors => _colors.Values;
+        public int Height
+        {
+            get => _height;
+            set
+            {
+                if (value <= 0) throw new ArgumentOutOfRangeException();
+                _height = value;
+            }
+        }
 
         /// <summary>
         /// Последовательность всех клеток схемы
@@ -130,12 +157,25 @@ namespace StripeCreator.TestConsole
         /// <param name="height">Высота схемы в клетках</param>
         public Scheme(int width, int height)
         {
-            if (width <= 0 || height <= 0) throw new ArgumentException("Размеры схемы не могуть быть <= 0");
             Width = width;
             Height = height;
-
-            _colors = new Dictionary<string, CellColor>();
             _cells = new Cell[width, height];
+        }
+
+        /// <summary>
+        /// Приватный конструктор для десериализации объекта
+        /// </summary>
+        /// <param name="info">Данные сериализованного объекта</param>
+        /// <param name="context">Источник потока сериализованного объекта</param>
+        /// <exception cref="SerializationException">Возникает, если нет возможности десериализовать массив клеток</exception>
+        private Scheme(SerializationInfo info, StreamingContext context)
+        {
+            Width = info.GetInt32(nameof(Width));
+            Height = info.GetInt32(nameof(Height));
+            var cellsObject = info.GetValue(nameof(_cells), typeof(Cell[,]));
+            if (cellsObject is not Cell[,] cells) 
+                throw new SerializationException("Ошибка сериализации клеток схемы");
+            _cells = cells;
         }
 
         #endregion
@@ -152,32 +192,24 @@ namespace StripeCreator.TestConsole
         {
             if (position.X >= Width || position.Y >= Height)
                 throw new ArgumentOutOfRangeException(nameof(position));
-            var colorHex = color.HexValue;
-            CellColor cellColor = GetColorFromDictionary(colorHex);
-            _cells[position.X, position.Y] = new Cell(cellColor, position);
+            _cells[position.X,position.Y] = new Cell(color, position);
         }
 
-        #endregion
-
-        #region Private helper methods
+        /// <summary>
+        /// Последовательность всех использованных цветов в схеме
+        /// </summary>
+        public IEnumerable<string> GetColors() => Cells.Select(cell => cell.Color.HexValue).Distinct();
 
         /// <summary>
-        /// Вспомогательный метод получения цвета из словаря
-        /// Если цвет имеется в словаре, то возвращается соответствующий элемент <see cref="CellColor"/>
-        /// Иначе в словарь добавляется и возвращается новый элемент <see cref="CellColor"/> 
+        /// Получение данных объекта для сериализации. Реализация <see cref="ISerializable"/>
         /// </summary>
-        /// <param name="colorHex">Цвет кода в 16 c.c</param>
-        /// <returns>Цвет клетки</returns>
-        private CellColor GetColorFromDictionary(string colorHex)
+        /// <param name="info">Данные сериализованного объекта</param>
+        /// <param name="context">Источник потока сериализованного объекта</param>
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            _colors.TryGetValue(colorHex, out var cellColor);
-            if (cellColor == null)
-            {
-                cellColor = new CellColor(colorHex);
-                _colors.Add(colorHex, cellColor);
-            }
-
-            return cellColor;
+            info.AddValue(nameof(Width), Width);
+            info.AddValue(nameof(Height), Height);
+            info.AddValue(nameof(_cells), _cells);
         }
 
         #endregion
@@ -255,6 +287,11 @@ namespace StripeCreator.TestConsole
         #endregion
 
         #region Constructors
+
+        /// <summary>
+        /// Дефолтный конструктор
+        /// </summary>
+        public CellColor() { }
 
         /// <summary>
         /// Инициализация объекта цвета клетки
