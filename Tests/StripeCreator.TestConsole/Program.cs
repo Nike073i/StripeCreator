@@ -1,7 +1,6 @@
 ﻿using ImageMagick;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Drawing;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 
@@ -12,18 +11,16 @@ namespace StripeCreator.TestConsole
         private static string TestImageInputPath = @"Images/test.bmp";
         private static string TestImageOutputPath = @"Images/OutputImage.png";
 
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             // Тест работы с изображением
             var imageKeeper = new ImageKeeper();
-            var image = Task.Run(() => imageKeeper.LoadImageAsync(TestImageInputPath)).Result;
+            var image = await imageKeeper.LoadImageAsync(TestImageInputPath);
             var converter = new SchemeConverter();
             var scheme = converter.CreateScheme(image);
-            var colors = scheme.GetColors();
-            var jsonSerializer = new JsonSerializer { Formatting = Formatting.Indented };
-            var json = JObject.FromObject(scheme).ToString();
-            Task.Run(() => File.WriteAllTextAsync("content.json", json)).Wait();
-            var newScheme = JObject.Parse(json).ToObject<Scheme>();
+            var schemeKeeper = new SchemeKeeper();
+            await schemeKeeper.SaveSchemeAsync("scheme1.json", scheme);
+            var schemeRestore = await schemeKeeper.LoadSchemeFromJsonAsync("scheme1.json");
             //var imageProccesor = new ImageProccesor(image);
             //imageProccesor.Trim();
 
@@ -35,6 +32,47 @@ namespace StripeCreator.TestConsole
             //var color = new CellColor("#000000");
             //scheme.SetCell(color, position);
             //var cells = scheme.Cells;
+        }
+    }
+
+    /// <summary>
+    /// Класс для загрузки и сохранения <see cref="Scheme"/>
+    /// </summary>
+    public class SchemeKeeper
+    {
+        /// <summary>
+        /// Загрузка схемы из json файла
+        /// </summary>
+        /// <param name="path">Абсолютный путь к файлу сохранения в json формате</param>
+        /// <returns><see cref="Scheme"/> - загруженные данные схемы</returns>
+        /// <exception cref="FileNotFoundException">Возникает, если файл со схемой по указанному пути отсутствует</exception>
+        /// <exception cref="ArgumentException">Возникает, если указанный файл не имеет расширение "json"</exception>
+        /// <exception cref="SerializationException">Возникает, если произошла ошибка при десериализации схемы из файла</exception>
+        public async Task<Scheme> LoadSchemeFromJsonAsync(string path)
+        {
+            var fileInfo = new FileInfo(path);
+            if (!fileInfo.Exists) throw new FileNotFoundException($"Схема по пути {path} не найдена");
+            if (fileInfo.Extension != ".json") throw new ArgumentException($"Указан файл с неподходящим расширением - {fileInfo.Extension}");
+
+            var data = await File.ReadAllTextAsync(path);
+            var scheme = JsonConvert.DeserializeObject<Scheme>(data);
+
+            return scheme ?? throw new SerializationException($"Ошибка десериализации схемы по пути {path}");
+        }
+
+        /// 
+        /// <summary>
+        /// Сохранения схемы в файл
+        /// </summary>
+        /// <param name="path">Абсолютный путь сохранения схемы</param>
+        /// <param name="scheme">Данные схемы для сохранения</param>
+        /// <param name="writeIndented">Запись данных с отступами и переносами строк. По умолчанию = false/></param>
+        /// <returns></returns>
+        public async Task SaveSchemeAsync(string path, Scheme scheme, bool writeIndented = false)
+        {
+            var formating = writeIndented ? Formatting.Indented : Formatting.None;
+            var json = JsonConvert.SerializeObject(scheme, formating);
+            await File.WriteAllTextAsync(path, json);
         }
     }
 
@@ -173,7 +211,7 @@ namespace StripeCreator.TestConsole
             Width = info.GetInt32(nameof(Width));
             Height = info.GetInt32(nameof(Height));
             var cellsObject = info.GetValue(nameof(_cells), typeof(Cell[,]));
-            if (cellsObject is not Cell[,] cells) 
+            if (cellsObject is not Cell[,] cells)
                 throw new SerializationException("Ошибка сериализации клеток схемы");
             _cells = cells;
         }
@@ -192,7 +230,7 @@ namespace StripeCreator.TestConsole
         {
             if (position.X >= Width || position.Y >= Height)
                 throw new ArgumentOutOfRangeException(nameof(position));
-            _cells[position.X,position.Y] = new Cell(color, position);
+            _cells[position.X, position.Y] = new Cell(color, position);
         }
 
         /// <summary>
@@ -337,11 +375,11 @@ namespace StripeCreator.TestConsole
     public class ImageKeeper
     {
         /// <summary>
-        /// Метод загрузки изображений
+        /// Загрузка изображений из файла
         /// </summary>
         /// <param name="path">Абсолютный путь к изображению</param>
         /// <returns><see cref="Image"/> - загруженные данные изображения</returns>
-        /// <exception cref="FileNotFoundException">Ошибка загрузки файла с изображением</exception>
+        /// <exception cref="FileNotFoundException">Возникает, если файл с изображением по указанному пути отсутствует</exception>
         public async Task<Image> LoadImageAsync(string path)
         {
             if (!File.Exists(path)) throw new FileNotFoundException("Изображение по указаному пути не найдено");
@@ -351,7 +389,7 @@ namespace StripeCreator.TestConsole
         }
 
         /// <summary>
-        /// Метод сохранения изображения
+        /// Сохранение изображения в файл
         /// </summary>
         /// <param name="path">Абсолютный путь сохранения изображения</param>
         /// <param name="image">Данные изображения для сохранения</param>
