@@ -68,6 +68,9 @@ namespace StripeCreator.TestConsole
         }
     }
 
+    /// <summary>
+    /// Класс для визуализации схем
+    /// </summary>
     public class SchemeVisualizer
     {
         #region Constants
