@@ -555,44 +555,6 @@ namespace StripeCreator.TestConsole
             return scheme;
         }
 
-        /// Очень спорный метод со сложной реализацией
-        public Image CreateImageFromScheme(Scheme scheme, int cellSize = 10)
-        {
-            if (cellSize <= 0)
-                throw new ArgumentOutOfRangeException(nameof(cellSize), "Размер ячейки не может быть <= 0");
-
-            var cells = scheme.Cells;
-            var drawables = new Drawables();
-            foreach (var cell in cells)
-            {
-                var colorHex = cell.Color.HexValue;
-                drawables.FillColor(new MagickColor(colorHex));
-                drawables.Point(cell.Position.X, cell.Position.Y);
-            }
-
-            using var image = new MagickImage(MagickColors.White, scheme.Width, scheme.Height);
-
-            image.Draw(drawables);
-            image.Sample(scheme.Width * cellSize, scheme.Height * cellSize);
-
-            //var grid = scheme.Grid;
-            //var grid = new Grid(1);
-            //if (grid != null)
-            //{
-            //    foreach (var cell in cells)
-            //    {
-            //        var position = cell.Position;
-            //        if (position.X == position.Y)
-            //            image.Splice(new MagickGeometry($"{grid.Size}x{grid.Size}+{position.X * cellSize}+{position.Y * cellSize}"));
-            //    }
-            //    image.Splice(new MagickGeometry($"{grid.Size}x{grid.Size}+{image.Width}+{image.Height}"));
-            //}
-
-            image.Format = MagickFormat.Png;
-
-            return new Image(image.ToByteArray(), image.Width, image.Height);
-        }
-
         #endregion
     }
 
