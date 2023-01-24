@@ -6,7 +6,7 @@
     <Color x:Key="LightDarkColor">#4a4a4a</Color>
     <SolidColorBrush x:Key="LightDarkColorBrush" Color="{StaticResource LightDarkColor}" />
 
-    <Color x:Key="RegularColor">#4a4a4a</Color>
+    <Color x:Key="RegularColor">#B5B5B5</Color>
     <SolidColorBrush x:Key="RegularColorBrush" Color="{StaticResource RegularColor}" />
 
     <Color x:Key="BrightColor">#C89B28</Color>
