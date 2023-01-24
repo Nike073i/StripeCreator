@@ -1,0 +1,38 @@
+﻿<UserControl x:Class="StripeCreator.WPF.ActionMenuControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:StripeCreator.WPF"
+             mc:Ignorable="d" 
+             d:DesignHeight="400" d:DesignWidth="500">
+    
+    <Grid d:DataContext="{x:Static local:ActionMenuDesignViewModel.Instance}"
+            HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!--Заголовок-->
+        <Border Grid.Row="0" 
+                BorderBrush="{StaticResource BrightColorBrush}" BorderThickness="0 0 0 1" 
+                Width="300">
+            <TextBlock Text="{Binding Header}" 
+                       Style="{StaticResource HeaderTextBlock}" 
+                       HorizontalAlignment="Center"/>
+        </Border> 
+        
+        <!--Меню-->
+        <ItemsControl Grid.Row="1" 
+                      ItemsSource="{Binding Items}" 
+                      HorizontalAlignment="Center" 
+                      Padding="5" Margin="5">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <local:ActionMenuItemControl/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </Grid>
+</UserControl>
