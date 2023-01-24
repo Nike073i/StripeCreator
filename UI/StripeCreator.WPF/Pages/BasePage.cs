@@ -2,9 +2,16 @@ using System.Windows.Controls;
 
 namespace StripeCreator.WPF
 {
-    public abstract class BasePage : UserControl { }
+    /// <summary>
+    /// Базовый класс для страниц
+    /// </summary>
+    public class BasePage : UserControl { }
 
-    public abstract class BasePage<TViewModel> : BasePage
+    /// <summary>
+    /// Базовый класс для страниц с view-model
+    /// </summary>
+    /// <typeparam name="TViewModel">view-model страницы</typeparam>
+    public class BasePage<TViewModel> : BasePage
         where TViewModel : BaseViewModel, new()
     {
         #region Public properties
@@ -18,6 +25,14 @@ namespace StripeCreator.WPF
         public BasePage(TViewModel viewModel)
         {
             ViewModel = viewModel;
+        }
+
+        /// <summary>
+        /// Конструктор по умолчанию
+        /// </summary>
+        public BasePage()
+        {
+            ViewModel = new TViewModel();
         }
 
         #endregion
