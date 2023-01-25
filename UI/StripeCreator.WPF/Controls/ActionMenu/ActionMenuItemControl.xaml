@@ -8,16 +8,18 @@
              xmlns:fa="http://schemas.fontawesome.com/icons/"
              d:DataContext="{x:Static local:ActionMenuItemDesignViewModel.Instance}">
     <UserControl.Resources>
-        <Style TargetType="{x:Type ContentControl}">
+        <!-- Стиль кнопки в виде ссылки-->
+        <Style x:Key="LinkButton" TargetType="{x:Type Button}" BasedOn="{StaticResource BaseStyle}">
+            <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ContentControl}">
+                    <ControlTemplate TargetType="{x:Type ButtonBase}">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition MaxWidth="{StaticResource FontSizeLarge}"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            
+
                             <!--Иконка-->
                             <Viewbox Width="{StaticResource FontSizeLarge}">
                                 <fa:FontAwesome Icon="{Binding Icon}" 
@@ -27,7 +29,7 @@
                                                 VerticalAlignment="Center" HorizontalAlignment="Center" 
                                                 Padding="5 0"/>
                             </Viewbox>
-                            
+
                             <!--Текст действия-->
                             <TextBlock Text="{Binding ActionText}" 
                                        Grid.Column="1" 
@@ -39,6 +41,19 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        
+        <!-- Отображение контента -->
+        <Style TargetType="{x:Type ContentControl}" BasedOn="{StaticResource BaseStyle}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ContentControl}">
+                        <Button Style="{StaticResource LinkButton}"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </UserControl.Resources>
+    
+    <!-- Держатель контента -->
     <ContentControl />
 </UserControl>
