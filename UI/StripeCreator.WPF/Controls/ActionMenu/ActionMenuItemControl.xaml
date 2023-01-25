@@ -22,7 +22,8 @@
 
                             <!--Иконка-->
                             <Viewbox Width="{StaticResource FontSizeLarge}">
-                                <fa:FontAwesome Icon="{Binding Icon}" 
+                                <fa:FontAwesome x:Name="icon"
+                                                Icon="{Binding Icon}" 
                                                 Grid.Column="0" 
                                                 FontSize="{StaticResource FontSizeLarge}" 
                                                 Foreground="{StaticResource RegularColorBrush}" 
@@ -31,12 +32,31 @@
                             </Viewbox>
 
                             <!--Текст действия-->
-                            <TextBlock Text="{Binding ActionText}" 
+                            <TextBlock x:Name="actionText"
+                                       Text="{Binding ActionText}" 
                                        Grid.Column="1" 
                                        Foreground="{StaticResource RegularColorBrush}" 
                                        VerticalAlignment="Center" HorizontalAlignment="Left" 
                                        Padding="10 5"/>
                         </Grid>
+                        <ControlTemplate.Triggers>
+                            <EventTrigger RoutedEvent="MouseEnter">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation To="{StaticResource BrightColor}" Duration="0:0:0.3" Storyboard.TargetName="actionText" Storyboard.TargetProperty="Foreground.Color" />
+                                        <ColorAnimation To="{StaticResource BrightColor}" Duration="0:0:0.3" Storyboard.TargetName="icon" Storyboard.TargetProperty="Foreground.Color" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                            <EventTrigger RoutedEvent="MouseLeave">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation From="{StaticResource BrightColor}" Duration="0:0:0.3" Storyboard.TargetName="actionText" Storyboard.TargetProperty="Foreground.Color" />
+                                        <ColorAnimation From="{StaticResource BrightColor}" Duration="0:0:0.3" Storyboard.TargetName="icon" Storyboard.TargetProperty="Foreground.Color" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -47,7 +67,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ContentControl}">
-                        <Button Style="{StaticResource LinkButton}"/>
+                        <Button Style="{StaticResource LinkButton}" Command="{Binding ActionCommand}"/>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>

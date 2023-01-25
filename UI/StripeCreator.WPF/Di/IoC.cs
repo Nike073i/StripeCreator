@@ -44,7 +44,7 @@ namespace StripeCreator.WPF
 
         private static void ConfigureServices(HostBuilderContext host, IServiceCollection services)
         {
-
+            services.AddViewModel();
         }
 
         #endregion

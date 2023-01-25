@@ -26,10 +26,10 @@ namespace StripeCreator.WPF
         {
             Header = "Добро пожаловать!";
             Items = new List<ActionMenuItemViewModel> {
-                new(EFontAwesomeIcon.Solid_Image, "Загрузить изображение"),
-                new(EFontAwesomeIcon.Solid_Ruler, "Материалы"),
-                new(EFontAwesomeIcon.Solid_BusinessTime, "Сообщество"),
-                new(EFontAwesomeIcon.Solid_Hashtag, "Загрузить схему"),
+                new() {Icon = EFontAwesomeIcon.Solid_Image, ActionText = "Загрузить изображение" },
+                new() {Icon = EFontAwesomeIcon.Solid_Ruler, ActionText = "Материалы" },
+                new() {Icon = EFontAwesomeIcon.Solid_BusinessTime, ActionText = "Сообщество" },
+                new() {Icon = EFontAwesomeIcon.Solid_Hashtag, ActionText = "Загрузить схему" },
             };
         }
 
