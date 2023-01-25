@@ -5,12 +5,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:StripeCreator.WPF"
-             mc:Ignorable="d">
-    <Grid d:DataContext="{x:Static local:WelcomePageDesignViewModel.Instance}"
-          Background="{StaticResource DarkColorBrush}"
+             mc:Ignorable="d"
+             d:DataContext="{x:Static local:WelcomePageDesignViewModel.Instance}">
+    <Grid Background="{StaticResource DarkColorBrush}"
           MinHeight="400"
           MinWidth="500">
         <!--Меню действий-->
-        <local:ActionMenuControl/>
+        <local:ActionMenuControl DataContext="{Binding ActionMenuViewModel}"/>
     </Grid>
 </local:BasePage>
