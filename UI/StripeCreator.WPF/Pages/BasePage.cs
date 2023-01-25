@@ -14,9 +14,28 @@ namespace StripeCreator.WPF
     public class BasePage<TViewModel> : BasePage
         where TViewModel : BaseViewModel, new()
     {
+        #region Private fields
+
+#nullable disable
+        private TViewModel _viewModel;
+
+        #endregion
+
         #region Public properties
 
-        public TViewModel ViewModel { get; set; }
+        public TViewModel ViewModel
+        {
+            get => _viewModel;
+            set
+            {
+                // Если ничего не изменилось
+                if (_viewModel == value)
+                    return;
+
+                _viewModel = value;
+                DataContext = _viewModel;
+            }
+        }
 
         #endregion
 
@@ -30,10 +49,7 @@ namespace StripeCreator.WPF
         /// <summary>
         /// Конструктор по умолчанию
         /// </summary>
-        public BasePage()
-        {
-            ViewModel = new TViewModel();
-        }
+        public BasePage() : this(new TViewModel()) { }
 
         #endregion
     }
