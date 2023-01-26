@@ -10,7 +10,9 @@
         /// <param name="page">Новая страница</param>
         public void GoToPage(ApplicationPage page)
         {
-            // Возможна дополнительная логика проверки перехода
+            // Если текущая страница соответствует новой, то ничего не делаем
+            if (CurrentPage == page) return;
+
             CurrentPage = page;
         }
     }
