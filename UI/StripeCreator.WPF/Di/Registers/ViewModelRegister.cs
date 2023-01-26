@@ -13,6 +13,7 @@ namespace StripeCreator.WPF
         {
             services.AddSingleton<ApplicationViewModel>();
             services.AddTransient<WelcomePageViewModel>();
+            services.AddTransient<DataStorePageViewModel>();
             return services;
         }
     }
