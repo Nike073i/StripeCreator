@@ -2,7 +2,7 @@
 {
     public class ApplicationViewModel : BaseViewModel
     {
-        public ApplicationPage CurrentPage { get; private set; }
+        public ApplicationPage CurrentPage { get; private set; } = ApplicationPage.Welcome;
 
         /// <summary>
         /// Смена страницы на <paramref name="page"/>
