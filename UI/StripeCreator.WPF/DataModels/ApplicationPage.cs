@@ -8,6 +8,10 @@
         /// <summary>
         /// Стартовая страница приветствия
         /// </summary>
-        Welcome = 0
+        Welcome = 0,
+        /// <summary>
+        /// Страница работы со справочниками
+        /// </summary>
+        DataStore = 1
     }
 }

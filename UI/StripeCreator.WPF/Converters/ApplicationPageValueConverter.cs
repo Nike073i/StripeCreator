@@ -10,6 +10,7 @@ namespace StripeCreator.WPF
             return (ApplicationPage)value switch
             {
                 ApplicationPage.Welcome => new WelcomePage(IoC.GetRequiredService<WelcomePageViewModel>()),
+                ApplicationPage.DataStore => new DataStorePage(IoC.GetRequiredService<DataStorePageViewModel>()),
                 _ => throw new ArgumentException("Получена несуществующая страница для конвертации"),
             };
         }
