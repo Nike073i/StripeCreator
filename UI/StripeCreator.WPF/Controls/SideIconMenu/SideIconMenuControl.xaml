@@ -5,17 +5,18 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:StripeCreator.WPF"
              mc:Ignorable="d" 
-             d:DesignHeight="600" d:DesignWidth="250"
+             d:DesignHeight="600" d:DesignWidth="125"
              d:DataContext="{x:Static local:ActionMenuDesignViewModel.Instance}">
     <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
         <!--Меню-->
         <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
             <ItemsControl ItemsSource="{Binding Items}" 
                           HorizontalAlignment="Center" 
+                          VerticalAlignment="Top"
                           Padding="0 20">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <local:SideIconMenuItemControl Margin="0 0 0 20"/>
+                        <local:SideIconMenuItemControl Width="110" Margin="0 0 0 20"/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

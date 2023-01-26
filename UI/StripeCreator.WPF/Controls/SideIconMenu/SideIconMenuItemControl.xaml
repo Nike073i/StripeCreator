@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:StripeCreator.WPF"
              xmlns:fa="http://schemas.fontawesome.com/icons/"
              mc:Ignorable="d" 
-             d:Width="150"
+             d:Width="110"
              d:DataContext="{x:Static local:ActionMenuItemDesignViewModel.Instance}">
     <UserControl.Resources>
         <!-- Стиль круглой кнопки в виде иконки с текстом -->
@@ -38,7 +38,7 @@
                                         Text="{Binding ActionText}" 
                                         Grid.Row="1" 
                                         Foreground="{StaticResource BrightColorBrush}" 
-                                        VerticalAlignment="Center" HorizontalAlignment="Center" 
+                                        VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center"
                                         Padding="10 7"
                                         TextWrapping="Wrap"/>
                         </Grid>
