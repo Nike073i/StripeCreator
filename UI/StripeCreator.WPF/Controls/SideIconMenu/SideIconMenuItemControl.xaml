@@ -22,7 +22,7 @@
                             </Grid.RowDefinitions>
 
                             <!--Иконка-->
-                            <Border Grid.Row="0" 
+                            <Border x:Name="border" Grid.Row="0" 
                                     Width="75" Height="{Binding Width, RelativeSource={RelativeSource Self}}" 
                                     Background="{StaticResource LightDarkColorBrush}" 
                                     CornerRadius="{Binding Width, RelativeSource={RelativeSource Self}}">
@@ -34,14 +34,29 @@
                             </Border>
 
                             <!--Текст действия-->
-                            <TextBlock
-                                        Text="{Binding ActionText}" 
+                            <TextBlock  Text="{Binding ActionText}" 
                                         Grid.Row="1" 
                                         Foreground="{StaticResource BrightColorBrush}" 
                                         VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center"
                                         Padding="10 7"
                                         TextWrapping="Wrap"/>
                         </Grid>
+                        <ControlTemplate.Triggers>
+                            <EventTrigger RoutedEvent="MouseEnter">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation To="{StaticResource RegularColor}" Duration="0:0:0.3" Storyboard.TargetName="border" Storyboard.TargetProperty="Background.Color" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                            <EventTrigger RoutedEvent="MouseLeave">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation From="{StaticResource RegularColor}" Duration="0:0:0.3" Storyboard.TargetName="border" Storyboard.TargetProperty="Background.Color" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
