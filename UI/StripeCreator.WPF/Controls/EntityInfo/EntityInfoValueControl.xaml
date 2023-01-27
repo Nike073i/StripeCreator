@@ -5,9 +5,30 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:StripeCreator.WPF"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{x:Static local:EntityInfoValueDesignViewModel.Instance}">
     <Grid>
-            
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        
+        <!-- Название поля-->
+        <TextBlock Text="{Binding Name}" Grid.Column="0" 
+                   VerticalAlignment="Center" HorizontalAlignment="Right"
+                   Foreground="{StaticResource BrightColorBrush}"
+                   Margin="10 5"/>
+        
+        <!-- Разделитель -->
+        <TextBlock Text="-" Grid.Column="1" 
+                   VerticalAlignment="Center" HorizontalAlignment="Left"
+                   Foreground="{StaticResource BrightColorBrush}"/>
+        
+        <!-- Значение -->
+        <TextBlock Text="{Binding Value}" Grid.Column="2" 
+                   VerticalAlignment="Center" HorizontalAlignment="Left"
+                   Foreground="{StaticResource RegularColorBrush}"
+                   TextWrapping="Wrap"
+                   Margin="10 5"/>
     </Grid>
 </UserControl>
