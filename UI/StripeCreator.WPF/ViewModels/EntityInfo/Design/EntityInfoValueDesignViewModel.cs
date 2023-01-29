@@ -16,7 +16,14 @@
 
         #region Constructors 
 
-        public EntityInfoValueDesignViewModel() : base("Поле", "Значение") { }
+        #region Design Data
+
+        private readonly static string DesignName = "Поле";
+        private readonly static string DesignValue = "Значение";
+
+        #endregion
+
+        public EntityInfoValueDesignViewModel() : base(DesignName, DesignValue) { }
 
         #endregion
     }

@@ -17,15 +17,6 @@
             Value = value;
         }
 
-        /// <summary>
-        /// Дефолтный конструктор
-        /// </summary>
-        public EntityInfoValueViewModel()
-        {
-            Name = string.Empty;
-            Value = string.Empty;
-        }
-
         #endregion
     }
 }

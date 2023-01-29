@@ -4,9 +4,15 @@ namespace StripeCreator.WPF
 {
     public class EntityInfoViewModel : BaseViewModel
     {
+        #region Private fields 
+
+        private List<EntityInfoValueViewModel> _data;
+
+        #endregion
+
         #region Public properties
 
-        public List<EntityInfoValueViewModel> Data { get; protected set; }
+        public IEnumerable<EntityInfoValueViewModel> Data => _data;
 
         #endregion
 
@@ -14,15 +20,7 @@ namespace StripeCreator.WPF
 
         public EntityInfoViewModel(List<EntityInfoValueViewModel> data)
         {
-            Data = data;
-        }
-
-        /// <summary>
-        /// Дефолтный конструктор
-        /// </summary>
-        public EntityInfoViewModel()
-        {
-            Data = new List<EntityInfoValueViewModel>();
+            _data = data;
         }
 
         #endregion

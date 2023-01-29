@@ -16,20 +16,24 @@ namespace StripeCreator.WPF
 
         #endregion
 
+        #region Design Data 
+
+        private static readonly List<EntityInfoValueViewModel> _designData = new()
+        {
+            new("Название", "Aida 16"),
+            new("Размерность", "16"),
+            new("Плотность", "71"),
+            new("Цвет", "Черный"),
+        };
+
+        #endregion
+
         #region Constructors 
 
         /// <summary>
         /// Конструктор по умолчанию
         /// </summary>
-        public EntityInfoDesignViewModel()
-        {
-            Data = new List<EntityInfoValueViewModel> {
-                new("Название","Aida 16"),
-                new("Размерность","16"),
-                new("Плотность","71"),
-                new("Цвет","Черный"),
-            };
-        }
+        public EntityInfoDesignViewModel() : base(new List<EntityInfoValueViewModel>(_designData)) { }
 
         #endregion
     }
