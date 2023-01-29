@@ -1,6 +1,5 @@
 ﻿using FontAwesome5;
 using System;
-using System.Data;
 using System.Windows.Input;
 
 namespace StripeCreator.WPF
@@ -25,16 +24,6 @@ namespace StripeCreator.WPF
             Icon = icon;
             ActionText = actionText;
             ActionCommand = new RelayCommand(action);
-        }
-
-        /// <summary>
-        /// Конструктор по умолчанию
-        /// </summary>
-        public ActionMenuItemViewModel()
-        {
-            Icon = EFontAwesomeIcon.Regular_Image;
-            ActionText = string.Empty;
-            ActionCommand = new RelayCommand(_ => { });
         }
 
         #endregion

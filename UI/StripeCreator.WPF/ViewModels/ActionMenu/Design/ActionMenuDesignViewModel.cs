@@ -1,4 +1,5 @@
 ﻿using FontAwesome5;
+using System;
 using System.Collections.Generic;
 
 namespace StripeCreator.WPF
@@ -17,21 +18,26 @@ namespace StripeCreator.WPF
 
         #endregion
 
+        #region Design Data
+
+        private static readonly string _header = "Добро пожаловать!";
+        private static readonly Action<object?> emptyAction = new(_ => { });
+        private static readonly List<ActionMenuItemViewModel> _items = new()
+        {
+             new (EFontAwesomeIcon.Solid_Image, "Загрузить изображение", emptyAction),
+             new (EFontAwesomeIcon.Solid_Ruler, "Материалы", emptyAction),
+             new (EFontAwesomeIcon.Solid_BusinessTime, "Сообщество", emptyAction),
+             new (EFontAwesomeIcon.Solid_Hashtag, "Загрузить схему", emptyAction),
+        };
+
+        #endregion
+
         #region Constructors 
 
         /// <summary>
         /// Конструктор по умолчанию
         /// </summary>
-        public ActionMenuDesignViewModel()
-        {
-            Header = "Добро пожаловать!";
-            Items = new List<ActionMenuItemViewModel> {
-                new() {Icon = EFontAwesomeIcon.Solid_Image, ActionText = "Загрузить изображение" },
-                new() {Icon = EFontAwesomeIcon.Solid_Ruler, ActionText = "Материалы" },
-                new() {Icon = EFontAwesomeIcon.Solid_BusinessTime, ActionText = "Сообщество" },
-                new() {Icon = EFontAwesomeIcon.Solid_Hashtag, ActionText = "Загрузить схему" },
-            };
-        }
+        public ActionMenuDesignViewModel() : base(_header, _items) { }
 
         #endregion
     }

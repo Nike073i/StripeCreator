@@ -1,4 +1,5 @@
 ﻿using FontAwesome5;
+using System;
 
 namespace StripeCreator.WPF
 {
@@ -16,16 +17,20 @@ namespace StripeCreator.WPF
 
         #endregion
 
+        #region Design data
+
+        private readonly static EFontAwesomeIcon _icon = EFontAwesomeIcon.Solid_Image;
+        private readonly static string _actionText = "Загрузить изображение";
+        private readonly static Action<object?> _emptyCommand = new(_ => { });
+
+        #endregion
+
         #region Constructors 
 
         /// <summary>
         /// Конструктор по умолчанию
         /// </summary>
-        public ActionMenuItemDesignViewModel()
-        {
-            Icon = EFontAwesomeIcon.Solid_Image;
-            ActionText = "Загрузить изображение";
-        }
+        public ActionMenuItemDesignViewModel() : base(_icon, _actionText, _emptyCommand) { }
 
         #endregion
     }

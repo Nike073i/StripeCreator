@@ -7,10 +7,16 @@ namespace StripeCreator.WPF
     /// </summary>
     public class ActionMenuViewModel : BaseViewModel
     {
+        #region Private fields
+
+        private List<ActionMenuItemViewModel> _items;
+
+        #endregion
+
         #region Public properties 
 
         public string Header { get; set; }
-        public List<ActionMenuItemViewModel> Items { get; set; }
+        public IEnumerable<ActionMenuItemViewModel> Items => _items;
 
         #endregion
 
@@ -19,16 +25,7 @@ namespace StripeCreator.WPF
         public ActionMenuViewModel(string header, List<ActionMenuItemViewModel> items)
         {
             Header = header;
-            Items = items;
-        }
-
-        /// <summary>
-        /// Конструктор по умолчанию
-        /// </summary>
-        public ActionMenuViewModel()
-        {
-            Header = string.Empty;
-            Items = new();
+            _items = items;
         }
 
         #endregion
