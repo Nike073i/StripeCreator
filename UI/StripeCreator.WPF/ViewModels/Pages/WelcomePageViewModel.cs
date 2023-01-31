@@ -24,11 +24,7 @@ namespace StripeCreator.WPF
 
         public WelcomePageViewModel()
         {
-            ActionMenuViewModel = new()
-            {
-                Header = _header,
-                Items = GetActionMenuItems()
-            };
+            ActionMenuViewModel = new(_header, GetActionMenuItems());
         }
 
         #endregion
