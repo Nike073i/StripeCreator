@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace StripeCreator.WPF
+﻿namespace StripeCreator.WPF
 {
     public interface IEntityViewModel
     {
