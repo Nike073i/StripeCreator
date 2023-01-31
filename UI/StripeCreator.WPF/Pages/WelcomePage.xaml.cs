@@ -2,7 +2,12 @@
 {
     public partial class WelcomePage
     {
-        public WelcomePage() => InitializeComponent();
-        public WelcomePage(WelcomePageViewModel viewModel) : base(viewModel) => InitializeComponent();
+        public WelcomePage(WelcomePageViewModel viewModel) : base(viewModel) => Initialize();
+
+        private void Initialize()
+        {
+            InitializeComponent();
+            App.SetWindowSize(500, 400);
+        }
     }
 }

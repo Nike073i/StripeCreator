@@ -2,7 +2,12 @@
 {
     public partial class DataStorePage
     {
-        public DataStorePage() => InitializeComponent();
-        public DataStorePage(DataStorePageViewModel viewModel) : base(viewModel) => InitializeComponent();
+        public DataStorePage(DataStorePageViewModel viewModel) : base(viewModel) => Initialize();
+
+        private void Initialize()
+        {
+            InitializeComponent();
+            App.SetWindowSize(1200, 700);
+        }
     }
 }
