@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StripeCreator.WPF"
         mc:Ignorable="d"
-        Title="MainWindow"
-        SizeToContent="WidthAndHeight" d:Height="400" d:Width="500">
+        Title="StripeCreator"
+        d:Height="400" d:Width="500">
     <Grid>
         <ContentControl Content="{Binding ApplicationViewModel.CurrentPage, Source={StaticResource Locator}, Converter={local:ApplicationPageValueConverter}}"/>
     </Grid>
