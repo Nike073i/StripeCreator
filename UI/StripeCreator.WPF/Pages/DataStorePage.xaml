@@ -5,19 +5,43 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:StripeCreator.WPF"
+             xmlns:fa="http://schemas.fontawesome.com/icons/"
              mc:Ignorable="d" 
              d:DesignHeight="700" d:DesignWidth="1200"
              d:DataContext="{x:Static local:DataStorePageDesignViewModel.Instance}">
     <Grid Background="{StaticResource DarkColorBrush}">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="110"></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="110"/>
+            <ColumnDefinition Width="400" MinWidth="400"/>
+            <ColumnDefinition Width="*" MinWidth="300"/>
         </Grid.ColumnDefinitions>
         
         <!--Меню действий-->
         <local:SideIconMenuControl Grid.Column="0" 
                                    DataContext="{Binding ActionMenuViewModel}"
                                    VerticalAlignment="Top" />
+
+        <!-- Материалы -->
+        <GroupBox Header="Тип материала" Grid.Column="1" Margin="3">
+            <DockPanel>
+                <UniformGrid DockPanel.Dock="Bottom">
+                    <Button fa:Awesome.Content="Solid_Plus" Command="{Binding AddCommand}"/>
+                    <Button fa:Awesome.Content="Solid_Pen" Command="{Binding EditCommand}"/>
+                    <Button fa:Awesome.Content="Solid_Trash" Command="{Binding RemoveCommand}"/>
+                    <Button fa:Awesome.Content="Solid_SyncAlt" Command="{Binding RefreshCommand}"/>
+                </UniformGrid>
+                <ListBox ItemsSource="{Binding Entities}"
+                         SelectedItem="{Binding SelectedEntity}"/>
+            </DockPanel>
+        </GroupBox>
+
+        <GridSplitter Grid.Column="1" HorizontalAlignment="Right" 
+                      Width="3" Background="Transparent"/>
+
+        <!-- Информация по материалу-->
+        <GroupBox Header="Информация" Grid.Column="2" Margin="3">
+            <local:EntityInfoControl DataContext="{Binding SelectedEntity.GetData}"/>
+        </GroupBox>
+        
     </Grid>
 </local:BasePage>

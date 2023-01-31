@@ -1,4 +1,8 @@
-﻿namespace StripeCreator.WPF
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+
+namespace StripeCreator.WPF
 {
     /// <summary>
     /// Класс view-model для страницы приветствия в design-mode
@@ -14,6 +18,12 @@
 
         #endregion
 
+        #region Design data
+
+        public List<IEntityViewModel> DesignEntities = new() { };
+
+        #endregion
+
         #region Constructors
 
         /// <summary>
@@ -21,6 +31,8 @@
         /// </summary>
         public DataStorePageDesignViewModel()
         {
+            Entities = new ObservableCollection<IEntityViewModel>(DesignEntities);
+            SelectedEntity = Entities.FirstOrDefault();
         }
 
         #endregion

@@ -1,5 +1,7 @@
 ﻿using FontAwesome5;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 namespace StripeCreator.WPF
 {
@@ -16,7 +18,18 @@ namespace StripeCreator.WPF
 
         #region Public Properties 
 
-        public ActionMenuViewModel ActionMenuViewModel { get; protected set; }
+        public ActionMenuViewModel ActionMenuViewModel { get; private set; }
+        public ObservableCollection<IEntityViewModel>? Entities { get; protected set; }
+        public IEntityViewModel? SelectedEntity { get; set; }
+
+        #region Commands
+
+        public ICommand AddCommand { get; }
+        public ICommand EditCommand { get; }
+        public ICommand RemoveCommand { get; }
+        public ICommand RefreshCommand { get; }
+
+        #endregion
 
         #endregion
 
@@ -24,11 +37,13 @@ namespace StripeCreator.WPF
 
         public DataStorePageViewModel()
         {
-            ActionMenuViewModel = new()
-            {
-                Header = _header,
-                Items = GetSideMenuItems()
-            };
+            ActionMenuViewModel = new(_header, GetSideMenuItems());
+
+            // Инициализация команд
+            AddCommand = new RelayCommand(OnExecutedAddCommand);
+            EditCommand = new RelayCommand(OnExecutedEditCommand);
+            RemoveCommand = new RelayCommand(OnExecutedRemoveCommand);
+            RefreshCommand = new RelayCommand(OnExecutedRefreshCommand);
         }
 
         #endregion
@@ -46,6 +61,11 @@ namespace StripeCreator.WPF
 
         private void ShowThreadStore(object? parameter) { }
         private void ShowClothStore(object? parameter) { }
+
+        private void OnExecutedAddCommand(object? parameter) { }
+        private void OnExecutedEditCommand(object? parameter) { }
+        private void OnExecutedRemoveCommand(object? parameter) { }
+        private void OnExecutedRefreshCommand(object? parameter) { }
 
         #endregion
     }
