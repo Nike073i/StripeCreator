@@ -27,5 +27,20 @@ namespace StripeCreator.WPF
         }
 
         #endregion
+
+        #region Window managements
+
+        public static void SetWindowSize(int width, int height, bool isMinSize = true)
+        {
+            Current.MainWindow.Height = height;
+            Current.MainWindow.Width = width;
+            if (isMinSize)
+            {
+                Current.MainWindow.MinWidth = width;
+                Current.MainWindow.MinHeight = height;
+            }
+        }
+
+        #endregion
     }
 }
