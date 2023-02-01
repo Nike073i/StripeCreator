@@ -41,7 +41,7 @@ namespace StripeCreator.Business.Models
 
         public override bool Equals(object? obj) => (obj is PersonData other) && Equals(other);
 
-        public bool Equals(PersonData other) => other != null &&
+        public bool Equals(PersonData other) => other != null && 
                                                 FirstName == other.FirstName &&
                                                 SecondName == other.SecondName;
 
