@@ -23,8 +23,11 @@ namespace StripeCreator.Business.Models
         /// </summary>
         /// <param name="firstName">Имя</param>
         /// <param name="secondName">Фамилия</param>
+        /// <exception cref="ArgumentNullException">Возникает, если <paramref name="firstName"/> или <paramref name="secondName"/> имеют пустое значение</exception>
         public PersonData(string firstName, string secondName)
         {
+            if (string.IsNullOrWhiteSpace(firstName)) throw new ArgumentNullException(nameof(firstName));
+            if (string.IsNullOrWhiteSpace(secondName)) throw new ArgumentNullException(nameof(secondName));
             FirstName = firstName;
             SecondName = secondName;
         }
@@ -35,7 +38,7 @@ namespace StripeCreator.Business.Models
 
         public override bool Equals(object? obj) => (obj is PersonData other) && Equals(other);
 
-        public bool Equals(PersonData other) => other != null && 
+        public bool Equals(PersonData other) => other != null &&
                                                 FirstName == other.FirstName &&
                                                 SecondName == other.SecondName;
 
