@@ -28,6 +28,7 @@ namespace StripeCreator.Business.Models
         /// </summary>
         /// <param name="personData">Персональные данные</param>
         /// <param name="contactData">Контактные данные</param>
+        /// <param name="id">Идентификатор сущности</param>
         public Client(PersonData personData, ContactData contactData, Guid? id = null) : base(id)
         {
             PersonData = personData;
