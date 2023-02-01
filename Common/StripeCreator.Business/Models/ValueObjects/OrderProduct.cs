@@ -1,5 +1,8 @@
 namespace StripeCreator.Business.Models
 {
+    /// <summary>
+    /// Класс информации по продукции в заказе
+    /// </summary>
     public class OrderProduct
     {
         #region Public properties
