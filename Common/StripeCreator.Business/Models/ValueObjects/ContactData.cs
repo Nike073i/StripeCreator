@@ -50,5 +50,32 @@ namespace StripeCreator.Business.Models
         }
 
         #endregion
+
+        #region Override object methods
+
+        public override bool Equals(object? obj)
+        {
+            return (obj is ContactData other) && Equals(other);
+        }
+
+        public bool Equals(ContactData other)
+        {
+            if (other == null) return false;
+            return ContactNumber == other.ContactNumber &&
+                    Email == other.Email &&
+                    Other == other.Other;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(ContactNumber, Email, Other);
+        }
+
+        public override string ToString()
+        {
+            return $"н.т. - {ContactNumber}, e-mail - {Email}.{Environment.NewLine} Иные сведения - {Other}";
+        }
+
+        #endregion
     }
 }
