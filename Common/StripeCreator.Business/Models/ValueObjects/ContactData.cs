@@ -2,6 +2,9 @@ using System.Text.RegularExpressions;
 
 namespace StripeCreator.Business.Models
 {
+    /// <summary>
+    /// Класс контактных данных
+    /// </summary>
     public class ContactData
     {
         #region Constants
