@@ -1,5 +1,8 @@
 namespace StripeCreator.Business.Models
 {
+    /// <summary>
+    /// Класс персональных данных
+    /// </summary>
     public class PersonData
     {
         #region Public properties
