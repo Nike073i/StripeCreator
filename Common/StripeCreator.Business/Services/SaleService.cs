@@ -71,28 +71,28 @@ namespace StripeCreator.Business.Services
         /// </summary>
         /// <param name="id">Идентификатор заказа</param>
         /// <returns>Измененный заказ</returns>
-        public Task<Order> CancelOrderAsync(Guid id) => ChangeOrderStatus(id, OrderStatus.Canceled);
+        public Task<Order> CancelOrderAsync(Guid id) => ChangeOrderStatusAsync(id, OrderStatus.Canceled);
 
         /// <summary>
         /// Оплата заказа
         /// </summary>
         /// <param name="id">Идентификатор заказа</param>
         /// <returns>Измененный заказ</returns>
-        public Task<Order> PayOrderAsync(Guid id) => ChangeOrderStatus(id, OrderStatus.Paid);
+        public Task<Order> PayOrderAsync(Guid id) => ChangeOrderStatusAsync(id, OrderStatus.Paid);
 
         /// <summary>
         /// Обработка заказа
         /// </summary>
         /// <param name="id">Идентификатор заказа</param>
         /// <returns>Измененный заказ</returns>
-        public Task<Order> ProcessOrderAsync(Guid id) => ChangeOrderStatus(id, OrderStatus.Processed);
+        public Task<Order> ProcessOrderAsync(Guid id) => ChangeOrderStatusAsync(id, OrderStatus.Processed);
 
         /// <summary>
         /// Отправка заказа
         /// </summary>
         /// <param name="id">Идентификатор заказа</param>
         /// <returns>Измененный заказ</returns>
-        public Task<Order> SendOrderAsync(Guid id) => ChangeOrderStatus(id, OrderStatus.Sent);
+        public Task<Order> SendOrderAsync(Guid id) => ChangeOrderStatusAsync(id, OrderStatus.Sent);
 
         #endregion
 
@@ -105,7 +105,7 @@ namespace StripeCreator.Business.Services
         /// <param name="newStatus">Новый статус</param>
         /// <returns>Измененный заказ</returns>
         /// <exception cref="ArgumentException">Возникает, если заказ с указанным <paramref name="id"/> не найден</exception>
-        private async Task<Order> ChangeOrderStatus(Guid id, OrderStatus newStatus)
+        private async Task<Order> ChangeOrderStatusAsync(Guid id, OrderStatus newStatus)
         {
             var order = await _orderRepository.GetByIdAsync(id);
             if (order == null)
