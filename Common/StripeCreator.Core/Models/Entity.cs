@@ -20,7 +20,7 @@ namespace StripeCreator.Core.Models
         /// Конструктор по умолчанию
         /// </summary>
         /// <param name="id">Идентификатор сущности</param>
-        public Entity(Guid? id = null) => Id = id;
+        protected Entity(Guid? id = null) => Id = id;
 
         #endregion
     }
