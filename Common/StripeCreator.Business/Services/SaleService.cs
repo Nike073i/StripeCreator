@@ -56,7 +56,7 @@ namespace StripeCreator.Business.Services
         /// <param name="contactData">Контактная информация получателя</param>
         /// <returns>Новый заказ</returns>
         /// <exception cref="ArgumentException">Возникает, если клиент с указанным <paramref name="clientId"/> не найден</exception>
-        public async Task<Order> CreateOrder(Guid clientId, IEnumerable<OrderProduct> orderProducts, ContactData contactData)
+        public async Task<Order> CreateOrderAsync(Guid clientId, IEnumerable<OrderProduct> orderProducts, ContactData contactData)
         {
             var client = await _clientRepository.GetByIdAsync(clientId);
             if (client == null)
@@ -71,7 +71,7 @@ namespace StripeCreator.Business.Services
         /// </summary>
         /// <param name="id">Идентификатор заказа</param>
         /// <returns>Измененный заказ</returns>
-        public Task<Order> CancelOrder(Guid id) => ChangeOrderStatus(id, OrderStatus.Canceled);
+        public Task<Order> CancelOrderAsync(Guid id) => ChangeOrderStatus(id, OrderStatus.Canceled);
 
         /// <summary>
         /// Оплата заказа
