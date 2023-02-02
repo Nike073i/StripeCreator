@@ -35,7 +35,7 @@ namespace StripeCreator.Core.Models
             set
             {
                 if (value < MinValue || value > MaxValue)
-                    throw new ArgumentOutOfRangeException(nameof(Price), $"Стоимость не может быть < {MinValue} и > {MaxValue}");
+                    throw new ArgumentOutOfRangeException(nameof(Value), $"Стоимость не может быть < {MinValue} и > {MaxValue}");
                 _value = value;
             }
         }
