@@ -1,6 +1,6 @@
 using StripeCreator.Core.Models;
 
-namespace StripeCreator.Models
+namespace StripeCreator.Stripe.Models
 {
     /// <summary>
     /// Абстрактный класс сущности материала
