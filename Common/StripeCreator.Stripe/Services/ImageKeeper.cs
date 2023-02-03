@@ -8,6 +8,8 @@ namespace StripeCreator.Stripe.Services
     /// </summary>
     public class ImageKeeper : IDataKeeper<Image>
     {
+        #region Interface implementations
+
         /// <summary>
         /// Загрузка изображений из файла
         /// </summary>
@@ -33,5 +35,7 @@ namespace StripeCreator.Stripe.Services
             using var magickImage = new MagickImage(image.Data);
             await magickImage.WriteAsync(path);
         }
+
+        #endregion
     }
 }
