@@ -6,7 +6,7 @@ namespace StripeCreator.Stripe.Services
     /// <summary>
     /// Хранитель данных <see cref="Scheme"/> в JSON
     /// </summary>
-    public class SchemeKeeper : IDataKeeper<Scheme>
+    public class JsonSchemeKeeper : IDataKeeper<Scheme>
     {
         #region Public properties
 
