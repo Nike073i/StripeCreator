@@ -75,7 +75,7 @@ namespace StripeCreator.Stripe.Scheme
         #region Constructors
 
         /// <summary>
-        /// Инициализация объекта схемы
+        /// Конструктор с полной инициализацией
         /// </summary>
         /// <param name="width">Ширина схемы в клетках</param>
         /// <param name="height">Высота схемы в клетках</param>
