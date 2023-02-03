@@ -24,4 +24,10 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\StripeCreator.Stripe\StripeCreator.Stripe.csproj" />
+    <ProjectReference Include="..\..\Common\StripeCreator.Business\StripeCreator.Business.csproj" />
+    <ProjectReference Include="..\..\Common\StripeCreator.Core\StripeCreator.Core.csproj" />
+  </ItemGroup>
+
 </Project>
