@@ -1,4 +1,4 @@
-namespace StripeCreator.Stripe.Scheme
+namespace StripeCreator.Stripe.Models
 {
     /// <summary>
     /// Структура данных координат точки

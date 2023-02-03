@@ -2,7 +2,7 @@ using System.Runtime.Serialization;
 using StripeCreator.Core.Extensions;
 using StripeCreator.Core.Models;
 
-namespace StripeCreator.Stripe.Scheme
+namespace StripeCreator.Stripe.Models
 {
     /// <summary>
     /// Cхема вышивки
