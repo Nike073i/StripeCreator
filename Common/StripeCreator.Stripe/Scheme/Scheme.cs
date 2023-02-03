@@ -122,7 +122,8 @@ namespace StripeCreator.Stripe.Scheme
         /// <summary>
         /// Последовательность всех использованных цветов в схеме
         /// </summary>
-        public IEnumerable<string> GetColors() => Cells.Select(cell => cell.Color.HexValue).Distinct();
+        public IEnumerable<Color> GetColors() => Cells.Select(cell => cell.Color)
+                                                      .DistinctBy(color => color.HexValue);
 
         #endregion
 
