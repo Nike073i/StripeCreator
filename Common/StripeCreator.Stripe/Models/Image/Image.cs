@@ -1,4 +1,4 @@
-namespace StripeCreator.Stripe.Image
+namespace StripeCreator.Stripe.Models
 {
     /// <summary>
     /// Класс с данными изображения
