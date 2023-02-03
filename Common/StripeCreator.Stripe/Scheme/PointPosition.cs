@@ -35,6 +35,13 @@ namespace StripeCreator.Stripe.Scheme
 
         #region Interface implementations
 
+        /// <summary>
+        /// Сравнение координат. Реализация интерфейса <see cref="IComparable{PointPosition}"/>
+        /// Первичная сортировка по Y координатам
+        /// Вторичная по X координатам
+        /// </summary>
+        /// <param name="other">Другая позиция</param>
+        /// <returns>Результат сравнения позиций</returns>
         public int CompareTo(PointPosition other) => Y != other.Y ? Y - other.Y : X - other.X;
 
         #endregion
