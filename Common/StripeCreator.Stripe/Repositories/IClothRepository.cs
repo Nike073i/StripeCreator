@@ -4,7 +4,7 @@ using StripeCreator.Stripe.Models;
 namespace StripeCreator.Stripe.Repositories
 {
     /// <summary>
-    /// Интерфейс репозитория для сущности <see cref="Cloth"/>
+    /// ��������� ����������� ��� �������� <see cref="Cloth"/>
     /// </summary>
     public interface IClothRepository : IRepository<Cloth> { }
 }

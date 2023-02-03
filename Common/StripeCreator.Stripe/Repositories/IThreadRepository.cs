@@ -4,7 +4,7 @@ using Thread = StripeCreator.Stripe.Models.Thread;
 namespace StripeCreator.Stripe.Repositories
 {
     /// <summary>
-    /// Интерфейс репозитория для сущности <see cref="Thread"/>
+    /// ��������� ����������� ��� �������� <see cref="Thread"/>
     /// </summary>
     public interface IThreadRepository : IRepository<Thread> { }
 }
