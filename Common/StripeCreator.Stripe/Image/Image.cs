@@ -12,6 +12,16 @@ namespace StripeCreator.Stripe.Image
         /// </summary>
         private byte[] _data = { };
 
+        /// <summary>
+        /// Ширина изображения
+        /// </summary>
+        public int _width;
+
+        /// <summary>
+        /// Высота изображения
+        /// </summary>
+        public int _height;
+
         #endregion
 
         #region Public properties
@@ -24,7 +34,8 @@ namespace StripeCreator.Stripe.Image
             get => (byte[])_data.Clone();
             private set
             {
-                if (value.Length == 0) throw new ArgumentException("Бинарные данные изображения не могут быть пустыми");
+                if (value.Length == 0)
+                    throw new ArgumentException("Бинарные данные изображения не могут быть пустыми");
                 _data = value;
             }
         }
@@ -32,12 +43,30 @@ namespace StripeCreator.Stripe.Image
         /// <summary>
         /// Ширина изображения
         /// </summary>
-        public int Width { get; }
+        public int Width
+        {
+            get => _width;
+            set
+            {
+                if (value <= 0)
+                    throw new ArgumentOutOfRangeException(nameof(Width), "Ширина изображения не может быть <= 0");
+                _width = value;
+            }
+        }
 
         /// <summary>
         /// Высота изображения
         /// </summary>
-        public int Height { get; }
+        public int Height
+        {
+            get => _height;
+            set
+            {
+                if (value <= 0)
+                    throw new ArgumentOutOfRangeException(nameof(Height), "Высота изображения не может быть <= 0");
+                _height = value;
+            }
+        }
 
         #endregion
 
