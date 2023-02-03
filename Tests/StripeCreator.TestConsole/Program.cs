@@ -1,13 +1,13 @@
 ﻿using ImageMagick;
-using Newtonsoft.Json;
-using System.Runtime.Serialization;
-using System.Text.RegularExpressions;
+using StripeCreator.Core.Models;
+using StripeCreator.Stripe.Models;
+using StripeCreator.Stripe.Services;
 
 namespace StripeCreator.TestConsole
 {
     public class Program
     {
-        private static string TestImageInputPath = @"Images/test.bmp";
+        private static string TestImageInputPath = @"Images/Вольные.bmp";
         //private static string TestImageInputPath = @"Images/ДДТ.jpg";
         private static string TestImageOutputPath = @"Images/OutputImage.png";
 
@@ -15,6 +15,11 @@ namespace StripeCreator.TestConsole
         {
             //Тест ImageProcessor
             var imageKeeper = new ImageKeeper();
+            var image = await imageKeeper.LoadAsync(TestImageInputPath);
+            using var imageProcessor = new ImageProccesor(image);
+            imageProcessor.Scale(250, 250);
+            imageProcessor.Quantize(3);
+            await imageKeeper.SaveAsync(TestImageOutputPath, imageProcessor.Image);
 
             // Тест отрисовки схемы
             // var imageKeeper = new ImageKeeper();
