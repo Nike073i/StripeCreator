@@ -1,6 +1,6 @@
 using StripeCreator.Core.Models;
 
-namespace StripeCreator.Stripe.Scheme
+namespace StripeCreator.Stripe.Models
 {
     /// <summary>
     /// Сетка схемы
