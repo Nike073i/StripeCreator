@@ -13,18 +13,21 @@ namespace StripeCreator.TestConsole
 
         public static async Task Main(string[] args)
         {
-            // Тест отрисовки схемы
+            //Тест ImageProcessor
             var imageKeeper = new ImageKeeper();
-            var image = await imageKeeper.LoadImageAsync(TestImageInputPath);
-            var converter = new SchemeConverter();
-            var scheme = converter.CreateScheme(image);
 
-            var viz = new SchemeVisualizer(scheme);
-            scheme.Grid = new Grid(1, new Color("#AAAAAA"));
-            //var newImage = viz.CreateCellScheme(5);
-            var newImage = viz.CreatePrototypeScheme(ЕmbroideryType.SmoothVertical, EmbroideryMethod.In2Thread, 5);
+            // Тест отрисовки схемы
+            // var imageKeeper = new ImageKeeper();
+            // var image = await imageKeeper.LoadImageAsync(TestImageInputPath);
+            // var converter = new SchemeConverter();
+            // var scheme = converter.CreateScheme(image);
 
-            await imageKeeper.SaveImageAsync(TestImageOutputPath, newImage);
+            // var viz = new SchemeVisualizer(scheme);
+            // scheme.Grid = new Grid(1, new Color("#AAAAAA"));
+            // //var newImage = viz.CreateCellScheme(5);
+            // var newImage = viz.CreatePrototypeScheme(ЕmbroideryType.SmoothVertical, EmbroideryMethod.In2Thread, 5);
+
+            // await imageKeeper.SaveImageAsync(TestImageOutputPath, newImage);
             //var cells = scheme.Cells;
 
             //int count = 0;
