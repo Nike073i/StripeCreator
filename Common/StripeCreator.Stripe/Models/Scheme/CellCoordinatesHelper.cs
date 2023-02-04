@@ -66,12 +66,12 @@ namespace StripeCreator.Stripe.Models
         /// Конструктор с инициализацией верхней левой координаты и размера клетки
         /// </summary>
         /// <param name="topLeftPoint">Верхняя левая координата</param>
-        /// <param name="cellSize">Размер клетки</param>
-        public CellCoordinatesHelper(PointPosition topLeftPoint, int cellSize)
+        /// <param name="cellLength">Размер клетки</param>
+        public CellCoordinatesHelper(PointPosition topLeftPoint, int cellLength)
         {
-            if (cellSize <= 1)
-                throw new ArgumentOutOfRangeException(nameof(cellSize), "Размер клетки не может быть <= 1");
-            _cellLength = cellSize - 1;
+            if (cellLength <= 1)
+                throw new ArgumentOutOfRangeException(nameof(cellLength), "Размер клетки не может быть <= 1");
+            _cellLength = cellLength - 1;
             TopLeftPosition = topLeftPoint;
         }
 
