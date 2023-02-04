@@ -1,9 +1,9 @@
 namespace StripeCreator.Stripe.Models
 {
     /// <summary>
-    /// Данные по координатам клетки <see cref="Cell"/>
+    /// Вспомогательный класс расчета координат точек клетки <see cref="Cell"/>
     /// </summary>
-    public struct CellCoordinates
+    public class CellCoordinatesHelper
     {
         #region Private fields
 
@@ -67,7 +67,7 @@ namespace StripeCreator.Stripe.Models
         /// </summary>
         /// <param name="topLeftPoint">Верхняя левая координата</param>
         /// <param name="cellSize">Размер клетки</param>
-        public CellCoordinates(PointPosition topLeftPoint, int cellSize)
+        public CellCoordinatesHelper(PointPosition topLeftPoint, int cellSize)
         {
             if (cellSize <= 1)
                 throw new ArgumentOutOfRangeException(nameof(cellSize), "Размер клетки не может быть <= 1");
