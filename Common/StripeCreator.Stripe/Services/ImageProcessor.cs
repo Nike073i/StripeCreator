@@ -1,4 +1,5 @@
 using ImageMagick;
+using StripeCreator.Stripe.Extensions;
 using StripeCreator.Stripe.Models;
 
 namespace StripeCreator.Stripe.Services
@@ -10,7 +11,7 @@ namespace StripeCreator.Stripe.Services
     {
         #region Private fields
 
-        private MagickImage imageMagick;
+        private MagickImage _imageMagick;
 
         #endregion
 
@@ -19,7 +20,7 @@ namespace StripeCreator.Stripe.Services
         /// <summary>
         /// Данные изображения
         /// </summary>
-        public Image Image => new Image(data: imageMagick.ToByteArray(), imageMagick.Width, imageMagick.Height);
+        public Image Image => _imageMagick.CreateImage();
 
         #endregion
 
@@ -31,7 +32,7 @@ namespace StripeCreator.Stripe.Services
         /// <param name="image">Исходные данные изображения</param>
         public ImageProccesor(Image image)
         {
-            imageMagick = new MagickImage(image.Data);
+            _imageMagick = new MagickImage(image.Data);
         }
 
         #endregion
@@ -41,7 +42,7 @@ namespace StripeCreator.Stripe.Services
         /// <summary>
         /// Обрезка шума изображения по краям
         /// </summary>
-        public void Trim() => imageMagick.Trim();
+        public void Trim() => _imageMagick.Trim();
 
         /// <summary>
         /// Масштабирование изображения без сглаживаний
@@ -55,7 +56,7 @@ namespace StripeCreator.Stripe.Services
                 throw new ArgumentOutOfRangeException(nameof(newWidth), "Новая ширина изображения не может быть < 1");
             if (newHeight < 1)
                 throw new ArgumentOutOfRangeException(nameof(newHeight), "Новая высота изображения не может быть < 1");
-            imageMagick.Sample(newWidth, newHeight);
+            _imageMagick.Sample(newWidth, newHeight);
         }
 
         /// <summary>
@@ -71,7 +72,7 @@ namespace StripeCreator.Stripe.Services
             {
                 Colors = colors,
             };
-            imageMagick.Quantize(settings);
+            _imageMagick.Quantize(settings);
         }
 
         /// <summary>
@@ -83,13 +84,13 @@ namespace StripeCreator.Stripe.Services
         {
             if (levels < 1 || levels > 256)
                 throw new ArgumentOutOfRangeException(nameof(levels), "Количество уровней в каждом канале не может быть < 1 и > 256");
-            imageMagick.Posterize(levels);
+            _imageMagick.Posterize(levels);
         }
 
         /// <summary>
         /// Нормальное распределение цветовой гаммы
         /// </summary>
-        public void Normalize() => imageMagick.Normalize();
+        public void Normalize() => _imageMagick.Normalize();
 
         #endregion
 
@@ -100,7 +101,7 @@ namespace StripeCreator.Stripe.Services
         /// </summary>
         public void Dispose()
         {
-            imageMagick.Dispose();
+            _imageMagick.Dispose();
         }
 
         #endregion

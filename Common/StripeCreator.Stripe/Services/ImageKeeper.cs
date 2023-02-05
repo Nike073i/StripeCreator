@@ -1,4 +1,5 @@
 using ImageMagick;
+using StripeCreator.Stripe.Extensions;
 using StripeCreator.Stripe.Models;
 
 namespace StripeCreator.Stripe.Services
@@ -21,8 +22,7 @@ namespace StripeCreator.Stripe.Services
             if (!File.Exists(path))
                 throw new FileNotFoundException("Изображение по указаному пути не найдено");
             var data = await File.ReadAllBytesAsync(path);
-            using var image = new MagickImage(data);
-            return new Image(data, image.Width, image.Height);
+            return new MagickImage(data).CreateImage();
         }
 
         /// <summary>
