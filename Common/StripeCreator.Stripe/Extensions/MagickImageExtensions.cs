@@ -1,4 +1,5 @@
 using ImageMagick;
+using StripeCreator.Stripe.Models;
 
 namespace StripeCreator.Stripe.Extensions
 {
@@ -42,6 +43,13 @@ namespace StripeCreator.Stripe.Extensions
             image.BorderColor = gridColor;
             image.Border(gridSize);
         }
+
+        /// <summary>
+        /// Создание объекта данных изображения <see cref="Image"/>
+        /// </summary>
+        /// <param name="imageMagick">объект <see cref="MagickImage"/> для расширения</param>
+        /// <returns>Данные изображения</returns>
+        public static Image CreateImage(this MagickImage imageMagick) => new Image(imageMagick.ToByteArray(), imageMagick.Width, imageMagick.Height);
 
         #endregion
 
