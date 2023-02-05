@@ -1,4 +1,5 @@
 using ImageMagick;
+using StripeCreator.Stripe.Extensions;
 using StripeCreator.Stripe.Models;
 
 namespace StripeCreator.Stripe.Services
@@ -19,7 +20,7 @@ namespace StripeCreator.Stripe.Services
         /// <summary>
         /// Данные изображения
         /// </summary>
-        public Image Image => new Image(data: _imageMagick.ToByteArray(), _imageMagick.Width, _imageMagick.Height);
+        public Image Image => _imageMagick.CreateImage();
 
         #endregion
 
