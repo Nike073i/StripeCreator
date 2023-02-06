@@ -76,8 +76,11 @@ namespace StripeCreator.DAL.Repositories
                             .ToListAsync();
         }
 
-        public async Task<TEntity?> GetByIdAsync(Guid id) => await Items.Select(dmModel => Mapper.MapToDomainModel(dmModel))
-                                                                        .FirstOrDefaultAsync(x => x.Id == id);
+        public async Task<TEntity?> GetByIdAsync(Guid id)
+        {
+            var storedEntity = await Items.FirstOrDefaultAsync(x => x.Id == id);
+            return storedEntity != null ? Mapper.MapToDomainModel(storedEntity) : null;
+        }
 
         public async Task<Guid> RemoveAsync(Guid id)
         {
@@ -93,14 +96,17 @@ namespace StripeCreator.DAL.Repositories
         {
             var storedEntity = await Items.FirstOrDefaultAsync(x => x.Id == entity.Id);
             if (storedEntity == null)
-                await Set.AddAsync(Mapper.CreateDbModel(entity));
+            {
+                storedEntity = Mapper.CreateDbModel(entity);
+                await Set.AddAsync(storedEntity);
+            }
             else
             {
                 Mapper.UpdateDbModel(entity, ref storedEntity);
                 Set.Update(storedEntity);
             }
             await DbContext.SaveChangesAsync();
-            return entity;
+            return Mapper.MapToDomainModel(storedEntity);
         }
 
         #endregion
