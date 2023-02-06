@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using StripeCreator.DAL.Models;
 
 namespace StripeCreator.DAL
 {
@@ -23,6 +24,8 @@ namespace StripeCreator.DAL
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<DbThread>();
+            modelBuilder.Entity<DbCloth>();
         }
 
         #endregion
