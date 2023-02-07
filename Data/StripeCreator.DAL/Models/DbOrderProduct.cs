@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace StripeCreator.DAL.Models
 {
     /// <summary>
@@ -10,11 +12,13 @@ namespace StripeCreator.DAL.Models
         /// <summary>
         /// Идентификатор продукта
         /// </summary>
+        [Required]
         public Guid ProductId { get; set; }
 
         /// <summary>
         /// Количество продукции в заказе
         /// </summary>
+        [Required]
         public int Quantity { get; set; }
 
         #endregion
