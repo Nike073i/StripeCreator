@@ -48,10 +48,10 @@ namespace StripeCreator.DAL.Mappers
         #region Private helper methods
 
         private IEnumerable<DbOrderProduct> CreateDbOrderProductModel(IEnumerable<OrderProduct> domainModel) =>
-            domainModel.Select(orderProduct => new DbOrderProduct(orderProduct.ProductId, orderProduct.Quantity));
+            domainModel.Select(orderProduct => new DbOrderProduct(orderProduct.ProductId, orderProduct.Quantity)).ToList();
 
         private IEnumerable<OrderProduct> MapDbOrderProductToDomainModel(IEnumerable<DbOrderProduct> dbModel) =>
-            dbModel.Select(orderProduct => new OrderProduct(orderProduct.ProductId, orderProduct.Quantity));
+            dbModel.Select(orderProduct => new OrderProduct(orderProduct.ProductId, orderProduct.Quantity)).ToList();
 
         #endregion
     }
