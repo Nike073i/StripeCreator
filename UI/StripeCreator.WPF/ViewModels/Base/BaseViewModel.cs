@@ -2,8 +2,15 @@ using System.ComponentModel;
 
 namespace StripeCreator.WPF
 {
+    /// <summary>
+    /// Базовый класс для ViewModel
+    /// </summary>
     public abstract class BaseViewModel : INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
+        #region Interface implementations
+
+        public event PropertyChangedEventHandler? PropertyChanged = (sender, e) => { };
+
+        #endregion
     }
 }
