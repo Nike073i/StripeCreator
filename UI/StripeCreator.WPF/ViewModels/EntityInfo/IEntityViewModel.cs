@@ -1,7 +1,13 @@
 ﻿namespace StripeCreator.WPF
 {
+    /// <summary>
+    /// Интерфейс ViewModel сущности
+    /// </summary>
     public interface IEntityViewModel
     {
-        public EntityInfoViewModel GetData { get; }
+        /// <summary>
+        /// Получение информации сущности
+        /// </summary>
+        EntityInfoViewModel GetData { get; }
     }
 }

@@ -23,6 +23,9 @@
 
         #region Constructors 
 
+        /// <summary>
+        /// Конструктор по умолчанию
+        /// </summary>
         public EntityInfoValueDesignViewModel() : base(DesignName, DesignValue) { }
 
         #endregion
