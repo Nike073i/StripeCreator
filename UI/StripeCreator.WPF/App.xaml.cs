@@ -3,10 +3,16 @@ using System.Windows;
 
 namespace StripeCreator.WPF
 {
+    /// <summary>
+    /// Основной класс приложения
+    /// </summary>
     public partial class App
     {
         #region Public properties
 
+        /// <summary>
+        /// Текущая рабочая папка
+        /// </summary>
         public static string CurrentDirectory => Environment.CurrentDirectory;
 
         #endregion
@@ -30,6 +36,12 @@ namespace StripeCreator.WPF
 
         #region Window managements
 
+        /// <summary>
+        /// Установка размеров окна
+        /// </summary>
+        /// <param name="width">Ширина окна</param>
+        /// <param name="height">Высота окна</param>
+        /// <param name="isMinSize">Установить <paramref name="width"/> и <paramref name="height"/> в качестве минимальных размеров</param>
         public static void SetWindowSize(int width, int height, bool isMinSize = true)
         {
             Current.MainWindow.Height = height;

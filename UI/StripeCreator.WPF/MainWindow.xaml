@@ -8,6 +8,7 @@
         Title="StripeCreator"
         d:Height="400" d:Width="500">
     <Grid>
+        <!-- Держатель страниц-->
         <ContentControl Content="{Binding ApplicationViewModel.CurrentPage, Source={StaticResource Locator}, Converter={local:ApplicationPageValueConverter}}"/>
     </Grid>
 </Window>
