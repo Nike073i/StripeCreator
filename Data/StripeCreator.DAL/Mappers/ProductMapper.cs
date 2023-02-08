@@ -4,7 +4,7 @@ using StripeCreator.DAL.Models;
 namespace StripeCreator.DAL.Mappers
 {
     /// <summary>
-    /// преобразователя хранимых <see cref="DbProduct"/> и доменных <see cref="Product"/> сущностей 
+    /// Преобразователь хранимых <see cref="DbProduct"/> и доменных <see cref="Product"/> сущностей 
     /// </summary>
     public class ProductMapper : IDbMapper<DbProduct, Product>
     {

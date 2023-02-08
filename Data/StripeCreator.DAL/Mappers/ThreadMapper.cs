@@ -5,7 +5,7 @@ using Thread = StripeCreator.Stripe.Models.Thread;
 namespace StripeCreator.DAL.Mappers
 {
     /// <summary>
-    /// преобразователя хранимых <see cref="DbThread"/> и доменных <see cref="Thread"/> сущностей 
+    /// Преобразователь хранимых <see cref="DbThread"/> и доменных <see cref="Thread"/> сущностей 
     /// </summary>
     public class ThreadMapper : IDbMapper<DbThread, Thread>
     {

@@ -5,7 +5,7 @@ using StripeCreator.Stripe.Models;
 namespace StripeCreator.DAL.Mappers
 {
     /// <summary>
-    /// преобразователя хранимых <see cref="DbCloth"/> и доменных <see cref="Cloth"/> сущностей 
+    /// Преобразователь хранимых <see cref="DbCloth"/> и доменных <see cref="Cloth"/> сущностей 
     /// </summary>
     public class ClothMapper : IDbMapper<DbCloth, Cloth>
     {
