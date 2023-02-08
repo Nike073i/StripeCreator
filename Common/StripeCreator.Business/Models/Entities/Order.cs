@@ -116,8 +116,9 @@ namespace StripeCreator.Business.Models
         /// <param name="contactData">Контактная информация получателя</param>
         /// <param name="status">Текущий статус заказа</param>
         /// <param name="dateCreated">Дата создания заказа</param>
-        public Order(Guid id, Guid clientId, decimal price, IEnumerable<OrderProduct> products,
-                    ContactData contactData, OrderStatus status, DateTime dateCreated) : base(id)
+        /// <param name="id">Идентификатор заказа</param>
+        public Order(Guid clientId, decimal price, IEnumerable<OrderProduct> products,
+                    ContactData contactData, OrderStatus status, DateTime dateCreated, Guid? id = null) : base(id)
         {
             ClientId = clientId;
             Price = price;
