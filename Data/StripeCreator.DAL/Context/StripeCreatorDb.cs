@@ -26,6 +26,9 @@ namespace StripeCreator.DAL
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<DbThread>();
             modelBuilder.Entity<DbCloth>();
+            modelBuilder.Entity<DbProduct>();
+            modelBuilder.Entity<DbClient>();
+            modelBuilder.Entity<DbOrder>();
         }
 
         #endregion
