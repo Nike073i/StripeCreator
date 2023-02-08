@@ -1,8 +1,20 @@
 ﻿namespace StripeCreator.WPF
 {
+    /// <summary>
+    /// ViewModel основонго приложения
+    /// </summary>
     public class ApplicationViewModel : BaseViewModel
     {
+        #region Public properties
+
+        /// <summary>
+        /// Текущая страница приложения
+        /// </summary>
         public ApplicationPage CurrentPage { get; private set; } = ApplicationPage.Welcome;
+
+        #endregion
+
+        #region Public methods
 
         /// <summary>
         /// Смена страницы на <paramref name="page"/>
@@ -15,5 +27,7 @@
 
             CurrentPage = page;
         }
+
+        #endregion
     }
 }
