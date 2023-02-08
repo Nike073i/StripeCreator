@@ -13,13 +13,13 @@ namespace StripeCreator.DAL.Models
         /// Идентификатор продукта
         /// </summary>
         [Required]
-        public Guid ProductId { get; set; }
+        public Guid ProductId { get; protected set; }
 
         /// <summary>
         /// Количество продукции в заказе
         /// </summary>
         [Required]
-        public int Quantity { get; set; }
+        public int Quantity { get; protected set; }
 
         #endregion
 
