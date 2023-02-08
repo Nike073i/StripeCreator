@@ -1,5 +1,5 @@
-using System.ComponentModel.DataAnnotations;
 using StripeCreator.Business.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace StripeCreator.DAL.Models
 {

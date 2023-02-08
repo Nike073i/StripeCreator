@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StripeCreator.DAL.Models
 {
@@ -20,6 +21,19 @@ namespace StripeCreator.DAL.Models
         /// </summary>
         [Required]
         public int Quantity { get; protected set; }
+
+        /// <summary>
+        /// Идентификатор заказа. Устанавливается автоматически
+        /// </summary>
+        public Guid OrderId { get; protected set; }
+
+#nullable disable
+        /// <summary>
+        /// Навигационное свойство заказа
+        /// </summary>
+        [ForeignKey(nameof(OrderId))]
+        public DbOrder DbOrder { get; protected set; }
+#nullable enable
 
         #endregion
 
