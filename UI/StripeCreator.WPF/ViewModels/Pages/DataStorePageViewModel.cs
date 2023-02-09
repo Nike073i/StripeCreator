@@ -1,5 +1,4 @@
 ﻿using FontAwesome5;
-using PropertyChanged;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -31,10 +30,19 @@ namespace StripeCreator.WPF
         /// </summary>
         private readonly ApplicationViewModel _applicationViewModel;
 
+        #region Services
+
         /// <summary>
         /// Сервис работы с ViewModel доменных сущностей
         /// </summary>
-        private IDataService _dataService;
+        private IDataService? _dataService;
+
+        /// <summary>
+        /// Сервис работы с клиентами
+        /// </summary>
+        private readonly ClientService _clientService;
+
+        #endregion
 
         /// <summary>
         /// Менеджер интерактивного взаимодействия
@@ -61,6 +69,21 @@ namespace StripeCreator.WPF
         public IEntityViewModel? SelectedEntity { get; set; }
 
         #region Commands
+
+        /// <summary>
+        /// Показать список хранимых нитей
+        /// </summary>
+        public ICommand ShowThreadStoreCommand { get; }
+
+        /// <summary>
+        /// Показать список хранимых тканей
+        /// </summary>
+        public ICommand ShowClothStoreCommand { get; }
+
+        /// <summary>
+        /// Показать список хранимых клиентов
+        /// </summary>
+        public ICommand ShowClientStoreCommand { get; }
 
         /// <summary>
         /// Команда добавления новой сущности
@@ -109,17 +132,18 @@ namespace StripeCreator.WPF
         {
             _applicationViewModel = applicationViewModel;
             _uiManager = uiManager;
+            _clientService = clientService;
             ActionMenuViewModel = new(_header, GetSideMenuItems());
 
             // Инициализация команд
-            AddCommand = new RelayCommand(async param => await OnExecutedAddCommand(param));
+            ShowThreadStoreCommand = new RelayCommand(ShowThreadStore);
+            ShowClothStoreCommand = new RelayCommand(ShowClothStore);
+            ShowClientStoreCommand = new RelayCommand(ShowClientStore);
+
+            AddCommand = new RelayCommand(async param => await OnExecutedAddCommand(param)) { CanExecutePredicate = CanExecuteAddCommand };
             EditCommand = new RelayCommand(async param => await OnExecutedEditCommand(param)) { CanExecutePredicate = CanExecuteEditCommand };
             RemoveCommand = new RelayCommand(async param => await OnExecutedRemoveCommand(param)) { CanExecutePredicate = CanExecuteRemoveCommand };
-            RefreshCommand = new RelayCommand(async param => await OnExecutedRefreshCommand(param));
-
-            //Инициализация сервиса
-            _dataService = clientService;
-            // TODO Установить логику установки сервиса
+            RefreshCommand = new RelayCommand(async param => await OnExecutedRefreshCommand(param)) { CanExecutePredicate = CanExecuteRefreshCommand };
         }
 
         #endregion
@@ -134,22 +158,35 @@ namespace StripeCreator.WPF
         {
             return new List<ActionMenuItemViewModel>
             {
-                new(EFontAwesomeIcon.Solid_Bars, "Нитки", async param => await ShowThreadStore(param)),
-                new(EFontAwesomeIcon.Solid_CropAlt, "Ткани", async param => await ShowClothStore(param)),
+                new(EFontAwesomeIcon.Solid_Bars, "Нитки", ShowThreadStore),
+                new(EFontAwesomeIcon.Solid_CropAlt, "Ткани", ShowClothStore),
+                new(EFontAwesomeIcon.Solid_Users, "Клиенты", ShowClientStore),
             };
         }
+
+        #region Commands action and predicate
 
         /// <summary>
         /// Показать список хранимых нитей
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private async Task ShowThreadStore(object? parameter) => _applicationViewModel.GoToPage(ApplicationPage.Welcome);
+        private void ShowThreadStore(object? parameter) => _applicationViewModel.GoToPage(ApplicationPage.Welcome);
 
         /// <summary>
         /// Показать список хранимых тканей
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private async Task ShowClothStore(object? parameter) { }
+        private void ShowClothStore(object? parameter) { }
+
+        /// <summary>
+        /// Показать список хранимых нитей
+        /// </summary>
+        /// <param name="parameter">Параметр команды</param>
+        private void ShowClientStore(object? parameter)
+        {
+            _dataService = _clientService;
+            RefreshCommand.Execute(parameter);
+        }
 
         /// <summary>
         /// Добавить новую хранимую сущность
@@ -159,6 +196,13 @@ namespace StripeCreator.WPF
         {
             // TODO: Логика создания новой сущности
         }
+
+        /// <summary>
+        /// Проверка вызова команды добавления данных
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        private bool CanExecuteAddCommand(object? parameter) => _dataService != null;
 
         /// <summary>
         /// Редактировать выбранную хранимую сущность
@@ -184,7 +228,7 @@ namespace StripeCreator.WPF
         {
             if (SelectedEntity is null)
                 throw new InvalidOperationException(NonSelectedEntityError);
-            var removeId = _dataService.RemoveAsync(SelectedEntity);
+            var removeId = await _dataService!.RemoveAsync(SelectedEntity);
             await _uiManager.ShowInfo(new MessageBoxDialogViewModel("Удалено успешно", $"Удалена сущность с Id {removeId}"));
             Entities?.Remove(SelectedEntity);
         }
@@ -202,9 +246,18 @@ namespace StripeCreator.WPF
         /// <param name="parameter">Параметр команды</param>
         private async Task OnExecutedRefreshCommand(object? parameter)
         {
-            var data = await _dataService.GetAllAsync();
+            var data = await _dataService!.GetAllAsync();
             Entities = new ObservableCollection<IEntityViewModel>(data);
         }
+
+        /// <summary>
+        /// Проверка вызова команды обновления данных
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        private bool CanExecuteRefreshCommand(object? parameter) => _dataService != null;
+
+        #endregion
 
         #endregion
     }
