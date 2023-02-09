@@ -1,6 +1,7 @@
 ﻿using FontAwesome5;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace StripeCreator.WPF
@@ -21,6 +22,11 @@ namespace StripeCreator.WPF
         /// ViewModel приложения
         /// </summary>
         private readonly ApplicationViewModel _applicationViewModel;
+
+        /// <summary>
+        /// Сервис работы с ViewModel доменных сущностей
+        /// </summary>
+        private IDataService _dataService;
 
         #endregion
 
@@ -86,10 +92,13 @@ namespace StripeCreator.WPF
             ActionMenuViewModel = new(_header, GetSideMenuItems());
 
             // Инициализация команд
-            AddCommand = new RelayCommand(OnExecutedAddCommand);
-            EditCommand = new RelayCommand(OnExecutedEditCommand);
-            RemoveCommand = new RelayCommand(OnExecutedRemoveCommand);
-            RefreshCommand = new RelayCommand(OnExecutedRefreshCommand);
+            AddCommand = new RelayCommand(async param => await OnExecutedAddCommand(param));
+            EditCommand = new RelayCommand(async param => await OnExecutedEditCommand(param));
+            RemoveCommand = new RelayCommand(async param => await OnExecutedRemoveCommand(param));
+            RefreshCommand = new RelayCommand(async param => await OnExecutedRefreshCommand(param));
+
+            //Инициализация сервиса
+            // TODO Установить логику установки сервиса
         }
 
         #endregion
@@ -104,8 +113,8 @@ namespace StripeCreator.WPF
         {
             return new List<ActionMenuItemViewModel>
             {
-                new(EFontAwesomeIcon.Solid_Bars, "Нитки", ShowThreadStore),
-                new(EFontAwesomeIcon.Solid_CropAlt, "Ткани",ShowClothStore),
+                new(EFontAwesomeIcon.Solid_Bars, "Нитки", async param => await ShowThreadStore(param)),
+                new(EFontAwesomeIcon.Solid_CropAlt, "Ткани", async param => await ShowClothStore(param)),
             };
         }
 
@@ -113,37 +122,37 @@ namespace StripeCreator.WPF
         /// Показать список хранимых нитей
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private void ShowThreadStore(object? parameter) => _applicationViewModel.GoToPage(ApplicationPage.Welcome);
+        private async Task ShowThreadStore(object? parameter) => _applicationViewModel.GoToPage(ApplicationPage.Welcome);
 
         /// <summary>
         /// Показать список хранимых тканей
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private void ShowClothStore(object? parameter) { }
+        private async Task ShowClothStore(object? parameter) { }
 
         /// <summary>
         /// Добавить новую хранимую сущность
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private void OnExecutedAddCommand(object? parameter) { }
+        private async Task OnExecutedAddCommand(object? parameter) { }
 
         /// <summary>
         /// Редактировать выбранную хранимую сущность
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private void OnExecutedEditCommand(object? parameter) { }
+        private async Task OnExecutedEditCommand(object? parameter) { }
 
         /// <summary>
         /// Удалить выбранную хранимую сущность
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private void OnExecutedRemoveCommand(object? parameter) { }
+        private async Task OnExecutedRemoveCommand(object? parameter) { }
 
         /// <summary>
         /// Обновить список хранимых сущностей
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private void OnExecutedRefreshCommand(object? parameter) { }
+        private async Task OnExecutedRefreshCommand(object? parameter) { }
 
         #endregion
     }
