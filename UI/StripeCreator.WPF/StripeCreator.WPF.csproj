@@ -13,4 +13,8 @@
     <PackageReference Include="PropertyChanged.Fody" Version="4.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Data\StripeCreator.DAL.SqlServer\StripeCreator.DAL.SqlServer.csproj" />
+  </ItemGroup>
+
 </Project>
