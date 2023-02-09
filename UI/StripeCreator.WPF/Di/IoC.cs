@@ -6,17 +6,30 @@ using System.Threading.Tasks;
 
 namespace StripeCreator.WPF
 {
+    /// <summary>
+    /// Хост IoC
+    /// </summary>
     public static class IoC
     {
         #region Private fields
 
+        /// <summary>
+        /// Сообщение об ошибке использования хоста
+        /// </summary>
         private static readonly string HostNotCreatedError = "Ошибка взаимодействия с хостом. Хост не был создан";
+
+        /// <summary>
+        /// Контейнер
+        /// </summary>
         private static IHost? _container;
 
         #endregion
 
         #region Public properties
 
+        /// <summary>
+        /// Контейнер
+        /// </summary>
         public static IHost Container
         {
             get
@@ -31,6 +44,12 @@ namespace StripeCreator.WPF
 
         #region Host building
 
+        /// <summary>
+        /// Создание хоста IoC
+        /// </summary>
+        /// <param name="args">Аргументы запуска</param>
+        /// <param name="contentPath">Стартовая директория</param>
+        /// <param name="settingsFile">Путь к файлу-конфигурации</param>
         public static void CreateHost(string[] args, string contentPath, string settingsFile)
         {
             Container = Host.CreateDefaultBuilder(args)
@@ -42,8 +61,14 @@ namespace StripeCreator.WPF
                         .Build();
         }
 
+        /// <summary>
+        /// Конфигурация сервисов
+        /// </summary>
+        /// <param name="host">Хост контейнера</param>
+        /// <param name="services">Сервисы</param>
         private static void ConfigureServices(HostBuilderContext host, IServiceCollection services)
         {
+            services.AddSqlServer(host.Configuration.GetSection("Database"));
             services.AddViewModel();
         }
 
@@ -51,17 +76,35 @@ namespace StripeCreator.WPF
 
         #region Host management
 
-        public static Task StartAsync() => Container.StartAsync();
+        /// <summary>
+        /// Запуск контейнера
+        /// </summary>
+        /// <returns></returns>
+        public static async Task StartAsync() => await Container.StartAsync();
 
-        public static Task StopAsync() => Container.StopAsync();
+        /// <summary>
+        /// Остановка контейнера
+        /// </summary>
+        /// <returns></returns>
+        public static async Task StopAsync() => await Container.StopAsync();
 
         #endregion
 
         #region Access methods
 
-        public static T GetRequiredService<T>() => Container.Services.GetRequiredService<T>();
+        /// <summary>
+        /// Запрос обязательного сервиса
+        /// </summary>
+        /// <typeparam name="T">Тип запрашиваемого сервиса</typeparam>
+        /// <returns>Запрашиваемый сервис</returns>
+        public static T GetRequiredService<T>() where T : notnull => Container.Services.GetRequiredService<T>();
 
-        public static T GetService<T>() => Container.Services.GetService<T>();
+        /// <summary>
+        /// Запрос необязательного сервиса
+        /// </summary>
+        /// <typeparam name="T">Тип запрашиваемого сервиса</typeparam>
+        /// <returns>Запрашиваемый сервис</returns>
+        public static T? GetService<T>() => Container.Services.GetService<T>();
 
         #endregion
     }

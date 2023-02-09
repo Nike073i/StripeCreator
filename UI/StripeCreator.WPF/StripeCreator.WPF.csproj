@@ -17,4 +17,10 @@
     <ProjectReference Include="..\..\Data\StripeCreator.DAL.SqlServer\StripeCreator.DAL.SqlServer.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

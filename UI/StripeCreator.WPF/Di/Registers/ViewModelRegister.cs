@@ -2,6 +2,9 @@
 
 namespace StripeCreator.WPF
 {
+    /// <summary>
+    /// Расширения для регистрации ViewModel в IoC 
+    /// </summary>
     public static class ViewModelRegister
     {
         /// <summary>
