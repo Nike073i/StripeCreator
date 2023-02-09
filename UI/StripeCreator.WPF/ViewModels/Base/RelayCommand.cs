@@ -15,10 +15,14 @@ namespace StripeCreator.WPF
         /// </summary>
         private readonly Action<object?> _executeAction;
 
+        #endregion
+
+        #region Public properties
+
         /// <summary>
-        /// ƒелегат проверки готовности выполнени€ команды
+        /// ѕредикат проверки готовности выполнени€ команды
         /// </summary>
-        private readonly Func<object?, bool>? _canExecute;
+        public Predicate<object?>? CanExecutePredicate { get; set; }
 
         #endregion
 
@@ -29,24 +33,26 @@ namespace StripeCreator.WPF
         /// </summary>
         /// <param name="executeAction">ƒействие дл€ выполнени€</param>
         /// <param name="canExecute">ѕроверка готовности команды</param>
-        public RelayCommand(Action<object?> executeAction, Func<object?, bool>? canExecute = null)
+        public RelayCommand(Action<object?> executeAction)
         {
             _executeAction = executeAction;
-            _canExecute = canExecute ?? new((_) => true);
         }
 
         #endregion
 
         #region Interface implementations
 
-        public event EventHandler? CanExecuteChanged = (sender, e) => { };
+        public event EventHandler? CanExecuteChanged
+        {
+            add { CommandManager.RequerySuggested += value; }
+            remove { CommandManager.RequerySuggested -= value; }
+        }
 
-        public bool CanExecute(object? parameter) => _canExecute is not null && _canExecute(parameter);
+        public bool CanExecute(object? parameter) => CanExecutePredicate is null || CanExecutePredicate(parameter);
 
         public void Execute(object? parameter)
         {
-            if (CanExecute(parameter))
-                _executeAction(parameter);
+            _executeAction(parameter);
         }
 
         #endregion

@@ -108,11 +108,12 @@ namespace StripeCreator.WPF
 
             // Инициализация команд
             AddCommand = new RelayCommand(async param => await OnExecutedAddCommand(param));
-            EditCommand = new RelayCommand(async param => await OnExecutedEditCommand(param), CanExecuteEditCommand);
-            RemoveCommand = new RelayCommand(async param => await OnExecutedRemoveCommand(param), CanExecuteRemoveCommand);
+            EditCommand = new RelayCommand(async param => await OnExecutedEditCommand(param)) { CanExecutePredicate = CanExecuteEditCommand };
+            RemoveCommand = new RelayCommand(async param => await OnExecutedRemoveCommand(param)) { CanExecutePredicate = CanExecuteRemoveCommand };
             RefreshCommand = new RelayCommand(async param => await OnExecutedRefreshCommand(param));
 
             //Инициализация сервиса
+            _dataService = clientService;
             // TODO Установить логику установки сервиса
         }
 
