@@ -19,9 +19,7 @@
         /// <summary>
         /// Конструктор по умолчанию
         /// </summary>
-        public WelcomePageDesignViewModel()
-        {
-        }
+        public WelcomePageDesignViewModel() {  }
 
         #endregion
     }

@@ -44,13 +44,13 @@ namespace StripeCreator.WPF
         /// <param name="isMinSize">Установить <paramref name="width"/> и <paramref name="height"/> в качестве минимальных размеров</param>
         public static void SetWindowSize(int width, int height, bool isMinSize = true)
         {
-            Current.MainWindow.Height = height;
-            Current.MainWindow.Width = width;
             if (isMinSize)
             {
                 Current.MainWindow.MinWidth = width;
                 Current.MainWindow.MinHeight = height;
             }
+            Current.MainWindow.Height = height;
+            Current.MainWindow.Width = width;
         }
 
         #endregion

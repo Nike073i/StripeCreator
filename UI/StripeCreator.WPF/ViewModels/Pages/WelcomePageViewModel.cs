@@ -10,20 +10,43 @@ namespace StripeCreator.WPF
     {
         #region Constants
 
+        /// <summary>
+        /// Заголовок меню действий
+        /// </summary>
         private readonly string _header = "Добро пожаловать!";
+        
+        /// <summary>
+        /// ViewModel приложения
+        /// </summary>
+        private readonly ApplicationViewModel _applicationViewModel;
 
         #endregion
 
         #region Public Properties 
 
+        /// <summary>
+        /// ViewModel меню действий
+        /// </summary>
         public ActionMenuViewModel ActionMenuViewModel { get; protected set; }
 
         #endregion
 
         #region Constructors
 
-        public WelcomePageViewModel()
+        /// <summary>
+        /// Конструктор по умолчанию
+        /// </summary>
+#nullable disable
+        public WelcomePageViewModel() { }
+#nullable enable
+
+        /// <summary>
+        /// Конструктор с полной инициализацией
+        /// </summary>
+        /// <param name="applicationViewModel">ViewModel приложения</param>
+        public WelcomePageViewModel(ApplicationViewModel applicationViewModel)
         {
+            _applicationViewModel = applicationViewModel;
             ActionMenuViewModel = new(_header, GetActionMenuItems());
         }
 
@@ -31,20 +54,41 @@ namespace StripeCreator.WPF
 
         #region Private helper methods
 
-        private List<ActionMenuItemViewModel> GetActionMenuItems()
-        {
-            return new List<ActionMenuItemViewModel>
+        /// <summary>
+        /// Получить список элементов меню действий
+        /// </summary>
+        /// <returns>Список элементов меню действий</returns>
+        private List<ActionMenuItemViewModel> GetActionMenuItems() =>
+            new()
             {
                 new(EFontAwesomeIcon.Solid_Image, "Загрузить изображение", LoadImagePage),
-                new(EFontAwesomeIcon.Solid_Ruler, "Материалы",LoadMaterialPage),
+                new(EFontAwesomeIcon.Solid_Database, "Справочники",LoadDataPage),
                 new(EFontAwesomeIcon.Solid_BusinessTime, "Сообщество", LoadCommunityPage),
                 new(EFontAwesomeIcon.Solid_Hashtag, "Загрузить схему", LoadSchemePage),
             };
-        }
 
+        /// <summary>
+        /// Загрузка страницы работы с изображением
+        /// </summary>
+        /// <param name="parameter">Параметр для команды</param>
         private void LoadImagePage(object? parameter) { }
-        private void LoadMaterialPage(object? parameter) { }
+
+        /// <summary>
+        /// Загрузка страницы работы со справочниками
+        /// </summary>
+        /// <param name="parameter">Параметр для команды</param>
+        private void LoadDataPage(object? parameter) => _applicationViewModel.GoToPage(ApplicationPage.DataStore);
+
+        /// <summary>
+        /// Загрузка страницы работы с сообществом
+        /// </summary>
+        /// <param name="parameter">Параметр для команды</param>
         private void LoadCommunityPage(object? parameter) { }
+
+        /// <summary>
+        /// Загрузка страницы работы со схемами
+        /// </summary>
+        /// <param name="parameter">Параметр для команды</param>
         private void LoadSchemePage(object? parameter) { }
 
         #endregion
