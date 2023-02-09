@@ -16,6 +16,7 @@ namespace StripeCreator.WPF
         {
             services.AddTransient<IUiManager, DialogUiManager>();
             services.AddTransient<ClientService>();
+            services.AddTransient<ThreadService>();
             return services;
         }
     }

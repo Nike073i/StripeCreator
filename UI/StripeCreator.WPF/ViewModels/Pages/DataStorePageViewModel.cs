@@ -42,6 +42,11 @@ namespace StripeCreator.WPF
         /// </summary>
         private readonly ClientService _clientService;
 
+        /// <summary>
+        /// Сервис работы с нитями
+        /// </summary>
+        private readonly ThreadService _threadService;
+
         #endregion
 
         /// <summary>
@@ -67,6 +72,16 @@ namespace StripeCreator.WPF
         /// Выбранная в списке сущность
         /// </summary>
         public IEntityViewModel? SelectedEntity { get; set; }
+
+        public IDataService? DataService
+        {
+            get => _dataService;
+            set
+            {
+                _dataService = value;
+                RefreshCommand.Execute(null);
+            }
+        }
 
         #region Commands
 
@@ -128,11 +143,12 @@ namespace StripeCreator.WPF
         /// </summary>
         /// <param name="applicationViewModel">ViewModel приложения</param>
         /// <param name="uiManager">Менеджер интерактивного взаимодействия</param>
-        public DataStorePageViewModel(ApplicationViewModel applicationViewModel, IUiManager uiManager, ClientService clientService)
+        public DataStorePageViewModel(ApplicationViewModel applicationViewModel, IUiManager uiManager, ClientService clientService, ThreadService threadService)
         {
             _applicationViewModel = applicationViewModel;
             _uiManager = uiManager;
             _clientService = clientService;
+            _threadService = threadService;
             ActionMenuViewModel = new(_header, GetSideMenuItems());
 
             // Инициализация команд
@@ -170,23 +186,19 @@ namespace StripeCreator.WPF
         /// Показать список хранимых нитей
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private void ShowThreadStore(object? parameter) => _applicationViewModel.GoToPage(ApplicationPage.Welcome);
+        private void ShowThreadStore(object? parameter) => DataService = _threadService;
 
         /// <summary>
         /// Показать список хранимых тканей
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private void ShowClothStore(object? parameter) { }
+        private void ShowClothStore(object? parameter) => _applicationViewModel.GoToPage(ApplicationPage.Welcome);
 
         /// <summary>
         /// Показать список хранимых нитей
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private void ShowClientStore(object? parameter)
-        {
-            _dataService = _clientService;
-            RefreshCommand.Execute(parameter);
-        }
+        private void ShowClientStore(object? parameter) => DataService = _clientService;
 
         /// <summary>
         /// Добавить новую хранимую сущность
