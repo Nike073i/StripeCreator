@@ -11,6 +11,7 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.32" />
 	<PackageReference Include="FontAwesome5" Version="2.1.6" />
     <PackageReference Include="PropertyChanged.Fody" Version="4.0.1" />
+	<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.2" />
   </ItemGroup>
 
   <ItemGroup>
