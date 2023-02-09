@@ -10,8 +10,8 @@ namespace StripeCreator.WPF
         /// <summary>
         /// Метод расширения для регистрации view-model в IoC
         /// </summary>
-        /// <param name="services"></param>
-        /// <returns></returns>
+        /// <param name="services">Коллекция сервисов</param>
+        /// <returns>Коллекция сервисов</returns>
         public static IServiceCollection AddViewModel(this IServiceCollection services)
         {
             services.AddSingleton<ApplicationViewModel>();
