@@ -14,11 +14,6 @@
         /// </summary>
         public string Message { get; set; }
 
-        /// <summary>
-        /// Текст кнопки подтверждения
-        /// </summary>
-        public string OkText { get; set; }
-
         #endregion
 
         #region Constructors
@@ -28,12 +23,10 @@
         /// </summary>
         /// <param name="title">Заголовок окна</param>
         /// <param name="message">Сообщение для отображения</param>
-        /// <param name="okText">Текст кнопки подтверждения</param>
-        public MessageBoxDialogViewModel(string title, string message, string okText = "Да")
+        public MessageBoxDialogViewModel(string title, string message)
         {
             Title = title;
             Message = message;
-            OkText = okText;
         }
 
         #endregion

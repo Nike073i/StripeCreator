@@ -14,6 +14,7 @@ namespace StripeCreator.WPF
         /// <returns>Коллекция сервисов</returns>
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
+            services.AddTransient<IUiManager, DialogUiManager>();
             services.AddTransient<ClientService>();
             return services;
         }

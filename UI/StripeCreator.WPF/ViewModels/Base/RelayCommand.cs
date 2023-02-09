@@ -32,7 +32,7 @@ namespace StripeCreator.WPF
         public RelayCommand(Action<object?> executeAction, Func<object?, bool>? canExecute = null)
         {
             _executeAction = executeAction;
-            _canExecute = canExecute;
+            _canExecute = canExecute ?? new((_) => true);
         }
 
         #endregion
@@ -41,9 +41,13 @@ namespace StripeCreator.WPF
 
         public event EventHandler? CanExecuteChanged = (sender, e) => { };
 
-        public bool CanExecute(object? parameter) => _canExecute is null || _canExecute(parameter);
+        public bool CanExecute(object? parameter) => _canExecute is not null && _canExecute(parameter);
 
-        public void Execute(object? parameter) => _executeAction(parameter);
+        public void Execute(object? parameter)
+        {
+            if (CanExecute(parameter))
+                _executeAction(parameter);
+        }
 
         #endregion
     }

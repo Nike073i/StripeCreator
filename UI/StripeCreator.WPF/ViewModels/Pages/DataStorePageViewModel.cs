@@ -1,4 +1,6 @@
 ﻿using FontAwesome5;
+using PropertyChanged;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -11,6 +13,12 @@ namespace StripeCreator.WPF
     /// </summary>
     public class DataStorePageViewModel : BaseViewModel
     {
+        #region Constants
+
+        private const string NonSelectedEntityError = "Не выбранна сущность для взаимодействия";
+
+        #endregion
+
         #region Private fields
 
         /// <summary>
@@ -27,6 +35,11 @@ namespace StripeCreator.WPF
         /// Сервис работы с ViewModel доменных сущностей
         /// </summary>
         private IDataService _dataService;
+
+        /// <summary>
+        /// Менеджер интерактивного взаимодействия
+        /// </summary>
+        private readonly IUiManager _uiManager;
 
         #endregion
 
@@ -86,15 +99,17 @@ namespace StripeCreator.WPF
         /// Конструктор с полной инициализацией
         /// </summary>
         /// <param name="applicationViewModel">ViewModel приложения</param>
-        public DataStorePageViewModel(ApplicationViewModel applicationViewModel)
+        /// <param name="uiManager">Менеджер интерактивного взаимодействия</param>
+        public DataStorePageViewModel(ApplicationViewModel applicationViewModel, IUiManager uiManager, ClientService clientService)
         {
             _applicationViewModel = applicationViewModel;
+            _uiManager = uiManager;
             ActionMenuViewModel = new(_header, GetSideMenuItems());
 
             // Инициализация команд
             AddCommand = new RelayCommand(async param => await OnExecutedAddCommand(param));
-            EditCommand = new RelayCommand(async param => await OnExecutedEditCommand(param));
-            RemoveCommand = new RelayCommand(async param => await OnExecutedRemoveCommand(param));
+            EditCommand = new RelayCommand(async param => await OnExecutedEditCommand(param), CanExecuteEditCommand);
+            RemoveCommand = new RelayCommand(async param => await OnExecutedRemoveCommand(param), CanExecuteRemoveCommand);
             RefreshCommand = new RelayCommand(async param => await OnExecutedRefreshCommand(param));
 
             //Инициализация сервиса
@@ -134,25 +149,56 @@ namespace StripeCreator.WPF
         /// Добавить новую хранимую сущность
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private async Task OnExecutedAddCommand(object? parameter) { }
+        private async Task OnExecutedAddCommand(object? parameter)
+        {
+            // TODO: Логика создания новой сущности
+        }
 
         /// <summary>
         /// Редактировать выбранную хранимую сущность
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private async Task OnExecutedEditCommand(object? parameter) { }
+        private async Task OnExecutedEditCommand(object? parameter)
+        {
+            // TODO: Логика редактирования...
+        }
+
+        /// <summary>
+        /// Проверка вызова команды редактирования
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        private bool CanExecuteEditCommand(object? parameter) => _dataService != null && SelectedEntity != null;
 
         /// <summary>
         /// Удалить выбранную хранимую сущность
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private async Task OnExecutedRemoveCommand(object? parameter) { }
+        private async Task OnExecutedRemoveCommand(object? parameter)
+        {
+            if (SelectedEntity is null)
+                throw new InvalidOperationException(NonSelectedEntityError);
+            var removeId = _dataService.RemoveAsync(SelectedEntity);
+            await _uiManager.ShowInfo(new MessageBoxDialogViewModel("Удалено успешно", $"Удалена сущность с Id {removeId}"));
+            Entities?.Remove(SelectedEntity);
+        }
+
+        /// <summary>
+        /// Проверка вызова команды удаления
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        private bool CanExecuteRemoveCommand(object? parameter) => _dataService != null && SelectedEntity != null;
 
         /// <summary>
         /// Обновить список хранимых сущностей
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private async Task OnExecutedRefreshCommand(object? parameter) { }
+        private async Task OnExecutedRefreshCommand(object? parameter)
+        {
+            var data = await _dataService.GetAllAsync();
+            Entities = new ObservableCollection<IEntityViewModel>(data);
+        }
 
         #endregion
     }
