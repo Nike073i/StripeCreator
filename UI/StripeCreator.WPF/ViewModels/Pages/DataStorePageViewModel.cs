@@ -82,6 +82,11 @@ namespace StripeCreator.WPF
         /// </summary>
         public ICommand RefreshCommand { get; }
 
+        /// <summary>
+        /// Предикат для команд управления сущностью
+        /// </summary>
+        public bool ManagementEnabled => _dataService != null && SelectedEntity != null;
+
         #endregion
 
         #endregion
@@ -169,7 +174,7 @@ namespace StripeCreator.WPF
         /// </summary>
         /// <param name="parameter"></param>
         /// <returns></returns>
-        private bool CanExecuteEditCommand(object? parameter) => _dataService != null && SelectedEntity != null;
+        private bool CanExecuteEditCommand(object? parameter) => ManagementEnabled;
 
         /// <summary>
         /// Удалить выбранную хранимую сущность
@@ -189,7 +194,7 @@ namespace StripeCreator.WPF
         /// </summary>
         /// <param name="parameter"></param>
         /// <returns></returns>
-        private bool CanExecuteRemoveCommand(object? parameter) => _dataService != null && SelectedEntity != null;
+        private bool CanExecuteRemoveCommand(object? parameter) => ManagementEnabled;
 
         /// <summary>
         /// Обновить список хранимых сущностей
