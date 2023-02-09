@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using StripeCreator.Business.Repositories;
 using StripeCreator.DAL.Repositories;
+using StripeCreator.Stripe.Repositories;
 
 namespace StripeCreator.WPF
 {
@@ -17,6 +18,7 @@ namespace StripeCreator.WPF
         public static IServiceCollection AddDbRepository(this IServiceCollection services)
         {
             services.AddTransient<IClientRepository, DbClientRepository>();
+            services.AddTransient<IThreadRepository, DbThreadRepository>();
             return services;
         }
     }
