@@ -1,4 +1,5 @@
 ﻿using StripeCreator.Core.Models;
+using System;
 
 namespace StripeCreator.WPF
 {
@@ -8,12 +9,12 @@ namespace StripeCreator.WPF
     /// <typeparam name="TEntity">Тип доменной сущности</typeparam>
     public abstract class EntityViewModel<TEntity> : IEntityViewModel where TEntity : Entity
     {
-        #region Protected fields
+        #region Public properties
 
         /// <summary>
         /// Доменная модель сущности
         /// </summary>
-        protected TEntity Entity { get; }
+        public TEntity Entity { get; }
 
         #endregion
 
@@ -33,6 +34,8 @@ namespace StripeCreator.WPF
         #region Interface implementations 
 
         public abstract EntityInfoViewModel GetData { get; }
+
+        public Guid? GetEntityId() => Entity.Id;
 
         #endregion
     }

@@ -1,4 +1,6 @@
-﻿namespace StripeCreator.WPF
+﻿using System;
+
+namespace StripeCreator.WPF
 {
     /// <summary>
     /// Интерфейс ViewModel сущности
@@ -9,5 +11,11 @@
         /// Получение информации сущности
         /// </summary>
         EntityInfoViewModel GetData { get; }
+
+        /// <summary>
+        /// Получение идентификатора сущности
+        /// </summary>
+        /// <returns>Идентификатор сущности</returns>
+        Guid? GetEntityId();
     }
 }

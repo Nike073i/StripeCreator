@@ -1,4 +1,5 @@
 ﻿using StripeCreator.Business.Models;
+using System.Collections.Generic;
 
 namespace StripeCreator.WPF
 {
@@ -23,8 +24,18 @@ namespace StripeCreator.WPF
         {
             get
             {
-                // TODO : РЕАЛИЗОВАТЬ МЕТОД
-                throw new System.Exception();
+                var data = new List<EntityInfoValueViewModel>();
+
+                var personData = Entity.PersonData;
+                data.Add(new("Имя", personData.FirstName));
+                data.Add(new("Фамилия", personData.SecondName));
+
+                var contactData = Entity.ContactData;
+                data.Add(new("Н.тел.", contactData.ContactNumber));
+                data.Add(new("Почта", contactData.Email));
+                data.Add(new("Иное", contactData.Other ?? "Отсутствует"));
+
+                return new EntityInfoViewModel(data);
             }
         }
 
