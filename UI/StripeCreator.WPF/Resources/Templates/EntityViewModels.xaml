@@ -1,0 +1,16 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:StripeCreator.WPF">
+    <DataTemplate DataType="{x:Type local:ClientViewModel}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Style ="{StaticResource ListItemTextBlock}" Grid.Row="0" 
+                       FontWeight="Bold" Text="{Binding Entity.PersonData.SecondName}"/>
+            <TextBlock Style ="{StaticResource ListItemTextBlock}" Grid.Row="1" 
+                       Text="{Binding Entity.ContactData.ContactNumber}"/>
+        </Grid>
+    </DataTemplate>
+</ResourceDictionary>

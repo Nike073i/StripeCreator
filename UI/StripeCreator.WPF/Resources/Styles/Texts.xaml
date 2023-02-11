@@ -5,4 +5,9 @@
         <Setter Property="FontSize" Value="{StaticResource FontSizeLarge}"/>
         <Setter Property="Foreground" Value="{StaticResource BrightColorBrush}"/>
     </Style>
+    <Style TargetType="{x:Type TextBlock}" 
+           x:Key="ListItemTextBlock" BasedOn="{StaticResource BaseTextBlockStyle}">
+        <Setter Property="Padding" Value="3"/>
+        <Setter Property="Foreground" Value="{StaticResource LightDarkColorBrush}"/>
+    </Style>
 </ResourceDictionary>
