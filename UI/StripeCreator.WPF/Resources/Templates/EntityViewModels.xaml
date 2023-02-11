@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:StripeCreator.WPF">
+    <!-- Клиент -->
     <DataTemplate DataType="{x:Type local:ClientViewModel}">
         <Grid>
             <Grid.RowDefinitions>
@@ -12,10 +13,27 @@
             </Grid.Resources>
             <TextBlock Grid.Row="0" 
                        FontWeight="Bold" Text="{Binding Entity.PersonData.SecondName}"/>
-            <TextBlock Grid.Row="1" 
-                       Text="{Binding Entity.ContactData.ContactNumber}"/>
+            <TextBlock Grid.Row="1" Text="{Binding Entity.ContactData.ContactNumber}"/>
         </Grid>
     </DataTemplate>
+
+    <!-- Продукт -->
+    <DataTemplate DataType="{x:Type local:ProductViewModel}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.Resources>
+                <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource ListItemTextBlock}"/>
+            </Grid.Resources>
+            <TextBlock Grid.Column="0" 
+                       FontWeight="Bold" Text="{Binding Entity.Name}"/>
+            <TextBlock Grid.Column="1" Text="{Binding Entity.Price}"/>
+        </Grid>
+    </DataTemplate>
+
+    <!-- Нить -->
     <DataTemplate DataType="{x:Type local:ThreadViewModel}">
         <Grid>
             <Grid.RowDefinitions>
@@ -33,6 +51,8 @@
             </StackPanel>
         </Grid>
     </DataTemplate>
+
+    <!-- Ткань -->
     <DataTemplate DataType="{x:Type local:ClothViewModel}">
         <Grid>
             <Grid.RowDefinitions>

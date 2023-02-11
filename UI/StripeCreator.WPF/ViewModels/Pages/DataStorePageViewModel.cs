@@ -52,6 +52,11 @@ namespace StripeCreator.WPF
         /// </summary>
         private readonly ClothService _clothService;
 
+        /// <summary>
+        /// Сервис работы с продуктами
+        /// </summary>
+        private readonly ProductService _productService;
+
         #endregion
 
         /// <summary>
@@ -154,13 +159,16 @@ namespace StripeCreator.WPF
         /// </summary>
         /// <param name="applicationViewModel">ViewModel приложения</param>
         /// <param name="uiManager">Менеджер интерактивного взаимодействия</param>
-        public DataStorePageViewModel(ApplicationViewModel applicationViewModel, IUiManager uiManager, ClientService clientService, ThreadService threadService, ClothService clothService)
+        public DataStorePageViewModel(ApplicationViewModel applicationViewModel, IUiManager uiManager, 
+            ClientService clientService, ThreadService threadService, ClothService clothService, ProductService productService)
         {
             _applicationViewModel = applicationViewModel;
             _uiManager = uiManager;
             _clientService = clientService;
             _threadService = threadService;
             _clothService = clothService;
+            _productService = productService;
+            
             ActionMenuViewModel = new(_header, GetSideMenuItems());
 
             // Инициализация команд
@@ -189,6 +197,7 @@ namespace StripeCreator.WPF
                 new(EFontAwesomeIcon.Solid_Bars, "Нитки", ShowThreadStore),
                 new(EFontAwesomeIcon.Solid_CropAlt, "Ткани", ShowClothStore),
                 new(EFontAwesomeIcon.Solid_Users, "Клиенты", ShowClientStore),
+                new(EFontAwesomeIcon.Brands_Slack, "Продукты", ShowProductStore),
             };
         }
 
@@ -211,6 +220,12 @@ namespace StripeCreator.WPF
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
         private void ShowClientStore(object? parameter) => DataService = _clientService;
+
+        /// <summary>
+        /// Показать список хранимых продуктов
+        /// </summary>
+        /// <param name="parameter">Параметр команды</param>
+        private void ShowProductStore(object? parameter) => DataService = _productService;
 
         /// <summary>
         /// Добавить новую хранимую сущность

@@ -18,6 +18,7 @@ namespace StripeCreator.WPF
         public static IServiceCollection AddDbRepository(this IServiceCollection services)
         {
             services.AddTransient<IClientRepository, DbClientRepository>();
+            services.AddTransient<IProductRepository, DbProductRepository>();
             services.AddTransient<IThreadRepository, DbThreadRepository>();
             services.AddTransient<IClothRepository, DbClothRepository>();
             return services;
