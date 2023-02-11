@@ -7,10 +7,47 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <TextBlock Style ="{StaticResource ListItemTextBlock}" Grid.Row="0" 
+            <Grid.Resources>
+                <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource ListItemTextBlock}"/>
+            </Grid.Resources>
+            <TextBlock Grid.Row="0" 
                        FontWeight="Bold" Text="{Binding Entity.PersonData.SecondName}"/>
-            <TextBlock Style ="{StaticResource ListItemTextBlock}" Grid.Row="1" 
+            <TextBlock Grid.Row="1" 
                        Text="{Binding Entity.ContactData.ContactNumber}"/>
+        </Grid>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type local:ThreadViewModel}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.Resources>
+                <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource ListItemTextBlock}"/>
+            </Grid.Resources>
+            <TextBlock Grid.Row="0" 
+                       FontWeight="Bold" Text="{Binding Entity.Name}"/>
+            <StackPanel Orientation="Horizontal" Grid.Row="1">
+                <TextBlock Text="{Binding Entity.Manufacturer}"/>                
+                <TextBlock Text="{Binding Entity.Type}"/>
+            </StackPanel>
+        </Grid>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type local:ClothViewModel}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.Resources>
+                <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource ListItemTextBlock}"/>
+            </Grid.Resources>
+            <TextBlock Grid.Row="0" 
+                       FontWeight="Bold" Text="{Binding Entity.Name}"/>
+            <StackPanel Orientation="Horizontal" Grid.Row="1">
+                <TextBlock Text="{Binding Entity.Manufacturer}"/>
+                <TextBlock Text="{Binding Entity.Type}"/>
+            </StackPanel>
         </Grid>
     </DataTemplate>
 </ResourceDictionary>

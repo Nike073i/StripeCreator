@@ -14,7 +14,7 @@ namespace StripeCreator.WPF
         /// <summary>
         /// Конструктор с полной инициализацией
         /// </summary>
-        /// <param name="repository"></param>
+        /// <param name="repository">Репозиторий сущности</param>
         public ThreadService(IThreadRepository repository) : base(repository) { }
 
         #endregion

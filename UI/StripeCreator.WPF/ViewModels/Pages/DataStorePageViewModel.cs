@@ -47,6 +47,11 @@ namespace StripeCreator.WPF
         /// </summary>
         private readonly ThreadService _threadService;
 
+        /// <summary>
+        /// Сервис работы с тканями
+        /// </summary>
+        private readonly ClothService _clothService;
+
         #endregion
 
         /// <summary>
@@ -120,10 +125,16 @@ namespace StripeCreator.WPF
         /// </summary>
         public ICommand RefreshCommand { get; }
 
+
         /// <summary>
-        /// Предикат для команд управления сущностью
+        /// Предикат для команд обращения к сервису
         /// </summary>
-        public bool ManagementEnabled => _dataService != null && SelectedEntity != null;
+        public bool ServiceAvailable => _dataService != null;
+
+        /// <summary>
+        /// Предикат для команд изменений сущности
+        /// </summary>
+        public bool EditingEnabled => ServiceAvailable && SelectedEntity != null;
 
         #endregion
 
@@ -143,12 +154,13 @@ namespace StripeCreator.WPF
         /// </summary>
         /// <param name="applicationViewModel">ViewModel приложения</param>
         /// <param name="uiManager">Менеджер интерактивного взаимодействия</param>
-        public DataStorePageViewModel(ApplicationViewModel applicationViewModel, IUiManager uiManager, ClientService clientService, ThreadService threadService)
+        public DataStorePageViewModel(ApplicationViewModel applicationViewModel, IUiManager uiManager, ClientService clientService, ThreadService threadService, ClothService clothService)
         {
             _applicationViewModel = applicationViewModel;
             _uiManager = uiManager;
             _clientService = clientService;
             _threadService = threadService;
+            _clothService = clothService;
             ActionMenuViewModel = new(_header, GetSideMenuItems());
 
             // Инициализация команд
@@ -192,7 +204,7 @@ namespace StripeCreator.WPF
         /// Показать список хранимых тканей
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private void ShowClothStore(object? parameter) => _applicationViewModel.GoToPage(ApplicationPage.Welcome);
+        private void ShowClothStore(object? parameter) => DataService = _clothService;
 
         /// <summary>
         /// Показать список хранимых нитей
@@ -214,7 +226,7 @@ namespace StripeCreator.WPF
         /// </summary>
         /// <param name="parameter"></param>
         /// <returns></returns>
-        private bool CanExecuteAddCommand(object? parameter) => _dataService != null;
+        private bool CanExecuteAddCommand(object? parameter) => ServiceAvailable;
 
         /// <summary>
         /// Редактировать выбранную хранимую сущность
@@ -230,7 +242,7 @@ namespace StripeCreator.WPF
         /// </summary>
         /// <param name="parameter"></param>
         /// <returns></returns>
-        private bool CanExecuteEditCommand(object? parameter) => ManagementEnabled;
+        private bool CanExecuteEditCommand(object? parameter) => EditingEnabled;
 
         /// <summary>
         /// Удалить выбранную хранимую сущность
@@ -250,7 +262,7 @@ namespace StripeCreator.WPF
         /// </summary>
         /// <param name="parameter"></param>
         /// <returns></returns>
-        private bool CanExecuteRemoveCommand(object? parameter) => ManagementEnabled;
+        private bool CanExecuteRemoveCommand(object? parameter) => EditingEnabled;
 
         /// <summary>
         /// Обновить список хранимых сущностей
@@ -267,7 +279,7 @@ namespace StripeCreator.WPF
         /// </summary>
         /// <param name="parameter"></param>
         /// <returns></returns>
-        private bool CanExecuteRefreshCommand(object? parameter) => _dataService != null;
+        private bool CanExecuteRefreshCommand(object? parameter) => ServiceAvailable;
 
         #endregion
 
