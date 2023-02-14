@@ -24,43 +24,48 @@
         </Grid.RowDefinitions>
         <Grid.Resources>
             <!-- Стиль для названия полей-->
-            <Style TargetType="TextBlock" BasedOn="{StaticResource GridDataTitleTextBlock}"/>
+            <Style x:Key="Title" TargetType="TextBlock" BasedOn="{StaticResource GridDataTitleTextBlock}"/>
             <!-- Стиль для значения полей-->
             <Style TargetType="TextBox" BasedOn="{StaticResource GridDataTextBox}"/>
+            <Style TargetType="{x:Type xceed:DecimalUpDown}" BasedOn="{StaticResource GridDataDecimalUpDown}"/>
+            <Style TargetType="{x:Type xceed:IntegerUpDown}" BasedOn="{StaticResource GridDataIntegerUpDown}"/>
+            <Style TargetType="{x:Type xceed:ColorPicker}" BasedOn="{StaticResource GridDataColorPicker}"/>
+            <Style TargetType="ComboBox" BasedOn="{StaticResource ComboBoxBase}"/>
+
         </Grid.Resources>
 
         <!-- Название -->
-        <TextBlock Text="Название"
+        <TextBlock Text="Название" Style="{StaticResource Title}"
                    Grid.Column="0" Grid.Row="0"/>
         <TextBox Text="{Binding Name}"
                  Grid.Column="1" Grid.Row="0"/>
 
         <!-- Производитель -->
-        <TextBlock Text="Производитель"
+        <TextBlock Text="Производитель" Style="{StaticResource Title}"
                    Grid.Column="0" Grid.Row="1"/>
         <TextBox Text="{Binding Manufacturer}"
                  Grid.Column="1" Grid.Row="1"/>
 
         <!-- Стоимость -->
-        <TextBlock Text="Стоимость"
+        <TextBlock Text="Стоимость" Style="{StaticResource Title}"
                    Grid.Column="0" Grid.Row="2"/>
         <xceed:DecimalUpDown Value="{Binding Price}"
-                 Grid.Column="1" Grid.Row="2"/>
+                 Grid.Column="1" Grid.Row="2" />
 
         <!-- Цвет -->
-        <TextBlock Text="Код цвета"
+        <TextBlock Text="Код цвета" Style="{StaticResource Title}"
                    Grid.Column="0" Grid.Row="3"/>
         <xceed:ColorPicker SelectedColor="{Binding ColorHex}"
                  Grid.Column="1" Grid.Row="3"/>
 
         <!-- Каунт -->
-        <TextBlock Text="Каунт"
+        <TextBlock Text="Каунт" Style="{StaticResource Title}"
                    Grid.Column="0" Grid.Row="4"/>
         <xceed:IntegerUpDown Value="{Binding Count}"
                  Grid.Column="1" Grid.Row="4"/>
 
         <!-- Тип -->
-        <TextBlock Text="Тип"
+        <TextBlock Text="Тип" Style="{StaticResource Title}"
                    Grid.Column="0" Grid.Row="5"/>
         <ComboBox SelectedItem="{Binding Type}" ItemsSource="{Binding Types}"
                  Grid.Column="1" Grid.Row="5"/>

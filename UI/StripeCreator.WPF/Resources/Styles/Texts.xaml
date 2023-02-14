@@ -22,14 +22,18 @@
     </Style>
 
     <!-- Стиль для значения полей-->
-    <Style TargetType="TextBox" BasedOn="{StaticResource BaseStyle}"
-           x:Key="GridDataTextBox">
-        <Setter Property="HorizontalAlignment" Value="Stretch"/>
-        <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="Foreground" Value="{StaticResource RegularColorBrush}"/>
-        <Setter Property="Background" Value="Transparent"/>
+    <Style x:Key="GridDataControl" TargetType="Control" BasedOn="{StaticResource BaseStyle}">
         <Setter Property="BorderBrush" Value="{StaticResource RegularColorBrush}"/>
         <Setter Property="BorderThickness" Value="0 0 0 1"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{StaticResource RegularColorBrush}"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Стиль для текстовых полей-->
+    <Style TargetType="TextBox" BasedOn="{StaticResource GridDataControl}"
+           x:Key="GridDataTextBox">
         <Setter Property="TextWrapping" Value="Wrap"/>
     </Style>
 </ResourceDictionary>
