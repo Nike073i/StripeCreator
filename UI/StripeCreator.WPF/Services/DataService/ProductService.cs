@@ -30,10 +30,8 @@ namespace StripeCreator.WPF
             return productViewModel.Entity;
         }
 
-        public override EntityFormationViewModel CreateFormationViewModel(IEntityViewModel? entity = null)
-        {
-            throw new NotImplementedException();
-        }
+        public override EntityFormationViewModel CreateFormationViewModel(IEntityViewModel? entity = null) =>
+            entity == null ? new ProductFormationViewModel() : new ProductFormationViewModel(GetEntityFromViewModel(entity));
 
         #endregion
     }

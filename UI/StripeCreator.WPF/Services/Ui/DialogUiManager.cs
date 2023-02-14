@@ -89,6 +89,10 @@ namespace StripeCreator.WPF
                     formationView = new ThreadFormationView(thread);
                     title = "Формирование нити";
                     break;
+                case ProductFormationViewModel product:
+                    formationView = new ProductFormationView(product);
+                    title = "Формирование продукта";
+                    break;
                 default:
                     throw new ArgumentException("Формирование данной сущности не поддерживается");
             }
