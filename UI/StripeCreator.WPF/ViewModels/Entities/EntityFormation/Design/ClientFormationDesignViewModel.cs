@@ -1,7 +1,7 @@
 ﻿namespace StripeCreator.WPF
 {
     /// <summary>
-    /// Класс view-model представления формирования сущности для design-mode
+    /// Класс view-model представления формирования сущности клиента для design-mode
     /// </summary>
     public class ClientFormationDesignViewModel : ClientFormationViewModel
     {

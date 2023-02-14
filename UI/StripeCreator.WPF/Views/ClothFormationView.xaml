@@ -1,0 +1,68 @@
+﻿<local:BasePage x:Class="StripeCreator.WPF.ClothFormationView"
+             x:TypeArguments="local:ClothFormationViewModel" 
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:xceed="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:StripeCreator.WPF"
+             mc:Ignorable="d" 
+             d:DataContext="{x:Static local:ClothFormationDesignViewModel.Instance}">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Grid.Resources>
+            <!-- Стиль для названия полей-->
+            <Style TargetType="TextBlock" BasedOn="{StaticResource GridDataTitleTextBlock}"/>
+            <!-- Стиль для значения полей-->
+            <Style TargetType="TextBox" BasedOn="{StaticResource GridDataTextBox}"/>
+        </Grid.Resources>
+
+        <!-- Название -->
+        <TextBlock Text="Название"
+                   Grid.Column="0" Grid.Row="0"/>
+        <TextBox Text="{Binding Name}"
+                 Grid.Column="1" Grid.Row="0"/>
+
+        <!-- Производитель -->
+        <TextBlock Text="Производитель"
+                   Grid.Column="0" Grid.Row="1"/>
+        <TextBox Text="{Binding Manufacturer}"
+                 Grid.Column="1" Grid.Row="1"/>
+
+        <!-- Стоимость -->
+        <TextBlock Text="Стоимость"
+                   Grid.Column="0" Grid.Row="2"/>
+        <xceed:DecimalUpDown Value="{Binding Price}"
+                 Grid.Column="1" Grid.Row="2"/>
+
+        <!-- Цвет -->
+        <TextBlock Text="Код цвета"
+                   Grid.Column="0" Grid.Row="3"/>
+        <xceed:ColorPicker SelectedColor="{Binding ColorHex}"
+                 Grid.Column="1" Grid.Row="3"/>
+
+        <!-- Каунт -->
+        <TextBlock Text="Каунт"
+                   Grid.Column="0" Grid.Row="4"/>
+        <xceed:IntegerUpDown Value="{Binding Count}"
+                 Grid.Column="1" Grid.Row="4"/>
+
+        <!-- Тип -->
+        <TextBlock Text="Тип"
+                   Grid.Column="0" Grid.Row="5"/>
+        <ComboBox SelectedItem="{Binding Type}" ItemsSource="{Binding Types}"
+                 Grid.Column="1" Grid.Row="5"/>
+    </Grid>
+</local:BasePage>
