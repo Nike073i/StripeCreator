@@ -80,6 +80,8 @@ namespace StripeCreator.WPF
             }
         }
 
+        public abstract EntityFormationViewModel CreateFormationViewModel(IEntityViewModel? entity = null);
+
         #endregion
 
         #region Abstract methods

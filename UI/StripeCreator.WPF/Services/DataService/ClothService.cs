@@ -30,6 +30,11 @@ namespace StripeCreator.WPF
             return clothViewModel.Entity;
         }
 
+        public override EntityFormationViewModel CreateFormationViewModel(IEntityViewModel? entity = null)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
     }
 }

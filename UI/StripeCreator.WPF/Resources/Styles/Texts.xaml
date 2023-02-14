@@ -10,4 +10,26 @@
         <Setter Property="Padding" Value="3"/>
         <Setter Property="Foreground" Value="{StaticResource LightDarkColorBrush}"/>
     </Style>
+
+    <!-- Стиль для названия полей в данных сущности -->
+    <Style TargetType="TextBlock" BasedOn="{StaticResource BaseTextBlockStyle}"
+           x:Key="GridDataTitleTextBlock">
+        <Setter Property="Margin" Value="10 5"/>
+        <Setter Property="HorizontalAlignment" Value="Right"/>
+        <Setter Property="VerticalAlignment" Value="Top"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Foreground" Value="{StaticResource BrightColorBrush}"/>
+    </Style>
+
+    <!-- Стиль для значения полей-->
+    <Style TargetType="TextBox" BasedOn="{StaticResource BaseStyle}"
+           x:Key="GridDataTextBox">
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Foreground" Value="{StaticResource RegularColorBrush}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="{StaticResource RegularColorBrush}"/>
+        <Setter Property="BorderThickness" Value="0 0 0 1"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+    </Style>
 </ResourceDictionary>

@@ -25,5 +25,12 @@ namespace StripeCreator.WPF
         /// <param name="viewModel">ViewModel сообщения</param>
         /// <returns>Выбор пользователя</returns>
         Task<bool> ShowConfirm(MessageBoxDialogViewModel viewModel);
+
+        /// <summary>
+        /// Отобразить окно формирования сущности
+        /// </summary>
+        /// <param name="entity">ViewModel сформированной сущности, если формирование прошло успешно
+        /// null - если формирование отмененно</param>
+        Task<IEntityViewModel?> FormationEntity(EntityFormationViewModel entityFormationViewModel);
     }
 }

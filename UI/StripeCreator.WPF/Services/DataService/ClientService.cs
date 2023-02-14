@@ -30,6 +30,9 @@ namespace StripeCreator.WPF
             return clientViewModel.Entity;
         }
 
+        public override EntityFormationViewModel CreateFormationViewModel(IEntityViewModel? entity = null) =>
+            entity == null ? new ClientFormationViewModel() : new ClientFormationViewModel(GetEntityFromViewModel(entity));
+
         #endregion
     }
 }

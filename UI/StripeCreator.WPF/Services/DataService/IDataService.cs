@@ -28,5 +28,12 @@ namespace StripeCreator.WPF
         /// <param name="entity">ViewMOdel удаляемой сущности</param>
         /// <returns>Идентификатор удаленной сущности</returns>
         Task<Guid> RemoveAsync(IEntityViewModel entity);
+
+        /// <summary>
+        /// Создание модели формирования сущности
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns>Модель формирования сущности</returns>
+        EntityFormationViewModel CreateFormationViewModel(IEntityViewModel? entity = null);
     }
 }

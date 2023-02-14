@@ -111,6 +111,11 @@ namespace StripeCreator.WPF
         public ICommand ShowClientStoreCommand { get; }
 
         /// <summary>
+        /// Показать список хранимой продукции
+        /// </summary>
+        public ICommand ShowProductStoreCommand { get; }
+
+        /// <summary>
         /// Команда добавления новой сущности
         /// </summary>
         public ICommand AddCommand { get; }
@@ -159,7 +164,7 @@ namespace StripeCreator.WPF
         /// </summary>
         /// <param name="applicationViewModel">ViewModel приложения</param>
         /// <param name="uiManager">Менеджер интерактивного взаимодействия</param>
-        public DataStorePageViewModel(ApplicationViewModel applicationViewModel, IUiManager uiManager, 
+        public DataStorePageViewModel(ApplicationViewModel applicationViewModel, IUiManager uiManager,
             ClientService clientService, ThreadService threadService, ClothService clothService, ProductService productService)
         {
             _applicationViewModel = applicationViewModel;
@@ -168,13 +173,14 @@ namespace StripeCreator.WPF
             _threadService = threadService;
             _clothService = clothService;
             _productService = productService;
-            
+
             ActionMenuViewModel = new(_header, GetSideMenuItems());
 
             // Инициализация команд
             ShowThreadStoreCommand = new RelayCommand(ShowThreadStore);
             ShowClothStoreCommand = new RelayCommand(ShowClothStore);
             ShowClientStoreCommand = new RelayCommand(ShowClientStore);
+            ShowProductStoreCommand = new RelayCommand(ShowProductStore);
 
             AddCommand = new RelayCommand(async param => await OnExecutedAddCommand(param)) { CanExecutePredicate = CanExecuteAddCommand };
             EditCommand = new RelayCommand(async param => await OnExecutedEditCommand(param)) { CanExecutePredicate = CanExecuteEditCommand };
@@ -233,7 +239,15 @@ namespace StripeCreator.WPF
         /// <param name="parameter">Параметр команды</param>
         private async Task OnExecutedAddCommand(object? parameter)
         {
-            // TODO: Логика создания новой сущности
+            var formationViewModel = DataService!.CreateFormationViewModel();
+            var formationData = await _uiManager.FormationEntity(formationViewModel);
+            if (formationData == null)
+            {
+                await _uiManager.ShowInfo(new("Отмена", "Создание записи отменено"));
+                return;
+            }
+            var newEntity = await DataService.SaveAsync(formationData);
+            Entities?.Add(newEntity);
         }
 
         /// <summary>
@@ -249,7 +263,17 @@ namespace StripeCreator.WPF
         /// <param name="parameter">Параметр команды</param>
         private async Task OnExecutedEditCommand(object? parameter)
         {
-            // TODO: Логика редактирования...
+            if (Entities is null || SelectedEntity is null)
+                throw new InvalidOperationException(NonSelectedEntityError);
+            var formationViewModel = DataService!.CreateFormationViewModel(SelectedEntity);
+            var changedEntity = await _uiManager.FormationEntity(formationViewModel);
+            if (changedEntity == null)
+            {
+                await _uiManager.ShowInfo(new("Отмена", "Редактирование записи отменено"));
+                return;
+            }
+            var newEntity = await DataService.SaveAsync(changedEntity);
+            Entities[Entities.IndexOf(SelectedEntity)] = newEntity;
         }
 
         /// <summary>
@@ -265,7 +289,7 @@ namespace StripeCreator.WPF
         /// <param name="parameter">Параметр команды</param>
         private async Task OnExecutedRemoveCommand(object? parameter)
         {
-            if (SelectedEntity is null)
+            if (Entities is null || SelectedEntity is null)
                 throw new InvalidOperationException(NonSelectedEntityError);
             var removeId = await _dataService!.RemoveAsync(SelectedEntity);
             await _uiManager.ShowInfo(new MessageBoxDialogViewModel("Удалено успешно", $"Удалена сущность с Id {removeId}"));
