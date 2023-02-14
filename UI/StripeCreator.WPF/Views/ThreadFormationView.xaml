@@ -1,0 +1,73 @@
+﻿<local:BasePage x:Class="StripeCreator.WPF.ThreadFormationView"
+             x:TypeArguments="local:ThreadFormationViewModel" 
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:xceed="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:StripeCreator.WPF"
+             mc:Ignorable="d" 
+             d:DataContext="{x:Static local:ThreadFormationDesignViewModel.Instance}">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Grid.Resources>
+            <!-- Стиль для названия полей-->
+            <Style x:Key="Title" TargetType="TextBlock" BasedOn="{StaticResource GridDataTitleTextBlock}"/>
+            <!-- Стиль для значения полей-->
+            <Style TargetType="TextBox" BasedOn="{StaticResource GridDataTextBox}"/>
+            <Style TargetType="{x:Type xceed:DecimalUpDown}" BasedOn="{StaticResource GridDataDecimalUpDown}"/>
+            <Style TargetType="{x:Type xceed:IntegerUpDown}" BasedOn="{StaticResource GridDataIntegerUpDown}"/>
+            <Style TargetType="{x:Type xceed:ColorPicker}" BasedOn="{StaticResource GridDataColorPicker}"/>
+            <Style TargetType="ComboBox" BasedOn="{StaticResource ComboBoxBase}"/>
+
+        </Grid.Resources>
+
+        <!-- Название -->
+        <TextBlock Text="Название" Style="{StaticResource Title}"
+                   Grid.Column="0" Grid.Row="0"/>
+        <TextBox Text="{Binding Name}"
+                 Grid.Column="1" Grid.Row="0"/>
+
+        <!-- Производитель -->
+        <TextBlock Text="Производитель" Style="{StaticResource Title}"
+                   Grid.Column="0" Grid.Row="1"/>
+        <TextBox Text="{Binding Manufacturer}"
+                 Grid.Column="1" Grid.Row="1"/>
+
+        <!-- Стоимость -->
+        <TextBlock Text="Стоимость" Style="{StaticResource Title}"
+                   Grid.Column="0" Grid.Row="2"/>
+        <xceed:DecimalUpDown Value="{Binding Price}"
+                 Grid.Column="1" Grid.Row="2" />
+
+        <!-- Цвет -->
+        <TextBlock Text="Код цвета" Style="{StaticResource Title}"
+                   Grid.Column="0" Grid.Row="3"/>
+        <xceed:ColorPicker SelectedColor="{Binding ColorHex}"
+                 Grid.Column="1" Grid.Row="3"/>
+
+        <!-- Вес -->
+        <TextBlock Text="Вес" Style="{StaticResource Title}"
+                   Grid.Column="0" Grid.Row="4"/>
+        <xceed:IntegerUpDown Value="{Binding Weight}"
+                 Grid.Column="1" Grid.Row="4"/>
+
+        <!-- Тип -->
+        <TextBlock Text="Тип" Style="{StaticResource Title}"
+                   Grid.Column="0" Grid.Row="5"/>
+        <ComboBox SelectedItem="{Binding Type}" ItemsSource="{Binding Types}"
+                 Grid.Column="1" Grid.Row="5"/>
+    </Grid>
+</local:BasePage>
