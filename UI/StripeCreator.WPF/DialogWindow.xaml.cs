@@ -1,13 +1,13 @@
 ﻿namespace StripeCreator.WPF
 {
     /// <summary>
-    /// Внутренняя логика окна <see cref="EntityFormationWindow"/>
+    /// Внутренняя логика окна <see cref="DialogWindow"/>
     /// </summary>
-    public partial class EntityFormationWindow
+    public partial class DialogWindow
     {
         /// <summary>
         /// Конструктор с полной инициализацией
         /// </summary>
-        public EntityFormationWindow() => InitializeComponent();
+        public DialogWindow() => InitializeComponent();
     }
 }

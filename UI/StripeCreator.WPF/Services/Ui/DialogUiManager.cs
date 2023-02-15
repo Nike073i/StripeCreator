@@ -29,7 +29,7 @@ namespace StripeCreator.WPF
 
         public Task<IEntityViewModel?> FormationEntity(EntityFormationViewModel formationViewModel)
         {
-            EntityFormationWindow window = new();
+            DialogWindow window = new();
             IEntityViewModel? formedEntity = null;
 
             async void okAction(object? param)
@@ -52,8 +52,9 @@ namespace StripeCreator.WPF
             }
 
             (Control formationView, string title) = GetViewInfo(formationViewModel);
+            string caption = "Формирование";
 
-            var windowViewModel = new EntityFormationWindowViewModel(formationView, title, okAction, cancelAction);
+            var windowViewModel = new DialogWindowViewModel(formationView, title, caption, okAction, cancelAction, okText : "Сохранить");
             window.DataContext = windowViewModel;
             window.ShowDialog();
 
