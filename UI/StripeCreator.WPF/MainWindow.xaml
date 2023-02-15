@@ -6,9 +6,9 @@
         xmlns:local="clr-namespace:StripeCreator.WPF"
         mc:Ignorable="d"
         Title="StripeCreator"
-        d:Height="400" d:Width="500"
+        d:Height="450" d:Width="600"
         Background="{StaticResource DarkColorBrush}">
-    <Grid>
+    <Grid Margin="15">
         <!-- Держатель страниц-->
         <ContentControl Content="{Binding ApplicationViewModel.CurrentPage, Source={StaticResource Locator}, Converter={local:ApplicationPageValueConverter}}"/>
     </Grid>
