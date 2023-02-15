@@ -15,7 +15,7 @@
             <i:InvokeCommandAction Command="{Binding ShowClientStoreCommand}"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
-    <Grid Background="{StaticResource DarkColorBrush}">
+    <Grid Background="{StaticResource DarkColorBrush}" Margin="-15 0 0 0">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="110"/>
             <ColumnDefinition Width="400" MinWidth="400"/>
