@@ -4,11 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:StripeCreator.WPF"
-             mc:Ignorable="d" 
-             d:DesignHeight="400" d:DesignWidth="500">
+             mc:Ignorable="d" >
     
     <Grid d:DataContext="{x:Static local:ActionMenuDesignViewModel.Instance}"
-            HorizontalAlignment="Center" VerticalAlignment="Center">
+            HorizontalAlignment="Center" VerticalAlignment="Center"
+            Margin="50">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
@@ -17,7 +17,8 @@
         <!--Заголовок-->
         <Border Grid.Row="0" 
                 BorderBrush="{StaticResource BrightColorBrush}" BorderThickness="0 0 0 1" 
-                Width="300">
+                Width="300"
+                Padding="5">
             <TextBlock Text="{Binding Header}" 
                        Style="{StaticResource HeaderTextBlock}" 
                        HorizontalAlignment="Center"/>
