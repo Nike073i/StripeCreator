@@ -135,7 +135,6 @@ namespace StripeCreator.WPF
         /// </summary>
         public ICommand RefreshCommand { get; }
 
-
         /// <summary>
         /// Предикат для команд обращения к сервису
         /// </summary>
