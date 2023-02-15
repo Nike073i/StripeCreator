@@ -14,6 +14,7 @@
                 <ResourceDictionary Source="Resources/Styles/GroupBox.xaml"/>
                 <ResourceDictionary Source="Resources/Styles/ListBoxes.xaml"/>
                 <ResourceDictionary Source="Resources/Styles/ComboBoxes.xaml"/>
+                <ResourceDictionary Source="Resources/Styles/DataGrid.xaml"/>
                 <ResourceDictionary Source="Resources/Styles/Xceed.xaml"/>
                 
                 <!-- Шаблоны -->
