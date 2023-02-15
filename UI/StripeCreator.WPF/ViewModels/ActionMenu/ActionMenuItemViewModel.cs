@@ -31,16 +31,29 @@ namespace StripeCreator.WPF
         #region Constructors 
 
         /// <summary>
-        /// Конструктор с полной инициализацией
+        /// Конструктор с полной инициализацией через делегат
         /// </summary>
         /// <param name="icon">Иконка действия</param>
         /// <param name="actionText">Текст действия</param>
-        /// <param name="action">Команда при нажатии</param>
+        /// <param name="action">Действие</param>
         public ActionMenuItemViewModel(EFontAwesomeIcon icon, string actionText, Action<object?> action)
         {
             Icon = icon;
             ActionText = actionText;
             ActionCommand = new RelayCommand(action);
+        }
+
+        /// <summary>
+        /// Конструктор с полной инициализацией через команду
+        /// </summary>
+        /// <param name="icon">Иконка действия</param>
+        /// <param name="actionText">Текст действия</param>
+        /// <param name="command">Команда</param>
+        public ActionMenuItemViewModel(EFontAwesomeIcon icon, string actionText, ICommand command)
+        {
+            Icon = icon;
+            ActionText = actionText;
+            ActionCommand = command;
         }
 
         #endregion
