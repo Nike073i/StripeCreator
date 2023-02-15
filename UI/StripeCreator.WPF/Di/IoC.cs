@@ -88,7 +88,11 @@ namespace StripeCreator.WPF
         /// Остановка контейнера
         /// </summary>
         /// <returns></returns>
-        public static async Task StopAsync() => await Container.StopAsync();
+        public static async Task StopAsync()
+        {
+            await Container.StopAsync();
+            Container.Dispose();
+        }
 
         #endregion
 
