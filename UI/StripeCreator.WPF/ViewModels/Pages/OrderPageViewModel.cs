@@ -1,8 +1,11 @@
 ﻿using FontAwesome5;
+using StripeCreator.Business.Models;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Windows.Navigation;
 
 namespace StripeCreator.WPF
 {
@@ -35,7 +38,7 @@ namespace StripeCreator.WPF
         /// <summary>
         /// ViewModel меню действий
         /// </summary>
-        public ActionMenuViewModel ActionMenuViewModel { get; private set; }
+        public ActionMenuViewModel ActionMenuViewModel { get; protected set; }
 
         /// <summary>
         /// Список хранимых заказов
@@ -198,7 +201,22 @@ namespace StripeCreator.WPF
         /// Обновить список хранимых заказов
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private async Task OnExecutedRefreshCommand(object? parameter) { }
+        private Task OnExecutedRefreshCommand(object? parameter)
+        {
+            var orderLines = new List<OrderProduct>
+            {
+                new(Guid.NewGuid(), 15),
+            };
+            var list = new List<OrderViewModel>
+            {
+                new(new(Guid.NewGuid(), 150m, orderLines, new("+79176306258", "nike073i@mail.ru"))),
+                new(new(Guid.NewGuid(), 150m, orderLines, new("+79176306258", "nike073i@mail.ru"))),
+                new(new(Guid.NewGuid(), 150m, orderLines, new("+79176306258", "nike073i@mail.ru"))),
+                new(new(Guid.NewGuid(), 150m, orderLines, new("+79176306258", "nike073i@mail.ru"))),
+            };
+            Orders = new ObservableCollection<OrderViewModel>(list);
+            return Task.CompletedTask;
+        }
 
         /// <summary>
         /// Проверка вызова команды обновления данных

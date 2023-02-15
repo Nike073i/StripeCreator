@@ -1,0 +1,41 @@
+﻿<local:BasePage x:Class="StripeCreator.WPF.OrderPage"
+                x:TypeArguments="local:OrderPageViewModel" 
+                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+                xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+                xmlns:local="clr-namespace:StripeCreator.WPF"
+                mc:Ignorable="d" 
+                d:DesignHeight="700" d:DesignWidth="1150"
+                d:DataContext="{x:Static local:OrderPageDesignViewModel.Instance}">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding RefreshCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <GroupBox Header="Заказы">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <!-- Заказы -->
+                <ColumnDefinition Width="*"/>
+                <!-- Меню действий-->
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+
+            <DataGrid Grid.Column="0" ItemsSource="{Binding Orders}" Margin="5"
+                      SelectedItem="{Binding SelectedOrder}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Дата заказа" Binding="{Binding DateCreated, StringFormat=dd.MM.yyyy}"/>
+                    <DataGridTextColumn Header="Статус заказа" Binding="{Binding Status}"/>
+                    <DataGridTextColumn Header="Стоимость" Binding="{Binding Price}"/>
+                    <DataGridTextColumn Header="Телефон клиента" Binding="{Binding ContactNumber}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+            
+            <!-- Меню действий-->
+            <local:ActionMenuControl Grid.Column="1" Background="{StaticResource DarkColorBrush}" 
+                                     HorizontalAlignment="Center" DataContext="{Binding ActionMenuViewModel}"/>
+        </Grid>
+    </GroupBox>
+</local:BasePage>

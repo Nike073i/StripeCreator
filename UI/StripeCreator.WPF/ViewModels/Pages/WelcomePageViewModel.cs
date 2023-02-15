@@ -14,7 +14,7 @@ namespace StripeCreator.WPF
         /// Заголовок меню действий
         /// </summary>
         private readonly string _header = "Добро пожаловать!";
-        
+
         /// <summary>
         /// ViewModel приложения
         /// </summary>
@@ -62,8 +62,9 @@ namespace StripeCreator.WPF
             new()
             {
                 new(EFontAwesomeIcon.Solid_Image, "Загрузить изображение", LoadImagePage),
-                new(EFontAwesomeIcon.Solid_Database, "Справочники",LoadDataPage),
-                new(EFontAwesomeIcon.Solid_BusinessTime, "Сообщество", LoadCommunityPage),
+                new(EFontAwesomeIcon.Solid_Database, "Справочники", LoadDataPage),
+                new(EFontAwesomeIcon.Solid_BusinessTime, "Заказы", LoadOrderPage),
+                new(EFontAwesomeIcon.Solid_Globe, "Сообщество", LoadCommunityPage),
                 new(EFontAwesomeIcon.Solid_Hashtag, "Загрузить схему", LoadSchemePage),
             };
 
@@ -78,6 +79,12 @@ namespace StripeCreator.WPF
         /// </summary>
         /// <param name="parameter">Параметр для команды</param>
         private void LoadDataPage(object? parameter) => _applicationViewModel.GoToPage(ApplicationPage.DataStore);
+
+        /// <summary>
+        /// Загрузка страницы взаимодействия с заказами
+        /// </summary>
+        /// <param name="parameter">Параметр для команды</param>
+        private void LoadOrderPage(object? parameter) => _applicationViewModel.GoToPage(ApplicationPage.Order);
 
         /// <summary>
         /// Загрузка страницы работы с сообществом
