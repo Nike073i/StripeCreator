@@ -21,6 +21,7 @@ namespace StripeCreator.WPF
             services.AddTransient<IProductRepository, DbProductRepository>();
             services.AddTransient<IThreadRepository, DbThreadRepository>();
             services.AddTransient<IClothRepository, DbClothRepository>();
+            services.AddTransient<IOrderRepository, DbOrderRepository>();
             return services;
         }
     }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using StripeCreator.Business.Services;
 
 namespace StripeCreator.WPF
 {
@@ -19,6 +20,9 @@ namespace StripeCreator.WPF
             services.AddTransient<ProductService>();
             services.AddTransient<ThreadService>();
             services.AddTransient<ClothService>();
+            services.AddTransient<OrderPriceCalculator>();
+            services.AddTransient<SaleService>();
+            services.AddTransient<OrderService>();
             return services;
         }
     }
