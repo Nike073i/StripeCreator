@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using StripeCreator.Business.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace StripeCreator.WPF
 {
@@ -32,5 +34,19 @@ namespace StripeCreator.WPF
         /// <param name="entity">ViewModel сформированной сущности, если формирование прошло успешно
         /// null - если формирование отмененно</param>
         Task<IEntityViewModel?> FormationEntity(EntityFormationViewModel entityFormationViewModel);
+
+        /// <summary>
+        /// Отобразить окно создания заказа
+        /// </summary>
+        /// <param name="products">Список продукции</param>
+        /// <param name="clients">Список клиентов</param>
+        /// <returns></returns>
+        Task<OrderCreateModel?> CreateOrder(IEnumerable<Product> products, IEnumerable<Client> clients);
+
+        /// <summary>
+        /// Отобразить окно просмотра информации по заказу
+        /// </summary>
+        /// <param name="orderDetailViewModel">ViewModel информации по заказу</param>
+        Task ShowOrderDetail(OrderDetailViewModel orderDetailViewModel);
     }
 }

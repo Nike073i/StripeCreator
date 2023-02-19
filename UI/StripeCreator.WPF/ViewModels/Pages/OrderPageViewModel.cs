@@ -1,11 +1,10 @@
 ﻿using FontAwesome5;
-using StripeCreator.Business.Models;
+using StripeCreator.Business.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using System.Windows.Navigation;
 
 namespace StripeCreator.WPF
 {
@@ -27,6 +26,21 @@ namespace StripeCreator.WPF
         private readonly IUiManager _uiManager;
 
         /// <summary>
+        /// Сервис работы с заказами
+        /// </summary>
+        private readonly OrderService _orderService;
+
+        /// <summary>
+        /// Репозиторий продукции
+        /// </summary>
+        private readonly IProductRepository _productRepository;
+
+        /// <summary>
+        /// Репозиторий клиентов
+        /// </summary>
+        private readonly IClientRepository _clientRepository;
+
+        /// <summary>
         /// ViewModel приложения
         /// </summary>
         private readonly ApplicationViewModel _applicationViewModel;
@@ -43,7 +57,7 @@ namespace StripeCreator.WPF
         /// <summary>
         /// Список хранимых заказов
         /// </summary>
-        public ObservableCollection<OrderViewModel>? Orders { get; protected set; }
+        public ObservableCollection<OrderViewModel> Orders { get; protected set; }
 
         /// <summary>
         /// Выбранный заказ
@@ -84,7 +98,7 @@ namespace StripeCreator.WPF
         public ICommand MenuCommand { get; }
 
         /// <summary>
-        /// Предикат для команд работы с выбранным заказов
+        /// Предикат для команды взаимодействия с выбранным заказом
         /// </summary>
         public bool ActionEnabled => SelectedOrder != null;
 
@@ -106,20 +120,25 @@ namespace StripeCreator.WPF
         /// </summary>
         /// <param name="applicationViewModel">ViewModel приложения</param>
         /// <param name="uiManager">Менеджер интерактивного взаимодействия</param>
-        public OrderPageViewModel(ApplicationViewModel applicationViewModel, IUiManager uiManager)
+        public OrderPageViewModel(ApplicationViewModel applicationViewModel, IUiManager uiManager, OrderService orderService, IProductRepository productRepository, IClientRepository clientRepository)
         {
             _applicationViewModel = applicationViewModel;
             _uiManager = uiManager;
+            _orderService = orderService;
+            _productRepository = productRepository;
+            _clientRepository = clientRepository;
 
-            ActionMenuViewModel = new(_header, GetMenuItems());
+            Orders = new ObservableCollection<OrderViewModel>();
 
             // Инициализация команд
-            CreateCommand = new RelayCommand(async param => await OnExecutedCreateCommand(param)) { CanExecutePredicate = CanExecuteCreateCommand };
+            CreateCommand = new RelayCommand(async param => await OnExecutedCreateCommand(param));
             InfoCommand = new RelayCommand(async param => await OnExecutedInfoCommand(param)) { CanExecutePredicate = CanExecuteInfoCommand };
             UpdateCommand = new RelayCommand(async param => await OnExecutedUpdateCommand(param)) { CanExecutePredicate = CanExecuteUpdateCommand };
             CancelCommand = new RelayCommand(async param => await OnExecutedCancelCommand(param)) { CanExecutePredicate = CanExecuteCancelCommand };
-            RefreshCommand = new RelayCommand(async param => await OnExecutedRefreshCommand(param)) { CanExecutePredicate = CanExecuteRefreshCommand };
+            RefreshCommand = new RelayCommand(async param => await OnExecutedRefreshCommand(param));
             MenuCommand = new RelayCommand(param => OnExecutedMenuCommand(param));
+
+            ActionMenuViewModel = new(_header, GetMenuItems());
         }
 
         #endregion
@@ -149,81 +168,125 @@ namespace StripeCreator.WPF
         /// Создать новый заказ
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private async Task OnExecutedCreateCommand(object? parameter) { }
-
-        /// <summary>
-        /// Проверка вызова команды создания заказа
-        /// </summary>
-        /// <param name="parameter">Параметр команды</param>
-        /// <returns></returns>
-        private bool CanExecuteCreateCommand(object? parameter) => true;
+        private async Task OnExecutedCreateCommand(object? parameter)
+        {
+            try
+            {
+                var products = await _productRepository.GetAllAsync();
+                var clients = await _clientRepository.GetAllAsync();
+                var orderCreateModel = await _uiManager.CreateOrder(products, clients);
+                if (orderCreateModel == null)
+                {
+                    await _uiManager.ShowInfo(new("Отмена", "Создание заказа отменено"));
+                    return;
+                }
+                var newOrder = await _orderService.CreateAsync(orderCreateModel);
+                Orders.Add(newOrder);
+            }
+            catch (Exception ex)
+            {
+                await _uiManager.ShowError(new("Ошибка создания заказа", ex.Message));
+            }
+        }
 
         /// <summary>
         /// Получить информацию по заказку
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private async Task OnExecutedInfoCommand(object? parameter) { }
+        private async Task OnExecutedInfoCommand(object? parameter)
+        {
+            try
+            {
+                var orders = await _orderService.GetAllAsync();
+                Orders = new ObservableCollection<OrderViewModel>(orders);
+
+                var order = SelectedOrder!.Entity;
+                var client = await _clientRepository.GetByIdAsync(order.ClientId) ??
+                    throw new InvalidOperationException("Клиент с указанным Id не найден");
+                var orderProducts = new List<OrderProductViewModel>();
+                foreach (var orderProduct in order.Products)
+                {
+                    var product = await _productRepository.GetByIdAsync(orderProduct.ProductId);
+                    if (product == null) continue;
+                    orderProducts.Add(new OrderProductViewModel(product, orderProduct.Quantity));
+                }
+                var orderDetailViewModel = new OrderDetailViewModel(order, client, orderProducts);
+                await _uiManager.ShowOrderDetail(orderDetailViewModel);
+            }
+            catch (Exception ex)
+            {
+                await _uiManager.ShowError(new("Ошибка получения данных по заказу", ex.Message));
+            }
+        }
 
         /// <summary>
         /// Проверка вызова команды получения информацию по заказу
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        /// <returns></returns>
-        private bool CanExecuteInfoCommand(object? parameter) => true;
+        private bool CanExecuteInfoCommand(object? parameter) => ActionEnabled;
 
         /// <summary>
         /// Продвинуть статус заказа
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private async Task OnExecutedUpdateCommand(object? parameter) { }
+        private async Task OnExecutedUpdateCommand(object? parameter)
+        {
+            try
+            {
+                var changedOrder = await _orderService.UpdateStatus(SelectedOrder!);
+                Orders[Orders.IndexOf(SelectedOrder!)] = changedOrder;
+            }
+            catch (Exception ex)
+            {
+                await _uiManager.ShowError(new("Ошибка обновления статуса", ex.Message));
+            }
+        }
 
         /// <summary>
         /// Проверка вызова команды продвижения статуса заказа
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        /// <returns></returns>
-        private bool CanExecuteUpdateCommand(object? parameter) => true;
+        private bool CanExecuteUpdateCommand(object? parameter) => ActionEnabled;
 
         /// <summary>
         /// Отмена заказа
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private async Task OnExecutedCancelCommand(object? parameter) { }
+        private async Task OnExecutedCancelCommand(object? parameter)
+        {
+            try
+            {
+                var changedOrder = await _orderService.CancelOrder(SelectedOrder!);
+                Orders[Orders.IndexOf(SelectedOrder!)] = changedOrder;
+            }
+            catch (Exception ex)
+            {
+                await _uiManager.ShowError(new("Ошибка отмены заказа", ex.Message));
+            }
+        }
 
         /// <summary>
         /// Проверка вызова команды отмены заказа
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        /// <returns></returns>
-        private bool CanExecuteCancelCommand(object? parameter) => true;
+        private bool CanExecuteCancelCommand(object? parameter) => ActionEnabled;
 
         /// <summary>
         /// Обновить список хранимых заказов
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private Task OnExecutedRefreshCommand(object? parameter)
+        private async Task OnExecutedRefreshCommand(object? parameter)
         {
-            var orderLines = new List<OrderProduct>
+            try
             {
-                new(Guid.NewGuid(), 15),
-            };
-            var list = new List<OrderViewModel>
+                var orders = await _orderService.GetAllAsync();
+                Orders = new ObservableCollection<OrderViewModel>(orders);
+            }
+            catch (Exception ex)
             {
-                new(new(Guid.NewGuid(), 150m, orderLines, new("+79176306258", "nike073i@mail.ru"))),
-                new(new(Guid.NewGuid(), 150m, orderLines, new("+79176306258", "nike073i@mail.ru"))),
-                new(new(Guid.NewGuid(), 150m, orderLines, new("+79176306258", "nike073i@mail.ru"))),
-                new(new(Guid.NewGuid(), 150m, orderLines, new("+79176306258", "nike073i@mail.ru"))),
-            };
-            Orders = new ObservableCollection<OrderViewModel>(list);
-            return Task.CompletedTask;
+                await _uiManager.ShowError(new("Ошибка загрузки данных", ex.Message));
+            }
         }
-
-        /// <summary>
-        /// Проверка вызова команды обновления данных
-        /// </summary>
-        /// <param name="parameter"></param>
-        /// <returns></returns>
-        private bool CanExecuteRefreshCommand(object? parameter) => true;
 
         /// <summary>
         /// Действие при команде выхода в главное меню

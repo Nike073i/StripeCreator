@@ -1,0 +1,19 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:business="clr-namespace:StripeCreator.Business.Models;assembly=StripeCreator.Business">
+    <!-- Клиенты -->
+    <DataTemplate DataType="{x:Type business:Client}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Grid.Column="0" Text="{Binding PersonData.SecondName}" Margin="5"/>
+            <TextBlock Grid.Column="1" Text="{Binding ContactData.ContactNumber}" Margin="5"/>
+        </StackPanel>
+    </DataTemplate>
+    
+    <!-- Продукция -->
+    <DataTemplate DataType="{x:Type business:Product}" >
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Grid.Column="0" Text="{Binding Name}" Margin="5"/>
+            <TextBlock Grid.Column="1" Text="{Binding Price}" Margin="5"/>
+        </StackPanel>
+    </DataTemplate>
+</ResourceDictionary>

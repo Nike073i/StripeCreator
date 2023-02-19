@@ -70,4 +70,24 @@
             </StackPanel>
         </Grid>
     </DataTemplate>
+
+    <!-- Продукт в заказе -->
+    <DataTemplate DataType="{x:Type local:OrderProductViewModel}">
+        <StackPanel Orientation="Vertical">
+            <!-- Продукт -->
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Продукт" Style="{StaticResource GridDataTitleTextBlock}" 
+                           Margin="5 2.5"/>
+                <TextBlock Text="{Binding ProductName}" Style="{StaticResource ValueTextBlock}"
+                           Margin="5 2.5"/>
+            </StackPanel>
+            <!-- Количество -->
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Количество" Style="{StaticResource GridDataTitleTextBlock}" 
+                           Margin="5 2.5"/>
+                <TextBlock Text="{Binding Quantity}" Style="{StaticResource ValueTextBlock}" 
+                           Margin="5 2.5"/>
+            </StackPanel>
+        </StackPanel>
+    </DataTemplate>
 </ResourceDictionary>

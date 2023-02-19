@@ -19,6 +19,7 @@
                 
                 <!-- Шаблоны -->
                 <ResourceDictionary Source="Resources/Templates/EntityViewModels.xaml"/>
+                <ResourceDictionary Source="Resources/Templates/DomainEntities.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <local:ViewModelLocator x:Key="Locator"/>
         </ResourceDictionary>

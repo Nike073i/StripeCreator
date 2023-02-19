@@ -1,0 +1,167 @@
+﻿<local:BasePage x:TypeArguments="local:OrderDetailViewModel" 
+                x:Class="StripeCreator.WPF.OrderDetailView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:StripeCreator.WPF"
+             mc:Ignorable="d" 
+             d:DataContext="{x:Static local:OrderDetailDesignViewModel.Instance}"
+             Width="1000" Height="600">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <!-- Данные -->
+            <ColumnDefinition />
+            <!-- Продукция в заказе -->
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <!-- Данные -->
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <!-- Данные заказа -->
+                <RowDefinition Height="auto"/>
+                <!-- Контактные данные -->
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <!-- Данные заказа -->
+            <GroupBox Header="Данные заказа" Margin="5" Padding="25">
+                <StackPanel>
+                    <!-- Дата создания -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock VerticalAlignment="Center" Text="Дата создания" 
+                                   Style="{StaticResource GridDataTitleTextBlock}"
+                                   Margin="5" Grid.Column="0"/>
+                        <TextBlock VerticalAlignment="Center"
+                                   Grid.Column="1" Text="{Binding DateCreated, StringFormat=dd.MM.yyyy}" 
+                                   Style="{StaticResource ValueTextBlock}"/>
+                    </Grid>
+                    <!-- Стоимость -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock VerticalAlignment="Center" Text="Стоимость" 
+                                   Style="{StaticResource GridDataTitleTextBlock}"
+                                   Margin="5" Grid.Column="0"/>
+                        <TextBlock VerticalAlignment="Center"
+                                   Grid.Column="1" Text="{Binding Price}" 
+                                   Style="{StaticResource ValueTextBlock}"/>
+                    </Grid>
+                    <!-- Статус -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock VerticalAlignment="Center" Text="Статус" 
+                                   Style="{StaticResource GridDataTitleTextBlock}"
+                                   Margin="5" Grid.Column="0"/>
+                        <TextBlock VerticalAlignment="Center"
+                                   Grid.Column="1" Text="{Binding Status}" 
+                                   Style="{StaticResource ValueTextBlock}"/>
+                    </Grid>
+                </StackPanel>
+            </GroupBox>
+            
+            <!-- Контактные данные -->
+            <GroupBox Header="Контактные данные" Grid.Row="1" Margin="5" Padding="25">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <!-- Клиент -->
+                        <RowDefinition Height="auto"/>
+                        <!-- Номер телефона -->
+                        <RowDefinition Height="auto"/>
+                        <!-- Email -->
+                        <RowDefinition Height="auto"/>
+                        <!-- Other -->
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Клиент -->
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock VerticalAlignment="Center" Text="Клиент" 
+                                   Style="{StaticResource GridDataTitleTextBlock}"
+                                   Margin="5" Grid.Column="0"/>
+                        <TextBlock VerticalAlignment="Center" Text="{Binding ClientName}" 
+                                   Style="{StaticResource ValueTextBlock}"
+                                   Margin="5" Grid.Column="1"/>
+                    </Grid>
+
+                    <!-- Номер телефона -->
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock VerticalAlignment="Center" Text="Номер телефона" 
+                                   Style="{StaticResource GridDataTitleTextBlock}"
+                                   Margin="5" Grid.Column="0"/>
+                        <TextBlock VerticalAlignment="Center" Text="{Binding ContactNumber}" 
+                                   Style="{StaticResource ValueTextBlock}"
+                                   Margin="5" Grid.Column="1"/>
+                    </Grid>
+
+                    <!-- Email -->
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock VerticalAlignment="Center" Text="Email" 
+                                   Style="{StaticResource GridDataTitleTextBlock}"
+                                   Margin="5" Grid.Column="0"/>
+                        <TextBlock VerticalAlignment="Center" Text="{Binding Email}" 
+                                   Style="{StaticResource ValueTextBlock}"
+                                   Margin="5" Grid.Column="1"/>
+                    </Grid>
+
+                    <!-- Other -->
+                    <Grid Grid.Row="3">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left"
+                               Text="Иные сведения" Margin="5"
+                               Grid.Row="0" Style="{StaticResource GridDataTitleTextBlock}"/>
+                        <TextBlock Grid.Row="1" Margin="5" Text="{Binding Other}"
+                                   Style="{StaticResource ValueTextBlock}"
+                                   TextWrapping="Wrap" VerticalAlignment="Top"/>
+                    </Grid>
+                </Grid>
+            </GroupBox>
+        </Grid>
+        
+        <!-- Продукция в заказе -->
+        <GroupBox Header="Продукция в заказе" Grid.Column="1" Margin="5">
+            <ListBox ItemsSource="{Binding OrderProducts}">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem" BasedOn="{StaticResource BaseStyle}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListBoxItem">
+                                    <Border CornerRadius="10"
+                                                Padding="5" Margin="2"
+                                                Background="{StaticResource DarkColorBrush}">
+                                        <ContentPresenter/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+            </ListBox>
+        </GroupBox>
+    </Grid>
+</local:BasePage>
