@@ -197,9 +197,6 @@ namespace StripeCreator.WPF
         {
             try
             {
-                var orders = await _orderService.GetAllAsync();
-                Orders = new ObservableCollection<OrderViewModel>(orders);
-
                 var order = SelectedOrder!.Entity;
                 var client = await _clientRepository.GetByIdAsync(order.ClientId) ??
                     throw new InvalidOperationException("Клиент с указанным Id не найден");
