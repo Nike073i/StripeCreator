@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.Design;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -203,10 +204,17 @@ namespace StripeCreator.WPF
                 new(EFontAwesomeIcon.Solid_CropAlt, "Ткани", ShowClothStore),
                 new(EFontAwesomeIcon.Solid_Users, "Клиенты", ShowClientStore),
                 new(EFontAwesomeIcon.Brands_Slack, "Продукты", ShowProductStore),
+                new(EFontAwesomeIcon.Solid_ArrowLeft, "В меню", ShowMenu)
             };
         }
 
         #region Commands action and predicate
+
+        /// <summary>
+        /// Показать главное меню
+        /// </summary>
+        /// <param name="parameter">Параметр команды</param>
+        private void ShowMenu(object? parameter) => _applicationViewModel.GoToPage(ApplicationPage.Welcome);
 
         /// <summary>
         /// Показать список хранимых нитей
