@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel.Design;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -84,6 +83,9 @@ namespace StripeCreator.WPF
         /// </summary>
         public IEntityViewModel? SelectedEntity { get; set; }
 
+        /// <summary>
+        /// Сервис работы с сущностью
+        /// </summary>
         public IDataService? DataService
         {
             get => _dataService;
@@ -93,6 +95,11 @@ namespace StripeCreator.WPF
                 RefreshCommand.Execute(null);
             }
         }
+
+        /// <summary>
+        /// Название сущности
+        /// </summary>
+        public string DataHeader { get; protected set; } = "Сущности";
 
         #region Commands
 
@@ -220,25 +227,41 @@ namespace StripeCreator.WPF
         /// Показать список хранимых нитей
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private void ShowThreadStore(object? parameter) => DataService = _threadService;
+        private void ShowThreadStore(object? parameter)
+        {
+            DataService = _threadService;
+            DataHeader = "Нити";
+        }
 
         /// <summary>
         /// Показать список хранимых тканей
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private void ShowClothStore(object? parameter) => DataService = _clothService;
+        private void ShowClothStore(object? parameter)
+        {
+            DataService = _clothService;
+            DataHeader = "Ткани";
+        }
 
         /// <summary>
         /// Показать список хранимых нитей
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private void ShowClientStore(object? parameter) => DataService = _clientService;
+        private void ShowClientStore(object? parameter)
+        {
+            DataService = _clientService;
+            DataHeader = "Клиенты";
+        }
 
         /// <summary>
         /// Показать список хранимых продуктов
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private void ShowProductStore(object? parameter) => DataService = _productService;
+        private void ShowProductStore(object? parameter)
+        {
+            DataService = _productService;
+            DataHeader = "Продукция";
+        }
 
         /// <summary>
         /// Добавить новую хранимую сущность

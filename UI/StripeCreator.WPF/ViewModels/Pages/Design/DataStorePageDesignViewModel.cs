@@ -21,6 +21,7 @@ namespace StripeCreator.WPF
         #region Design data
 
         public List<IEntityViewModel> DesignEntities = new() { };
+        private static string _designDataHeader = "Клиенты";
 
         #endregion
 
@@ -33,6 +34,7 @@ namespace StripeCreator.WPF
         {
             Entities = new ObservableCollection<IEntityViewModel>(DesignEntities);
             SelectedEntity = Entities.FirstOrDefault();
+            DataHeader = _designDataHeader;
         }
 
         #endregion

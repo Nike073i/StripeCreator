@@ -28,7 +28,7 @@
                                    VerticalAlignment="Top" />
 
         <!-- Материалы -->
-        <GroupBox Header="Тип материала" Grid.Column="1" Margin="3">
+        <GroupBox Header="{Binding DataHeader}" Grid.Column="1" Margin="3">
             <DockPanel>
                 <UniformGrid DockPanel.Dock="Bottom">
                     <Button fa:Awesome.Content="Solid_Plus" Command="{Binding AddCommand}"/>
