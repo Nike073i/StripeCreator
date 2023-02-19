@@ -167,41 +167,5 @@ namespace StripeCreator.Business.Models
 
         #endregion
 
-        #region Public methods
-
-        /// <summary>
-        /// Добавление санкций к стоимости заказа
-        /// </summary>
-        /// <param name="cost">Значение санкции</param>
-        /// <returns>Текущий заказ</returns>
-        public Order AddSanctions(decimal cost)
-        {
-            Price -= cost;
-            return this;
-        }
-
-        /// <summary>
-        /// Смена статуса текущего заказа
-        /// </summary>
-        /// <param name="newStatus">Новый статус заказа</param>
-        /// <returns>Текущий заказ</returns>
-        /// <exception cref="InvalidOperationException">Возникает, если смена статуса заказа на новый является некорректным</exception>
-        public Order ChangeStatus(OrderStatus newStatus)
-        {
-            if (Status == OrderStatus.Canceled || Status == OrderStatus.Sent)
-                throw new InvalidOperationException("Заказ уже не может изменить свой статус");
-            if (Status == newStatus) return this;
-
-            // Проверка корректности перехода состояний заказа. Допускается только постепенный переход
-            if (newStatus == OrderStatus.Canceled ||
-                (Status == OrderStatus.Created && newStatus == OrderStatus.Paid) ||
-                (Status == OrderStatus.Paid && newStatus == OrderStatus.Processed) ||
-                (Status == OrderStatus.Processed && newStatus == OrderStatus.Sent))
-                Status = newStatus;
-            else throw new InvalidOperationException($"Заказ не может изменить текущий статус {Status} на {newStatus}");
-            return this;
-        }
-
-        #endregion
     }
 }
