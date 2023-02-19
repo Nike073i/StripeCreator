@@ -35,5 +35,11 @@ namespace StripeCreator.DAL.Repositories
         }
 
         #endregion
+
+        #region Overrides
+
+        protected override IQueryable<DbOrder> Items => Set.Include(o => o.Products);
+
+        #endregion
     }
 }

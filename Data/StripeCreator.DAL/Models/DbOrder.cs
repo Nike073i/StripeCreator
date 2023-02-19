@@ -26,7 +26,7 @@ namespace StripeCreator.DAL.Models
         /// Продукция заказа
         /// </summary>
         [Required]
-        public IEnumerable<DbOrderProduct> Products { get; protected set; } = Enumerable.Empty<DbOrderProduct>();
+        public IEnumerable<DbOrderProduct> Products { get; protected set; }
 
         #region ContactData
 
@@ -68,7 +68,9 @@ namespace StripeCreator.DAL.Models
         /// <summary>
         /// Конструктор по умолчанию для EFC
         /// </summary>
+#nullable disable
         protected DbOrder() { }
+#nullable enable
 
         /// <summary>
         /// Конструктор c полной инициализацией
