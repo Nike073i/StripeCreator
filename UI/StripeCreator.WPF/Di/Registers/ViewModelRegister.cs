@@ -18,6 +18,7 @@ namespace StripeCreator.WPF
             services.AddTransient<WelcomePageViewModel>();
             services.AddTransient<DataStorePageViewModel>();
             services.AddTransient<OrderPageViewModel>();
+            services.AddTransient<ReportPageViewModel>();
             return services;
         }
     }

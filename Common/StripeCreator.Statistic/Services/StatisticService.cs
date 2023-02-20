@@ -92,7 +92,7 @@ namespace StripeCreator.Statistic.Services
         /// </param>
         /// <returns>Вхождение заказа в указанный диапазон</returns>
         private bool OrderInRange(Order order, DateTime? dateStart, DateTime? dateEnd) =>
-            (!dateStart.HasValue || order.DateCreated >= dateStart.Value) && (!dateEnd.HasValue || order.DateCreated <= dateEnd.Value);
+            (!dateStart.HasValue || order.DateCreated.Date >= dateStart.Value.Date) && (!dateEnd.HasValue || order.DateCreated.Date <= dateEnd.Value.Date);
 
         /// <summary>
         /// Определение оплаченности заказа
@@ -114,7 +114,7 @@ namespace StripeCreator.Statistic.Services
 
             // Группируем заказы по датам
             var groups = ordersForPeriod.OrderBy(order => order.DateCreated)
-                .GroupBy(sell => sell.DateCreated)
+                .GroupBy(sell => sell.DateCreated.Date)
                 .Select(group => new
                 {
                     Date = group.Key,

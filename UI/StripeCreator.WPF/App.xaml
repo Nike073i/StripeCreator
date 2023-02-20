@@ -15,7 +15,9 @@
                 <ResourceDictionary Source="Resources/Styles/ListBoxes.xaml"/>
                 <ResourceDictionary Source="Resources/Styles/ComboBoxes.xaml"/>
                 <ResourceDictionary Source="Resources/Styles/DataGrid.xaml"/>
+                <ResourceDictionary Source="Resources/Styles/DatePicker.xaml"/>
                 <ResourceDictionary Source="Resources/Styles/Xceed.xaml"/>
+                <ResourceDictionary Source="Resources/Styles/OxyPlot.xaml"/>
                 
                 <!-- Шаблоны -->
                 <ResourceDictionary Source="Resources/Templates/EntityViewModels.xaml"/>

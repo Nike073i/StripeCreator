@@ -98,7 +98,6 @@ namespace StripeCreator.Statistic.Reports
             _dateStart = dateStart ?? DateTimeMinValue;
             _dateEnd = dateEnd ?? DateTimeMaxValue;
             _document = new Document();
-
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         }
 
@@ -158,6 +157,13 @@ namespace StripeCreator.Statistic.Reports
         /// <param name="data">Данные по ежедневной выручке</param>
         private void InsertOrderIncome(IEnumerable<OrderIncomeDataModel> data)
         {
+            var titleParagraph = new Paragraph();
+            titleParagraph.AddText("Данные по выручке");
+            titleParagraph.Format.Alignment = ParagraphAlignment.Center;
+            titleParagraph.Format.Font.Bold = true;
+            titleParagraph.Format.Font.Size = HeaderInfoFontSize;
+            Section.Add(titleParagraph);
+
             var table = new Table
             {
                 Borders = new Borders() { Width = 1 },

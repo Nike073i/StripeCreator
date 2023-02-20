@@ -64,6 +64,7 @@ namespace StripeCreator.WPF
                 new(EFontAwesomeIcon.Solid_Image, "Загрузить изображение", LoadImagePage),
                 new(EFontAwesomeIcon.Solid_Database, "Справочники", LoadDataPage),
                 new(EFontAwesomeIcon.Solid_BusinessTime, "Заказы", LoadOrderPage),
+                new(EFontAwesomeIcon.Solid_ChartPie, "Отчеты", LoadReportPage),
                 new(EFontAwesomeIcon.Solid_Globe, "Сообщество", LoadCommunityPage),
                 new(EFontAwesomeIcon.Solid_Hashtag, "Загрузить схему", LoadSchemePage),
             };
@@ -85,6 +86,12 @@ namespace StripeCreator.WPF
         /// </summary>
         /// <param name="parameter">Параметр для команды</param>
         private void LoadOrderPage(object? parameter) => _applicationViewModel.GoToPage(ApplicationPage.Order);
+
+        /// <summary>
+        /// Загрузка страницы формирования отчетов
+        /// </summary>
+        /// <param name="parameter">Параметр для команды</param>
+        private void LoadReportPage(object? parameter) => _applicationViewModel.GoToPage(ApplicationPage.Report);
 
         /// <summary>
         /// Загрузка страницы работы с сообществом

@@ -1,0 +1,61 @@
+﻿<local:BasePage x:Class="StripeCreator.WPF.ReportPage"
+                x:TypeArguments="local:ReportPageViewModel" 
+                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+                xmlns:local="clr-namespace:StripeCreator.WPF"
+                xmlns:oxy="http://oxyplot.org/wpf"
+                mc:Ignorable="d" 
+                d:DesignHeight="700" d:DesignWidth="1250"
+                d:DataContext="{x:Static local:ReportPageDesignViewModel.Instance}">
+    <GroupBox Header="Отчетные данные">
+        <GroupBox.Resources>
+            <Style TargetType="TextBlock" BasedOn="{StaticResource HeaderTextBlock}"/>
+        </GroupBox.Resources>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <!-- Контент -->
+                <ColumnDefinition Width="*"/>
+                <!-- Меню действий-->
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+
+             <!-- Контент --> 
+            <StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin="15">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <!-- Дата начала -->
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <TextBlock Text="Дата начала" Style="{StaticResource GridDataTitleTextBlock}" HorizontalAlignment="Center"/>
+                        <DatePicker SelectedDate="{Binding DateStart}" />
+                        <CheckBox IsChecked="{Binding IsDateStartSet}" VerticalAlignment="Center"/>
+                    </StackPanel>
+
+                    <!-- Дата окончания -->
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <TextBlock Text="Дата окончания" Style="{StaticResource GridDataTitleTextBlock}" HorizontalAlignment="Center"/>
+                        <DatePicker SelectedDate="{Binding DateEnd}"/>
+                        <CheckBox IsChecked="{Binding IsDateEndSet}" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- График -->
+                <oxy:Plot Height="350" Background="{StaticResource DarkColorBrush}" 
+                          Padding="25">
+                    <oxy:Plot.Axes>
+                        <oxy:LinearAxis Title="Выручка"/>
+                        <oxy:DateTimeAxis Title="Дата" />
+                    </oxy:Plot.Axes>
+                    <oxy:LineSeries StrokeThickness="2" Color="{StaticResource BrightColor}"  
+                                    Background="{StaticResource LightDarkColorBrush}"
+                                    ItemsSource="{Binding PlotData}" 
+                                    DataFieldX="Date" DataFieldY="Income"/>
+                </oxy:Plot>
+            </StackPanel>
+
+            <!-- Меню действий-->
+            <local:ActionMenuControl Grid.Column="1" Background="{StaticResource DarkColorBrush}" 
+                                     HorizontalAlignment="Center" DataContext="{Binding ActionMenuViewModel}"/>
+        </Grid>
+    </GroupBox>
+</local:BasePage>
