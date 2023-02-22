@@ -1,4 +1,5 @@
 using ImageMagick;
+using StripeCreator.Core.Models;
 using StripeCreator.Stripe.Extensions;
 using StripeCreator.Stripe.Models;
 
@@ -11,7 +12,7 @@ namespace StripeCreator.Stripe.Services
     {
         #region Private fields
 
-        private MagickImage _imageMagick;
+        private readonly MagickImage _imageMagick;
 
         #endregion
 
@@ -45,19 +46,28 @@ namespace StripeCreator.Stripe.Services
         public void Trim() => _imageMagick.Trim();
 
         /// <summary>
-        /// Масштабирование изображения без сглаживаний
+        /// Масштабирование изображения путем репликации
         /// </summary>
-        /// <param name="newWidth">Новая ширина</param>
-        /// <param name="newHeight">Новая высота</param>
-        /// <exception cref="ArgumentOutOfRangeException">Возникает, если новые размеры изображения указаны неверно</exception>
-        public void Scale(int newWidth, int newHeight)
-        {
-            if (newWidth < 1)
-                throw new ArgumentOutOfRangeException(nameof(newWidth), "Новая ширина изображения не может быть < 1");
-            if (newHeight < 1)
-                throw new ArgumentOutOfRangeException(nameof(newHeight), "Новая высота изображения не может быть < 1");
-            _imageMagick.Sample(newWidth, newHeight);
-        }
+        /// <param name="newSize">Новая размер изображения</param>
+        public void Sample(Size newSize) => _imageMagick.Sample(newSize.Width, newSize.Height);
+
+        /// <summary>
+        /// Масштабирование изображения методом "Резьба по шву"
+        /// </summary>
+        /// <param name="newSize">Новая размер изображения</param>
+        public void LiquidRescale(Size newSize) => _imageMagick.LiquidRescale(newSize.Width, newSize.Height);
+
+        /// <summary>
+        /// Масштабирование изображение с усреднением пикселя
+        /// </summary>
+        /// <param name="newSize">Новая размер изображения</param>
+        public void Scale(Size newSize) => _imageMagick.Scale(newSize.Width, newSize.Height);
+
+        /// <summary>
+        /// Адаптивное изменение размера изображения с данными триангуляции.
+        /// </summary>
+        /// <param name="newSize">Новая размер изображения</param>
+        public void AdaptiveResize(Size newSize) => _imageMagick.AdaptiveResize(newSize.Width, newSize.Height);
 
         /// <summary>
         /// Квантование цветов
@@ -99,10 +109,7 @@ namespace StripeCreator.Stripe.Services
         /// <summary>
         /// Реализация интерфейса <see cref="IDisposable"/>
         /// </summary>
-        public void Dispose()
-        {
-            _imageMagick.Dispose();
-        }
+        public void Dispose() => _imageMagick.Dispose();
 
         #endregion
     }

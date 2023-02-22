@@ -61,7 +61,7 @@ namespace StripeCreator.WPF
         private List<ActionMenuItemViewModel> GetActionMenuItems() =>
             new()
             {
-                new(EFontAwesomeIcon.Solid_Image, "Загрузить изображение", LoadImagePage),
+                new(EFontAwesomeIcon.Solid_Image, "Обработать изображение", LoadImagePage),
                 new(EFontAwesomeIcon.Solid_Database, "Справочники", LoadDataPage),
                 new(EFontAwesomeIcon.Solid_BusinessTime, "Заказы", LoadOrderPage),
                 new(EFontAwesomeIcon.Solid_ChartPie, "Отчеты", LoadReportPage),
@@ -73,7 +73,7 @@ namespace StripeCreator.WPF
         /// Загрузка страницы работы с изображением
         /// </summary>
         /// <param name="parameter">Параметр для команды</param>
-        private void LoadImagePage(object? parameter) { }
+        private void LoadImagePage(object? parameter) => _applicationViewModel.GoToPage(ApplicationPage.ImageProcessing);
 
         /// <summary>
         /// Загрузка страницы работы со справочниками

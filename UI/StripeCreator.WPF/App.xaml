@@ -16,6 +16,8 @@
                 <ResourceDictionary Source="Resources/Styles/ComboBoxes.xaml"/>
                 <ResourceDictionary Source="Resources/Styles/DataGrid.xaml"/>
                 <ResourceDictionary Source="Resources/Styles/DatePicker.xaml"/>
+                <ResourceDictionary Source="Resources/Styles/ToggleButtons.xaml"/>
+                <ResourceDictionary Source="Resources/Styles/Images.xaml"/>
                 <ResourceDictionary Source="Resources/Styles/Xceed.xaml"/>
                 <ResourceDictionary Source="Resources/Styles/OxyPlot.xaml"/>
                 

@@ -118,4 +118,7 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style TargetType="ComboBox" BasedOn="{StaticResource ComboBoxBase}"/>
+
 </ResourceDictionary>

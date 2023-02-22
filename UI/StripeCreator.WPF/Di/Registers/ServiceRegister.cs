@@ -1,7 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using StripeCreator.Business.Services;
-using StripeCreator.Statistic.Reports;
 using StripeCreator.Statistic.Services;
+using StripeCreator.Stripe.Services;
+using StripeCreator.WPF.Services;
 
 namespace StripeCreator.WPF
 {
@@ -27,6 +28,9 @@ namespace StripeCreator.WPF
             services.AddTransient<OrderService>();
             services.AddTransient<StatisticService>();
             services.AddTransient<ReportService>();
+            services.AddTransient<ImageKeeper>();
+            services.AddTransient<SchemeCreator>();
+            services.AddTransient<ImageService>();
             return services;
         }
     }

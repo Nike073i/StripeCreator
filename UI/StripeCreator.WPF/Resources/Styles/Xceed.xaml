@@ -2,20 +2,17 @@
                     xmlns:xceed="http://schemas.xceed.com/wpf/xaml/toolkit"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <!-- Стиль для счетчиков цен-->
-    <Style TargetType="{x:Type xceed:DecimalUpDown }" BasedOn="{StaticResource GridDataControl}"
-           x:Key="GridDataDecimalUpDown">
+    <Style TargetType="{x:Type xceed:DecimalUpDown }" BasedOn="{StaticResource GridDataControl}">
         <Setter Property="ShowButtonSpinner" Value="False"/>
     </Style>
 
     <!-- Стиль для счетчиков количества-->
-    <Style TargetType="{x:Type xceed:IntegerUpDown }" BasedOn="{StaticResource GridDataControl}"
-           x:Key="GridDataIntegerUpDown">
+    <Style TargetType="{x:Type xceed:IntegerUpDown }" BasedOn="{StaticResource GridDataControl}">
         <Setter Property="ShowButtonSpinner" Value="False"/>
     </Style>
 
     <!-- Стиль для выбора цвета-->
-    <Style TargetType="{x:Type xceed:ColorPicker }" BasedOn="{StaticResource GridDataControl}"
-           x:Key="GridDataColorPicker">
+    <Style TargetType="{x:Type xceed:ColorPicker }" BasedOn="{StaticResource GridDataControl}">
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="DropDownBackground" Value="{StaticResource DarkColorBrush}"/>
         <Setter Property="HeaderBackground" Value="{StaticResource DarkColorBrush}"/>
@@ -30,4 +27,5 @@
         <Setter Property="ShowDropDownButton" Value="False"/>
         <Setter Property="UsingAlphaChannel" Value="False"/>
     </Style>
+
 </ResourceDictionary>

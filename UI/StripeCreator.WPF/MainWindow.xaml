@@ -10,6 +10,8 @@
         Background="{StaticResource DarkColorBrush}">
     <Grid Margin="15">
         <!-- Держатель страниц-->
-        <ContentControl Content="{Binding ApplicationViewModel.CurrentPage, Source={StaticResource Locator}, Converter={local:ApplicationPageValueConverter}}"/>
+        <ContentControl Content="{Binding ApplicationViewModel.CurrentPage, Source={StaticResource Locator}, 
+                        Converter={local:ApplicationPageValueConverter}, 
+                        ConverterParameter={Binding ApplicationViewModel.CurrentPageArg, Source={StaticResource Locator}}}"/>
     </Grid>
 </Window>

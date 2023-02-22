@@ -1,3 +1,5 @@
+using StripeCreator.Core.Models;
+
 namespace StripeCreator.Stripe.Models
 {
     /// <summary>
@@ -10,17 +12,7 @@ namespace StripeCreator.Stripe.Models
         /// <summary>
         /// Бинарные данные изображения  
         /// </summary>
-        private byte[] _data = { };
-
-        /// <summary>
-        /// Ширина изображения
-        /// </summary>
-        public int _width;
-
-        /// <summary>
-        /// Высота изображения
-        /// </summary>
-        public int _height;
+        private byte[] _data = Array.Empty<byte>();
 
         #endregion
 
@@ -41,49 +33,41 @@ namespace StripeCreator.Stripe.Models
         }
 
         /// <summary>
+        /// Размер изображения
+        /// </summary>
+        public Size Size { get; }
+
+        /// <summary>
         /// Ширина изображения
         /// </summary>
-        public int Width
-        {
-            get => _width;
-            set
-            {
-                if (value <= 0)
-                    throw new ArgumentOutOfRangeException(nameof(Width), "Ширина изображения не может быть <= 0");
-                _width = value;
-            }
-        }
+        public int Width => Size.Width;
 
         /// <summary>
         /// Высота изображения
         /// </summary>
-        public int Height
-        {
-            get => _height;
-            set
-            {
-                if (value <= 0)
-                    throw new ArgumentOutOfRangeException(nameof(Height), "Высота изображения не может быть <= 0");
-                _height = value;
-            }
-        }
+        public int Height => Size.Height;
 
         #endregion
 
         #region Constructors
 
         /// <summary>
-        /// Инициализация объекта изображения
+        /// Инициализация объекта изображения по ширине и высоте
         /// </summary>
         /// <param name="data">Бинарные данные изображения</param>
         /// <param name="width">Ширина изображения в пикселях</param>
         /// <param name="height">Высота изображения в пикселях</param>
-        /// <exception cref="ImageException">Возникает при некорреткном указании данных изображения</exception>
-        public Image(byte[] data, int width, int height)
+        public Image(byte[] data, int width, int height) : this(data, new Size(width, height)) { }
+
+        /// <summary>
+        /// Инициализация объекта изображения по размеру
+        /// </summary>
+        /// <param name="data">Бинарные данные изображения</param>
+        /// <param name="size">Размер изображения</param>
+        public Image(byte[] data, Size size)
         {
             Data = data;
-            Width = width;
-            Height = height;
+            Size = size;
         }
 
         #endregion

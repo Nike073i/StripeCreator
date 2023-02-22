@@ -1,0 +1,153 @@
+﻿<local:BasePage x:TypeArguments="local:ImageProcessingPageViewModel" 
+                x:Class="StripeCreator.WPF.ImageProcessingPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:StripeCreator.WPF"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             mc:Ignorable="d" 
+             xmlns:xceed="http://schemas.xceed.com/wpf/xaml/toolkit"
+             d:DesignHeight="800" d:DesignWidth="1200"
+             d:DataContext="{x:Static local:ImageProcessingPageDesignViewModel.Instance}">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadClothsCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <!-- Изображение для обработки -->
+            <ColumnDefinition />
+            <!-- Параметры обработки -->
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <!-- Изображение для обработки -->
+        <GroupBox Header="Изображение для обработки" Grid.Column="0" Margin="5" Padding="25">
+            <Image VerticalAlignment="Center" HorizontalAlignment="Center"
+                Source="{Binding ImagePath, TargetNullValue={StaticResource DefaultImage}, FallbackValue={StaticResource DefaultImage}}"/>
+        </GroupBox>
+
+        <!-- Параметры обработки -->
+        <GroupBox Header="Параметры обработки" Grid.Column="1" Margin="5">
+            <DockPanel>
+                <!-- Кнопки действий -->
+                <UniformGrid DockPanel.Dock="Bottom" HorizontalAlignment="Right" Columns="3">
+                    <Button Content="Выбрать" Command="{Binding ChooseCommand}"/>
+                    <Button Content="Обработать" Command="{Binding HandleCommand}" />
+                    <Button Content="В меню" Command="{Binding MenuCommand}"/>
+                </UniformGrid>
+                
+                <!-- Параметры-->
+                 <StackPanel>
+                    <!-- Метод дискретизации -->
+                    <Border Background="{StaticResource DarkColorBrush}" 
+                            Padding="10" Margin="5">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource HeaderTextBlock}" Text="Метод дискретизации"/>
+                            <ComboBox ItemsSource="{Binding ResizeMethods}" 
+                                      SelectedItem="{Binding SelectedResizeMethod}"/>
+                        </StackPanel>
+                    </Border>
+                    <!-- Уменьшение цветов -->
+                    <Border Background="{StaticResource DarkColorBrush}" Padding="10" Margin="5">
+                        <StackPanel>
+                            <TextBlock Text="Уменьшение цветов" 
+                                       Style="{StaticResource HeaderTextBlock}"/>
+                            <!-- Метод уменьшения цветов-->
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Style="{StaticResource ValueTextBlock}" 
+                                           Text="Метод" 
+                                           Grid.Column="0"/>
+                                <ComboBox ItemsSource="{Binding ReductionMethods}" 
+                                          SelectedItem="{Binding SelectedReductionMethod}" 
+                                          Grid.Column="1"/>
+                            </Grid>
+                            <!-- Аргумент метода -->
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Style="{StaticResource ValueTextBlock}" 
+                                           Text="Количество" 
+                                           Grid.Column="0"/>
+                                <xceed:IntegerUpDown Value="{Binding ReductionCount}" 
+                                                     Grid.Column="1"/>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                    <!-- Каунт ткани -->
+                    <Border Background="{StaticResource DarkColorBrush}" Padding="10" Margin="5">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Grid.ColumnSpan="2" 
+                                       Style="{StaticResource HeaderTextBlock}" Text="Каунт ткани"/>
+                            <!-- Каунт из ткани -->
+                            <RadioButton  Grid.Column="0" Grid.Row="1"
+                                          VerticalAlignment="Center"
+                                          Content="По ткани" IsChecked="{Binding IsClothData}"/>
+                            <ComboBox Grid.Column="1" Grid.Row="1"
+                                      ItemsSource="{Binding Cloths}" 
+                                      SelectedItem="{Binding SelectedCloth}"/>
+
+                            <!-- Каунт из доступных -->
+                            <RadioButton  Grid.Column="0" Grid.Row="2"
+                                          Content="Из доступных"/>
+                            <ComboBox Grid.Column="1" Grid.Row="2"
+                                      ItemsSource="{Binding ClothCounts}"
+                                      SelectedItem="{Binding SelectedClothCount}"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Размер вышивки -->
+                    <Border Background="{StaticResource DarkColorBrush}" Padding="10" Margin="5">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource HeaderTextBlock}" Text="Размер вышивки"/>
+                            <ComboBox ItemsSource="{Binding AvailableStripeSizes}" 
+                                      SelectedItem="{Binding SelectedStripeSize}"/>
+                        </StackPanel>
+                    </Border>
+                    
+                    <!-- Дополнительные опции -->
+                    <Border Background="{StaticResource DarkColorBrush}" Padding="10" Margin="5">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource HeaderTextBlock}" Text="Дополнительные опции"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                </Grid.RowDefinitions>
+                                
+                                <!-- Распределение цветов -->
+                                <TextBlock Style="{StaticResource ValueTextBlock}" 
+                                           Text="Распределение цветов" 
+                                           Grid.Column="0" Grid.Row="0" />
+                                <CheckBox IsChecked="{Binding IsColorNormalizeSet}"
+                                          Grid.Column="1" Grid.Row="0" 
+                                          VerticalAlignment="Center"
+                                          Margin="5"/>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </DockPanel>
+        </GroupBox>
+    </Grid>
+</local:BasePage>

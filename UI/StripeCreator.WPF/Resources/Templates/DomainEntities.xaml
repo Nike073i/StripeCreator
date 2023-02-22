@@ -1,6 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:business="clr-namespace:StripeCreator.Business.Models;assembly=StripeCreator.Business">
+                    xmlns:business="clr-namespace:StripeCreator.Business.Models;assembly=StripeCreator.Business"
+                    xmlns:stripe="clr-namespace:StripeCreator.Stripe.Models;assembly=StripeCreator.Stripe"
+                    >
     <!-- Клиенты -->
     <DataTemplate DataType="{x:Type business:Client}">
         <StackPanel Orientation="Horizontal">
@@ -15,5 +17,16 @@
             <TextBlock Grid.Column="0" Text="{Binding Name}" Margin="5"/>
             <TextBlock Grid.Column="1" Text="{Binding Price}" Margin="5"/>
         </StackPanel>
+    </DataTemplate>
+
+    <!-- Ткань -->
+    <DataTemplate DataType="{x:Type stripe:Cloth}">
+        <TextBlock>
+            <Run Text="{Binding Name}"/>
+            <Run Text=","/>
+            <Run Text="{Binding Count}"/>
+            <Run Text="-"/>
+            <Run Text="{Binding Type}"/>
+        </TextBlock>
     </DataTemplate>
 </ResourceDictionary>
