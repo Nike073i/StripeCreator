@@ -1,4 +1,5 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <BitmapImage x:Key="DefaultImage" UriSource="pack://application:,,,/Resources/Images/DefaultImage.png" />
+    <BitmapImage x:Key="DefaultSchemeVisualization" UriSource="pack://application:,,,/Resources/Images/DefaultSchemeVisualization.png" />
 </ResourceDictionary>
