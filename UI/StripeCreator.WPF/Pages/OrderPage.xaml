@@ -14,7 +14,7 @@
             <i:InvokeCommandAction Command="{Binding RefreshCommand}"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
-    <GroupBox Header="Заказы">
+    <GroupBox Header="Заказы" Padding="0">
         <Grid>
             <Grid.ColumnDefinitions>
                 <!-- Заказы -->
