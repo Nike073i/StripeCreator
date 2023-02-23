@@ -13,8 +13,6 @@
         <Grid.Resources>
             <Style TargetType="TextBlock" BasedOn="{StaticResource GridDataTitleTextBlock}"/>
             <Style TargetType="TextBox" BasedOn="{StaticResource GridDataTextBox}"/>
-            <Style TargetType="ComboBox" BasedOn="{StaticResource ComboBoxBase}"/>
-            <Style TargetType="xceed:IntegerUpDown" BasedOn="{StaticResource GridDataIntegerUpDown}"/>
         </Grid.Resources>
         <Grid.ColumnDefinitions>
             <!-- Контактные данные -->

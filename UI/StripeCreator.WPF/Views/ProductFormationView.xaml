@@ -23,8 +23,6 @@
             <Style TargetType="TextBlock" BasedOn="{StaticResource GridDataTitleTextBlock}"/>
             <!-- Стиль для значения полей-->
             <Style TargetType="TextBox" BasedOn="{StaticResource GridDataTextBox}"/>
-            <Style TargetType="{x:Type xceed:DecimalUpDown}" BasedOn="{StaticResource GridDataDecimalUpDown}"/>
-
         </Grid.Resources>
 
         <!-- Название -->

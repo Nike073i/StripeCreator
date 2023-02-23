@@ -27,9 +27,6 @@
             <Style x:Key="Title" TargetType="TextBlock" BasedOn="{StaticResource GridDataTitleTextBlock}"/>
             <!-- Стиль для значения полей-->
             <Style TargetType="TextBox" BasedOn="{StaticResource GridDataTextBox}"/>
-            <Style TargetType="{x:Type xceed:DecimalUpDown}" BasedOn="{StaticResource GridDataDecimalUpDown}"/>
-            <Style TargetType="{x:Type xceed:IntegerUpDown}" BasedOn="{StaticResource GridDataIntegerUpDown}"/>
-            <Style TargetType="{x:Type xceed:ColorPicker}" BasedOn="{StaticResource GridDataColorPicker}"/>
             <Style TargetType="ComboBox" BasedOn="{StaticResource ComboBoxBase}"/>
 
         </Grid.Resources>

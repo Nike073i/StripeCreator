@@ -25,6 +25,9 @@
   <ItemGroup>
     <Resource Include="Resources\Images\DefaultImage.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>    
+	  <Resource Include="Resources\Images\DefaultSchemeVisualization.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
 	<None Update="appsettings.json">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

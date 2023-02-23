@@ -30,8 +30,9 @@
         {
             // Если текущая страница соответствует новой, то ничего не делаем
             if (CurrentPage == page) return;
-            CurrentPage = page;
+
             CurrentPageArg = pageArg;
+            CurrentPage = page;
         }
 
         #endregion
