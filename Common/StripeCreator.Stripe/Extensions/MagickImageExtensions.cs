@@ -1,4 +1,5 @@
 using ImageMagick;
+using StripeCreator.Core.Models;
 using StripeCreator.Stripe.Models;
 
 namespace StripeCreator.Stripe.Extensions
@@ -45,15 +46,40 @@ namespace StripeCreator.Stripe.Extensions
         }
 
         /// <summary>
+        /// Создание обработчика изображения по бинарным данным
+        /// </summary>
+        /// <param name="data">бинарные данные изображения</param>
+        /// <returns>Обработчик изображения</returns>
+        public static MagickImage CreateMagickImage(byte[] data) => new(data) { Format = MagickFormat.Png };
+
+        /// <summary>
+        /// Создание обработчика изображения по данным изображения
+        /// </summary>
+        /// <param name="image">Данные изображения</param>
+        /// <returns>Обработчик изображения</returns>
+        public static MagickImage CreateMagickImage(Image image) => new(image.Data) { Format = MagickFormat.Png };
+
+        /// <summary>
+        /// Создание обработчика изображения по размерам
+        /// </summary>
+        /// <param name="size">Размеры изображения</param>
+        /// <returns>Обработчик изображения</returns>
+        public static MagickImage CreateMagickImage(Size size, Color? color = null)
+        {
+            var imageBackground = color != null ? new MagickColor(color.HexValue) : MagickColors.Transparent;
+            return new(imageBackground, size.Width, size.Height) { Format = MagickFormat.Png };
+        }
+
+        /// <summary>
         /// Создание объекта данных изображения <see cref="Image"/>
         /// </summary>
         /// <param name="imageMagick">объект <see cref="MagickImage"/> для расширения</param>
         /// <returns>Данные изображения</returns>
-        public static Image CreateImage(this MagickImage imageMagick) => new Image(imageMagick.ToByteArray(), imageMagick.Width, imageMagick.Height);
+        public static Image CreateImage(this MagickImage imageMagick) => new(imageMagick.ToByteArray(), imageMagick.Width, imageMagick.Height);
 
         #endregion
 
-        #region private helper methods
+        #region Private helper methods
 
         /// <summary>
         /// Отрисовка пересечений от точки (<paramref name="xoffset"/>,<paramref name="yoffset"/>) до (0,0)

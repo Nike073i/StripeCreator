@@ -33,7 +33,7 @@ namespace StripeCreator.Stripe.Services
         /// <param name="image">Исходные данные изображения</param>
         public ImageProccesor(Image image)
         {
-            _imageMagick = new MagickImage(image.Data);
+            _imageMagick = MagickImageExtensions.CreateMagickImage(image);
         }
 
         #endregion

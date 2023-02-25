@@ -1,7 +1,7 @@
 namespace StripeCreator.Stripe.Models
 {
     /// <summary>
-    /// Вспомогательный класс расчета координат точек клетки <see cref="Cell"/>
+    /// Вспомогательный класс расчета координат точек клетки
     /// </summary>
     public class CellCoordinatesHelper
     {

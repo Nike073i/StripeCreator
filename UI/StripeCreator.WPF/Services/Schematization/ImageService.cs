@@ -59,7 +59,7 @@ namespace StripeCreator.WPF.Services
             bool colorNormalize = false)
         {
             var sourceImage = await _imageKeeper.LoadAsync(imagePath);
-            var imageProcessor = new ImageProccesor(sourceImage);
+            using var imageProcessor = new ImageProccesor(sourceImage);
             var schemeSize = GetSchemeSize(sourceImage.Width, sourceImage.Height, clothCount, stripeMaxSize);
             ResizeImage(resizeMethod, imageProcessor, schemeSize);
             ReduceColors(reductiveMethod, reductiveCount, imageProcessor);

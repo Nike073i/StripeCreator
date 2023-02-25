@@ -19,7 +19,7 @@ namespace StripeCreator.Stripe.Services
         /// <param name="cellSize">Размер клетки в пикселях</param>
         /// <returns>Данные по изображению</returns>
         public Image CreateCellScheme(Scheme scheme, int cellSize) =>
-            CreateScheme(scheme, cellSize, () => DrawFilledCells(cellSize, scheme));
+            CreateScheme(scheme, cellSize, () => DrawFilledCells(cellSize, scheme.SchemeTemplate));
 
         /// <summary>
         /// Создание прототипного изображения по схеме с размерами клетки <paramref name="cellSize"/> 
@@ -32,7 +32,7 @@ namespace StripeCreator.Stripe.Services
         /// <returns>Данные по изображению</returns>
 
         public Image CreatePrototypeScheme(Scheme scheme, int cellSize, ЕmbroideryType type, EmbroideryMethod method, Color? backgroundColor = null) =>
-            CreateScheme(scheme, cellSize, () => DrawEmbroideryView(scheme, cellSize, type, method, backgroundColor ?? new Color()));
+            CreateScheme(scheme, cellSize, () => DrawEmbroideryView(scheme.SchemeTemplate, cellSize, type, method, backgroundColor ?? new Color()));
 
         #endregion
 
@@ -64,29 +64,15 @@ namespace StripeCreator.Stripe.Services
         /// Отрисовка закрашенных клеток по <paramref name="scheme"/> размером <paramref name="cellSize"/>
         /// </summary>
         /// <param name="cellSize">Размер клетки в сетке</param>
-        /// <param name="scheme">Схема для отрисовки</param>
-        /// <returns></returns>
-        private Image DrawFilledCells(int cellSize, Scheme scheme)
+        /// <param name="schemeTemplate">Заготовка схемы вышивки</param>
+        /// <returns>Визуализация схемы</returns>
+        private Image DrawFilledCells(int cellSize, Image schemeTemplate)
         {
-            // Отрисовываем клетки в виде пикселей
-            var drawables = new Drawables();
-            foreach (var cell in scheme.Cells)
-            {
-                var cellPosition = cell.Position;
-                drawables.FilledPoint(cellPosition.X, cellPosition.Y, new MagickColor(cell.Color.HexValue));
-            }
-            var width = scheme.Width;
-            var height = scheme.Height;
-            using var magickImage = new MagickImage(MagickColors.Transparent, width, height)
-            {
-                Format = MagickFormat.Png
-            };
-
-            magickImage.Draw(drawables);
+            using var magickImage = MagickImageExtensions.CreateMagickImage(schemeTemplate);
 
             // Масштабируем пиксели до нужного размера клетки
-            var newWidth = width * cellSize;
-            var newHeigth = height * cellSize;
+            var newWidth = schemeTemplate.Width * cellSize;
+            var newHeigth = schemeTemplate.Height * cellSize;
             magickImage.Sample(newWidth, newHeigth);
 
             return magickImage.CreateImage();
@@ -99,10 +85,10 @@ namespace StripeCreator.Stripe.Services
         /// <param name="cellSize">Размер необходимой клетки в пикселях</param>
         /// <param name="gridSize">Размер сетки в пикселях</param>
         /// <param name="gridColor">Цвет сетки</param>
-        /// <returns></returns>
+        /// <returns>Визуализация схемы</returns>
         private Image DrawGrid(Image sourceImage, int cellSize, int gridSize, Color gridColor)
         {
-            using var magickImage = new MagickImage(sourceImage.Data);
+            using var magickImage = MagickImageExtensions.CreateMagickImage(sourceImage);
             magickImage.DrawGrid(cellSize, gridSize, new MagickColor(gridColor.HexValue));
             return magickImage.CreateImage();
         }
@@ -113,19 +99,16 @@ namespace StripeCreator.Stripe.Services
         /// <param name="type">Вид вышивки</param>
         /// <param name="method">Способ вышивки</param>
         /// <param name="cellSize">Размер клетки</param>
-        /// <param name="scheme">Данные схемы</param>
+        /// <param name="schemeTemplate">Заготовка схемы вышивки</param>
         /// <param name="backgroundColor">Фоновый цвет</param>
         /// <returns></returns>
-        private Image DrawEmbroideryView(Scheme scheme, int cellSize, ЕmbroideryType type, EmbroideryMethod method, Color backgroundColor)
+        private Image DrawEmbroideryView(Image schemeTemplate, int cellSize, ЕmbroideryType type, EmbroideryMethod method, Color backgroundColor)
         {
-            var width = scheme.Width * cellSize;
-            var height = scheme.Height * cellSize;
+            var width = schemeTemplate.Width * cellSize;
+            var height = schemeTemplate.Height * cellSize;
 
             // Создаем пустое изображение размером width x height с фоновым цветом
-            using var magickImage = new MagickImage(new MagickColor(backgroundColor.HexValue), width, height)
-            {
-                Format = MagickFormat.Png
-            };
+            using var schemeMagickImage = MagickImageExtensions.CreateMagickImage(schemeTemplate);
 
             var drawables = new Drawables();
             // Устанавливаем свойства для соответствия способу вышивки
@@ -134,10 +117,10 @@ namespace StripeCreator.Stripe.Services
             else
                 drawables.EnableStrokeAntialias();
 
-            foreach (var cell in scheme.Cells)
+            foreach (var pixel in schemeMagickImage.GetPixels())
             {
-                drawables.StrokeColor(new MagickColor(cell.Color.HexValue));
-                var topLeftPosition = new PointPosition(cell.Position.X * cellSize, cell.Position.Y * cellSize);
+                drawables.StrokeColor(pixel.ToColor() ?? MagickColors.Black);
+                var topLeftPosition = new PointPosition(pixel.X * cellSize, pixel.Y * cellSize);
                 var cellCoordinates = new CellCoordinatesHelper(topLeftPosition, cellSize);
                 // Отрисовка клетки в зависимости от вида вышивки
                 switch (type)
@@ -159,8 +142,9 @@ namespace StripeCreator.Stripe.Services
             }
 
             // Отрисовываем клетки в виде вышивки на пустом изображении
-            magickImage.Draw(drawables);
-            return magickImage.CreateImage();
+            using var newImage = MagickImageExtensions.CreateMagickImage(new(width, height), backgroundColor);
+            newImage.Draw(drawables);
+            return newImage.CreateImage();
         }
 
         #endregion

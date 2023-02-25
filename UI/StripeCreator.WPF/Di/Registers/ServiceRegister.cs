@@ -29,8 +29,8 @@ namespace StripeCreator.WPF
             services.AddTransient<StatisticService>();
             services.AddTransient<ReportService>();
             services.AddTransient<ImageKeeper>();
-            services.AddTransient<SchemeCreator>();
             services.AddTransient<ImageService>();
+            services.AddTransient<SchemeVisualizer>();
             return services;
         }
     }

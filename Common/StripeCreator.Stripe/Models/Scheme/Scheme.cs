@@ -1,6 +1,7 @@
-using System.Runtime.Serialization;
-using StripeCreator.Core.Extensions;
+using ImageMagick;
 using StripeCreator.Core.Models;
+using StripeCreator.Stripe.Extensions;
+using System.Runtime.Serialization;
 
 namespace StripeCreator.Stripe.Models
 {
@@ -8,24 +9,14 @@ namespace StripeCreator.Stripe.Models
     /// Cхема вышивки
     /// </summary>
     [Serializable]
-    public class Scheme : ISerializable
+    public class Scheme : ISerializable, IDisposable
     {
         #region Private fields
 
         /// <summary>
-        /// Ширина схемы в клетках
+        /// Обработчик заготовки схемы
         /// </summary>
-        public int _width;
-
-        /// <summary>
-        /// Высота схемы в клетках
-        /// </summary>
-        public int _height;
-
-        /// <summary>
-        /// Клетки схемы. Многомерный массив размером <see cref="Width"/> на <see cref="Height"/>
-        /// </summary>
-        private Cell[,] _cells;
+        private readonly MagickImage _magickImage;
 
         #endregion
 
@@ -34,41 +25,29 @@ namespace StripeCreator.Stripe.Models
         /// <summary>
         /// Ширина схемы в клетках
         /// </summary>
-        public int Width
-        {
-            get => _width;
-            set
-            {
-                if (value <= 0)
-                    throw new ArgumentOutOfRangeException(nameof(Height), "Ширина схемы не может быть <= 0");
-                _width = value;
-            }
-        }
+        public int Width => _magickImage.Width;
 
         /// <summary>
         /// Высота схемы в клетках
         /// </summary>
-        public int Height
-        {
-            get => _height;
-            set
-            {
-                if (value <= 0)
-                    throw new ArgumentOutOfRangeException(nameof(Height), "Высота схемы не может быть <= 0");
-                _height = value;
-            }
-        }
+        public int Height => _magickImage.Height;
 
         /// <summary>
-        /// Последовательность клеток схемы
+        /// Заготовка схемы вышивки
         /// </summary>
-        public IEnumerable<Cell> Cells => _cells.ToEnumerable();
+        public Image SchemeTemplate => _magickImage.CreateImage();
 
         /// <summary>
         /// Сетка для схемы. 
         /// Null-значение означает, что сетка не применяется
         /// </summary>
         public Grid? Grid { get; set; }
+
+        /// <summary>
+        /// Отступ для схемы. 
+        /// Null-значение означает, что отступ не применяется
+        /// </summary>
+        public Indent? Indent { get; set; }
 
         #endregion
 
@@ -77,13 +56,10 @@ namespace StripeCreator.Stripe.Models
         /// <summary>
         /// Конструктор с полной инициализацией
         /// </summary>
-        /// <param name="width">Ширина схемы в клетках</param>
-        /// <param name="height">Высота схемы в клетках</param>
-        public Scheme(int width, int height)
+        /// <param name="schemeTemplate">Заготовка схемы вышивки</param>
+        public Scheme(Image schemeTemplate)
         {
-            Width = width;
-            Height = height;
-            _cells = new Cell[width, height];
+            _magickImage = new MagickImage(schemeTemplate.Data);
         }
 
         /// <summary>
@@ -94,12 +70,14 @@ namespace StripeCreator.Stripe.Models
         /// <exception cref="SerializationException">Возникает, если нет возможности десериализовать массив клеток</exception>
         private Scheme(SerializationInfo info, StreamingContext context)
         {
-            Width = info.GetInt32(nameof(Width));
-            Height = info.GetInt32(nameof(Height));
-            var cellsObject = info.GetValue(nameof(_cells), typeof(Cell[,]));
-            if (cellsObject is not Cell[,] cells)
-                throw new SerializationException("Ошибка сериализации клеток схемы");
-            _cells = cells;
+            var dataInfo = info.GetValue("data", typeof(byte[]));
+            if (dataInfo is not byte[] data)
+                throw new SerializationException("Ошибка сериализации данных схемы");
+            _magickImage = new MagickImage(data);
+            var gridInfo = info.GetValue(nameof(Grid), typeof(Grid));
+            Grid = gridInfo is Grid grid ? grid : null;
+            var indentInfo = info.GetValue(nameof(Indent), typeof(Indent));
+            Indent = indentInfo is Indent indent ? indent : null;
         }
 
         #endregion
@@ -107,23 +85,51 @@ namespace StripeCreator.Stripe.Models
         #region Public methods
 
         /// <summary>
-        /// Установка новой клетки по позиции
+        /// Установка нового цвета по позиции
         /// </summary>
         /// <param name="color">Цвет клетки</param>
         /// <param name="position">Позиция клетки в схеме</param>
         /// <exception cref="ArgumentOutOfRangeException">Возникает, если указанная позиция выходит за границы схемы</exception>
-        public void SetCell(Color color, PointPosition position)
+        public void SetColor(Color color, PointPosition position)
         {
             if (position.X >= Width || position.Y >= Height)
                 throw new ArgumentOutOfRangeException(nameof(position));
-            _cells[position.X, position.Y] = new Cell(color, position);
+            var drawables = new Drawables();
+            drawables.FilledPoint(position.X, position.Y, new MagickColor(color.HexValue));
+            _magickImage.Draw(drawables);
+        }
+
+        /// <summary>
+        /// Замена цвета на новый
+        /// </summary>
+        /// <param name="currentColor">Текущий цвет</param>
+        /// <param name="newColor">Новый цвет</param>
+        public void ChangeColor(Color currentColor, Color newColor)
+        {
+            if (currentColor.Equals(newColor)) return;
+            _magickImage.Opaque(new MagickColor(currentColor.HexValue), new MagickColor(currentColor.HexValue));
+        }
+
+        /// <summary>
+        /// Получение цвета клетки по позиции
+        /// </summary>
+        /// <param name="position">Позиция клетки</param>
+        /// <returns>Цвет клетки</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Возникает, если указанная позиция выходит за границы схемы</exception>
+        public Color GetColor(PointPosition position)
+        {
+            if (position.X >= Width || position.Y >= Height)
+                throw new ArgumentOutOfRangeException(nameof(position));
+            _magickImage.Crop(new MagickGeometry(position.X, position.Y, 1, 1));
+            var magickColor = _magickImage.Histogram().First().Key;
+            return new Color(magickColor.ToHexString());
         }
 
         /// <summary>
         /// Последовательность всех использованных цветов в схеме
         /// </summary>
-        public IEnumerable<Color> GetColors() => Cells.Select(cell => cell.Color)
-                                                      .DistinctBy(color => color.HexValue);
+        public IEnumerable<Color> GetColors() =>
+            _magickImage.Histogram().Select(x => new Color(x.Key.ToHexString()));
 
         #endregion
 
@@ -136,10 +142,12 @@ namespace StripeCreator.Stripe.Models
         /// <param name="context">Источник потока сериализованного объекта</param>
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue(nameof(Width), Width);
-            info.AddValue(nameof(Height), Height);
-            info.AddValue(nameof(_cells), _cells);
+            info.AddValue("data", SchemeTemplate.Data);
+            info.AddValue(nameof(Grid), Grid);
+            info.AddValue(nameof(Indent), Indent);
         }
+
+        public void Dispose() => _magickImage.Dispose();
 
         #endregion
     }

@@ -61,5 +61,18 @@ namespace StripeCreator.Core.Models
         }
 
         #endregion
+
+        #region Override object methods
+
+        public override bool Equals(object? obj) => (obj is Color other) && Equals(other);
+
+        public bool Equals(Color other) =>
+            other != null && _colorHex.Equals(other.HexValue);
+
+        public override int GetHashCode() => _colorHex.GetHashCode();
+
+        public override string ToString() => HexValue;
+
+        #endregion
     }
 }

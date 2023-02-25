@@ -1,16 +1,16 @@
-using StripeCreator.Core.Models;
+﻿using StripeCreator.Core.Models;
 
 namespace StripeCreator.Stripe.Models
 {
     /// <summary>
-    /// Сетка схемы
+    /// Отступ схемы
     /// </summary>
-    public class Grid
+    public class Indent
     {
         #region Private fields
 
         /// <summary>
-        /// Размер сетки в px
+        /// Размер отступа в клетках
         /// </summary>
         private int _size;
 
@@ -19,12 +19,12 @@ namespace StripeCreator.Stripe.Models
         #region Public properties
 
         /// <summary>
-        /// Цвет сетки
+        /// Цвет отступа
         /// </summary>
         public Color Color { get; set; }
 
         /// <summary>
-        /// Размер сетки в px
+        /// Размер отступа в клетках
         /// </summary>
         public int Size
         {
@@ -32,7 +32,7 @@ namespace StripeCreator.Stripe.Models
             set
             {
                 if (value <= 0)
-                    throw new ArgumentOutOfRangeException(nameof(Size), "Размер сетки не может быть <= 0");
+                    throw new ArgumentOutOfRangeException(nameof(Size), "Размер отступа в клетках не может быть <= 0");
                 _size = value;
             }
         }
@@ -44,9 +44,9 @@ namespace StripeCreator.Stripe.Models
         /// <summary>
         /// Конструктор с полной инициализацией
         /// </summary>
-        /// <param name="size">Размер сетки в px</param>
-        /// <param name="color">Цвет сетки</param>
-        public Grid(int size, Color? color = null)
+        /// <param name="size">Размер отступа в клетках</param>
+        /// <param name="color">Цвет отступа</param>
+        public Indent(int size, Color? color = null)
         {
             Size = size;
             Color = color ?? new Color();

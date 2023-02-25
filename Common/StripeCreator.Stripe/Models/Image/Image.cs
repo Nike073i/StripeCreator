@@ -12,7 +12,7 @@ namespace StripeCreator.Stripe.Models
         /// <summary>
         /// Бинарные данные изображения  
         /// </summary>
-        private byte[] _data = Array.Empty<byte>();
+        private readonly byte[] _data;
 
         #endregion
 
@@ -21,16 +21,7 @@ namespace StripeCreator.Stripe.Models
         /// <summary>
         /// Бинарные данные изображения
         /// </summary>
-        public byte[] Data
-        {
-            get => (byte[])_data.Clone();
-            private set
-            {
-                if (value.Length == 0)
-                    throw new ArgumentException("Бинарные данные изображения не могут быть пустыми");
-                _data = value;
-            }
-        }
+        public byte[] Data => (byte[])_data.Clone();
 
         /// <summary>
         /// Размер изображения
@@ -66,7 +57,9 @@ namespace StripeCreator.Stripe.Models
         /// <param name="size">Размер изображения</param>
         public Image(byte[] data, Size size)
         {
-            Data = data;
+            if (data.Length == 0)
+                throw new ArgumentException("Бинарные данные изображения не могут быть пустыми");
+            _data = data;
             Size = size;
         }
 

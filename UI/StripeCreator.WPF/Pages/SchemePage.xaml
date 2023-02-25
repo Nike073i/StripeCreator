@@ -1,0 +1,305 @@
+﻿<local:BasePage x:TypeArguments="local:SchemePageViewModel" 
+                x:Class="StripeCreator.WPF.SchemePage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:StripeCreator.WPF"
+             xmlns:core="clr-namespace:StripeCreator.Core.Models;assembly=StripeCreator.Core"
+             mc:Ignorable="d" 
+             xmlns:xceed="http://schemas.xceed.com/wpf/xaml/toolkit"
+             d:DesignHeight="900" d:DesignWidth="1300"
+             d:DataContext="{x:Static local:SchemePageDesignViewModel.Instance}">
+    <Grid Margin="-15 0 0 0">
+        <Grid.ColumnDefinitions>
+            <!-- Меню -->
+            <ColumnDefinition Width="auto"/>
+            <!-- Свойства схемы -->
+            <ColumnDefinition Width="auto"/>
+            <!-- Визуализация схемы-->
+            <ColumnDefinition />
+            <!-- Редактирование схемы -->
+            <ColumnDefinition Width="auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.Resources>
+            <Style TargetType="TextBlock" BasedOn="{StaticResource ValueTextBlock}"/>
+        </Grid.Resources>
+
+        <!-- Меню действий-->
+        <local:SideIconMenuControl Grid.Column="0" 
+                                   Background="{StaticResource DarkColorBrush}" 
+                                   DataContext="{Binding ActionMenuViewModel}"/>
+        
+        <!-- Свойства схемы-->
+        <GroupBox Header="Свойства" Grid.Column="1"
+                  Margin="5">
+            <DockPanel MinWidth="350">
+                <!-- Отображение -->
+                <Border DockPanel.Dock="Top" Background="{StaticResource DarkColorBrush}" Padding="10" Margin="5">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Grid.ColumnSpan="2" 
+                                        Style="{StaticResource HeaderTextBlock}" Text="Вид отображения"/>
+                        <!-- Квадратиками -->
+                        <RadioButton  Grid.ColumnSpan="2" Grid.Row="1" 
+                                            VerticalAlignment="Center"
+                                            Content="Квадратиками" IsChecked="{Binding IsPixelView}"/>
+                        <!-- Вышивкой -->
+                        <RadioButton  Grid.Column="0" Grid.Row="2"
+                                            Content="Вышивкой"/>
+                        <ComboBox Grid.Column="1" Grid.Row="2"
+                                    ItemsSource="{Binding ЕmbroideryTypes}"
+                                    SelectedItem="{Binding SelectedЕmbroideryType}"/>
+                        
+                        <!-- Размер клетки -->
+                        <TextBlock Text="Размер клетки"
+                                   Grid.Column="0" Grid.Row="3"/>
+                        <xceed:IntegerUpDown Value="{Binding CellSize}"
+                                             Grid.Column="1" Grid.Row="3"/>
+                    </Grid>
+                </Border>
+
+                <!-- Размеры -->
+                <Border  DockPanel.Dock="Bottom" Background="{StaticResource DarkColorBrush}" 
+                                        Padding="10" Margin="5">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <!-- Заголовок-->
+                        <TextBlock Style="{StaticResource HeaderTextBlock}" 
+                                            Text="Размеры"
+                                            Grid.Row="0" Grid.ColumnSpan="2"/>
+
+                        <!-- Ширина -->
+                        <TextBlock Text="Ширина"
+                                            Grid.Column="0" Grid.Row="1"/>
+                        <TextBlock Text="{Binding SchemeWidth, TargetNullValue=Неизвестно}"
+                                            Grid.Column="1" Grid.Row="1"/>
+
+                        <!-- Высота-->
+                        <TextBlock Text="Высота"
+                                            Grid.Column="0" Grid.Row="2"/>
+                        <TextBlock Text="{Binding SchemeHeight, TargetNullValue=Неизвестно}"
+                                            Grid.Column="1" Grid.Row="2"/>
+                    </Grid>
+                </Border>
+
+                <!-- Цвета -->
+                <Border Background="{StaticResource DarkColorBrush}" 
+                            Padding="10" Margin="5">
+                    <StackPanel>
+                        <!-- Заголовок-->
+                        <TextBlock Style="{StaticResource HeaderTextBlock}" Text="Цвета"/>
+                        <!-- Используемые цвета -->
+                        <ListBox ItemsSource="{Binding SchemeColors}" 
+                                 VirtualizingStackPanel.IsVirtualizing="True"
+                                 VirtualizingStackPanel.VirtualizationMode="Recycling">
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <VirtualizingStackPanel />
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate DataType="core:Color">
+                                    <StackPanel Orientation="Horizontal">
+                                        <xceed:ColorPicker SelectedColor="{Binding HexValue}" IsEnabled="False"/>
+                                        <TextBlock Text="{Binding HexValue}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </StackPanel>
+                </Border>
+            </DockPanel>
+        </GroupBox>
+
+        <!-- Визуализация схемы-->
+        <GroupBox Header="Схема" Grid.Column="2"
+                  Margin="5" Padding="0">
+                <Image VerticalAlignment="Center" HorizontalAlignment="Center"
+                       Source="{Binding SchemeData, 
+                                        TargetNullValue={StaticResource DefaultSchemeVisualization}, 
+                                        FallbackValue={StaticResource DefaultSchemeVisualization}}"/>
+
+        </GroupBox>
+
+        <!-- Редактирование схемы -->
+        <GroupBox Header="Редактирование" Grid.Column="3"
+                  MinWidth="350" Margin="5">
+            <StackPanel Margin="0,8,0,-8">
+                <!-- Сетка -->
+                <Border Background="{StaticResource DarkColorBrush}" 
+                                Padding="10" Margin="5">
+                    <StackPanel>
+                        <!-- Заголовок-->
+                        <DockPanel>
+                            <CheckBox DockPanel.Dock="Right" Content="Вкл"
+                                      IsChecked="{Binding IsGridActivated}"/>
+                            <TextBlock Style="{StaticResource HeaderTextBlock}" Text="Сетка"/>
+                        </DockPanel>
+                        <!-- Параметры сетки -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <!-- Цвет -->
+                                <RowDefinition Height="auto"/>
+                                <!-- Размер -->
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <!-- Цвет -->
+                            <TextBlock Text="Цвет" 
+                                           Grid.Column="0" Grid.Row="0"/>
+                            <xceed:ColorPicker Grid.Column="1" Grid.Row="0"
+                                               SelectedColor="{Binding GridColorHex}"/>
+
+                            <!-- Размер -->
+                            <TextBlock Text="Размер" 
+                                           Grid.Column="0" Grid.Row="1"/>
+                            <xceed:IntegerUpDown Grid.Column="1" Grid.Row="1"
+                                                 Value="{Binding GridSize}"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+                <!-- Отступ -->
+                <Border Background="{StaticResource DarkColorBrush}" 
+                                Padding="10" Margin="5">
+                    <StackPanel>
+                        <!-- Заголовок-->
+                        <DockPanel>
+                            <CheckBox DockPanel.Dock="Right" Content="Вкл"
+                                      IsChecked="{Binding IsIndentActivated}"/>
+                            <TextBlock Style="{StaticResource HeaderTextBlock}" Text="Отступ"/>
+                        </DockPanel>
+                        <!-- Параметры отступа -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <!-- Цвет -->
+                                <RowDefinition Height="auto"/>
+                                <!-- Количество -->
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <!-- Цвет -->
+                            <TextBlock Text="Цвет" 
+                                       Grid.Column="0" Grid.Row="0"/>
+                            <xceed:ColorPicker Grid.Column="1" Grid.Row="0"
+                                               SelectedColor="{Binding IndentColorHex}"/>
+
+                            <!-- Количество -->
+                            <TextBlock Text="Количество" 
+                                       Grid.Column="0" Grid.Row="1"/>
+                            <xceed:IntegerUpDown Grid.Column="1" Grid.Row="1"
+                                                 Value="{Binding IndentSize}"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+                <!-- Замена цвета клетки -->
+                <Border Background="{StaticResource DarkColorBrush}" 
+                                Padding="10" Margin="5">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <!-- Заголовок-->
+                        <TextBlock Style="{StaticResource HeaderTextBlock}" 
+                                    Text="Замена цвета клетки" 
+                                    Grid.ColumnSpan="2" Grid.Row="0"/>
+
+                        <!-- Координата x-->
+                        <TextBlock Text="Координата X"
+                                   Grid.Column="0" Grid.Row="1"/> 
+                        <xceed:IntegerUpDown Grid.Column="1" Grid.Row="1"
+                                             Value="{Binding CellCoordinateX}"/>
+                        <!-- Координата y-->
+                        <TextBlock Text="Координата Y"
+                                   Grid.Column="0" Grid.Row="2"/>
+                        <xceed:IntegerUpDown Grid.Column="1" Grid.Row="2"
+                                             Value="{Binding CellCoordinateY}"/>
+                        <!-- Текущий цвет -->
+                        <TextBlock Text="Текущий цвет"
+                                   Grid.Column="0" Grid.Row="3"/>
+                        <xceed:ColorPicker Grid.Column="1" Grid.Row="3"
+                                           SelectedColor="{Binding CurrentCellColorHex}"/>
+                        <!-- Новый цвет -->
+                        <TextBlock Text="Новый цвет"
+                                   Grid.Column="0" Grid.Row="4"/>
+                        <xceed:ColorPicker Grid.Column="1" Grid.Row="4"
+                                           SelectedColor="{Binding NewCellColorHex}"/>
+                        <!-- Кнопка изменения -->
+                        <Button Content="Изменить" Padding="5"
+                                Command="{Binding ChangeCellColorCommand}"
+                                FontSize="{StaticResource FontSizeRegular}"
+                                Grid.ColumnSpan="2" Grid.Row="5"/> 
+                    </Grid>
+                </Border>
+                <!-- Замена цвета -->
+                <Border Background="{StaticResource DarkColorBrush}" 
+                                Padding="10" Margin="5">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <!-- Заголовок-->
+                        <TextBlock Style="{StaticResource HeaderTextBlock}" 
+                                    Text="Замена цвета" 
+                                    Grid.ColumnSpan="2" Grid.Row="0"/>
+
+                        <!-- Текущий цвет -->
+                        <TextBlock Text="Текущий цвет"
+                                   Grid.Column="0" Grid.Row="1"/>
+                        <xceed:ColorPicker Grid.Column="1" Grid.Row="1"
+                                           SelectedColor="{Binding CurrentColorHex}"/>
+                        <!-- Новый цвет -->
+                        <TextBlock Text="Новый цвет"
+                                   Grid.Column="0" Grid.Row="2"/>
+                        <xceed:ColorPicker Grid.Column="1" Grid.Row="2"
+                                           SelectedColor="{Binding NewColorHex}"/>
+                        <!-- Кнопка изменения -->
+                        <Button Content="Изменить" Padding="5"
+                                Command="{Binding ChangeColorCommand}"
+                                FontSize="{StaticResource FontSizeRegular}"
+                                Grid.ColumnSpan="2" Grid.Row="3"/>
+                    </Grid>
+                </Border>
+            </StackPanel>
+        </GroupBox>
+    </Grid>
+</local:BasePage>

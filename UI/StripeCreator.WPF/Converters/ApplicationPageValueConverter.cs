@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StripeCreator.Stripe.Models;
+using System;
 using System.Globalization;
 
 namespace StripeCreator.WPF
@@ -9,7 +10,7 @@ namespace StripeCreator.WPF
         {
             if (value is not ApplicationPage page)
                 throw new ArgumentNullException("Не указана страница для конвертации");
-
+            var applicationViewModel = IoC.GetRequiredService<ApplicationViewModel>();
             switch (page)
             {
                 case ApplicationPage.Welcome:
@@ -22,6 +23,11 @@ namespace StripeCreator.WPF
                     return new ReportPage(IoC.GetRequiredService<ReportPageViewModel>());
                 case ApplicationPage.ImageProcessing:
                     return new ImageProcessingPage(IoC.GetRequiredService<ImageProcessingPageViewModel>());
+                case ApplicationPage.Scheme:
+                    var viewModel = IoC.GetRequiredService<SchemePageViewModel>();
+                    if (applicationViewModel.CurrentPageArg is Image schemeTemplate)
+                        viewModel.Scheme = new Scheme(schemeTemplate);
+                    return new SchemePage(viewModel);
                 default:
                     throw new ArgumentException("Получена несуществующая страница для конвертации");
             }
