@@ -104,47 +104,45 @@ namespace StripeCreator.Stripe.Services
         /// <returns></returns>
         private Image DrawEmbroideryView(Image schemeTemplate, int cellSize, ЕmbroideryType type, EmbroideryMethod method, Color backgroundColor)
         {
-            var width = schemeTemplate.Width * cellSize;
-            var height = schemeTemplate.Height * cellSize;
+            var imageCells = DrawFilledCells(cellSize, schemeTemplate);
+            using var image = MagickImageExtensions.CreateMagickImage(imageCells);
+            using var tile = GetEmbroideryMethodPattern(type, method, cellSize);
+            using var mask = MagickImageExtensions.CreateMagickImage(new Size(imageCells.Width, imageCells.Height));
+            mask.Tile(tile, CompositeOperator.Copy);
+            image.Composite(mask, CompositeOperator.CopyAlpha);
+            image.Opaque(MagickColors.Transparent, new MagickColor(backgroundColor.HexValue));
 
-            // Создаем пустое изображение размером width x height с фоновым цветом
-            using var schemeMagickImage = MagickImageExtensions.CreateMagickImage(schemeTemplate);
+            return image.CreateImage();
+        }
 
+        private MagickImage GetEmbroideryMethodPattern(ЕmbroideryType type, EmbroideryMethod method, int cellSize)
+        {
+            var patternImage = MagickImageExtensions.CreateMagickImage(new Size(cellSize, cellSize));
             var drawables = new Drawables();
-            // Устанавливаем свойства для соответствия способу вышивки
             if (method == EmbroideryMethod.In1Thread)
                 drawables.DisableStrokeAntialias();
             else
                 drawables.EnableStrokeAntialias();
-
-            foreach (var pixel in schemeMagickImage.GetPixels())
+            var center = (cellSize - 1) / 2;
+            drawables.StrokeWidth(2);
+            switch (type)
             {
-                drawables.StrokeColor(pixel.ToColor() ?? MagickColors.Black);
-                var topLeftPosition = new PointPosition(pixel.X * cellSize, pixel.Y * cellSize);
-                var cellCoordinates = new CellCoordinatesHelper(topLeftPosition, cellSize);
-                // Отрисовка клетки в зависимости от вида вышивки
-                switch (type)
-                {
-                    case ЕmbroideryType.Cross:
-                        drawables.LineByPoints(cellCoordinates.BottomLeftPosition, cellCoordinates.TopRightPosition);
-                        drawables.LineByPoints(cellCoordinates.TopLeftPosition, cellCoordinates.BottomRightPosition);
-                        break;
-                    case ЕmbroideryType.SmoothHorizontal:
-                        drawables.LineByPoints(cellCoordinates.CenterLeftPosition, cellCoordinates.CenterRightPosition);
-                        break;
-                    case ЕmbroideryType.SmoothVertical:
-                        drawables.LineByPoints(cellCoordinates.BottomCenterPosition, cellCoordinates.TopCenterPosition);
-                        break;
-                    case ЕmbroideryType.SmoothDiagonal:
-                        drawables.LineByPoints(cellCoordinates.BottomLeftPosition, cellCoordinates.TopRightPosition);
-                        break;
-                }
+                case ЕmbroideryType.Cross:
+                    drawables.Line(0, 0, cellSize - 1, cellSize - 1);
+                    drawables.Line(0, cellSize - 1, cellSize - 1, 0);
+                    break;
+                case ЕmbroideryType.SmoothHorizontal:
+                    drawables.Line(0, center, cellSize, center);
+                    break;
+                case ЕmbroideryType.SmoothVertical:
+                    drawables.Line(center, 0, center, cellSize);
+                    break;
+                case ЕmbroideryType.SmoothDiagonal:
+                    drawables.Line(0, cellSize - 1, cellSize - 1, 0);
+                    break;
             }
-
-            // Отрисовываем клетки в виде вышивки на пустом изображении
-            using var newImage = MagickImageExtensions.CreateMagickImage(new(width, height), backgroundColor);
-            newImage.Draw(drawables);
-            return newImage.CreateImage();
+            patternImage.Draw(drawables);
+            return patternImage;
         }
 
         #endregion
