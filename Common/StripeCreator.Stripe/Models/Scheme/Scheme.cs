@@ -95,7 +95,7 @@ namespace StripeCreator.Stripe.Models
             if (position.X >= Width || position.Y >= Height)
                 throw new ArgumentOutOfRangeException(nameof(position));
             var drawables = new Drawables();
-            drawables.FilledPoint(position.X, position.Y, new MagickColor(color.HexValue));
+            drawables.FilledPoint(position.X, position.Y, MagickImageExtensions.CreateColor(color));
             _magickImage.Draw(drawables);
         }
 
@@ -107,7 +107,7 @@ namespace StripeCreator.Stripe.Models
         public void ChangeColor(Color currentColor, Color newColor)
         {
             if (currentColor.Equals(newColor)) return;
-            _magickImage.Opaque(new MagickColor(currentColor.HexValue), new MagickColor(currentColor.HexValue));
+            _magickImage.Opaque(MagickImageExtensions.CreateColor(currentColor), MagickImageExtensions.CreateColor(newColor));
         }
 
         /// <summary>
@@ -120,8 +120,8 @@ namespace StripeCreator.Stripe.Models
         {
             if (position.X >= Width || position.Y >= Height)
                 throw new ArgumentOutOfRangeException(nameof(position));
-            _magickImage.Crop(new MagickGeometry(position.X, position.Y, 1, 1));
-            var magickColor = _magickImage.Histogram().First().Key;
+            using var pixel = _magickImage.Clone(position.X, position.Y, 1, 1);
+            var magickColor = pixel.Histogram().First().Key;
             return new Color(magickColor.ToHexString());
         }
 

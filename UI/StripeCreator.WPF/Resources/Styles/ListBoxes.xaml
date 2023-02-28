@@ -47,4 +47,19 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style x:Key="ColorListItem" TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource BaseStyle}">
+        <Setter Property="IsEnabled" Value="False"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                    <Border Background="{StaticResource LightDarkColorBrush}" 
+                                                CornerRadius="10" 
+                                                Margin="5" Padding="10">
+                        <ContentPresenter/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

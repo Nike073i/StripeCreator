@@ -17,6 +17,7 @@
                 <ResourceDictionary Source="Resources/Styles/DataGrid.xaml"/>
                 <ResourceDictionary Source="Resources/Styles/DatePicker.xaml"/>
                 <ResourceDictionary Source="Resources/Styles/ToggleButtons.xaml"/>
+                <ResourceDictionary Source="Resources/Styles/Expanders.xaml"/>
                 <ResourceDictionary Source="Resources/Styles/Images.xaml"/>
                 <ResourceDictionary Source="Resources/Styles/Xceed.xaml"/>
                 <ResourceDictionary Source="Resources/Styles/OxyPlot.xaml"/>
@@ -24,6 +25,7 @@
                 <!-- Шаблоны -->
                 <ResourceDictionary Source="Resources/Templates/EntityViewModels.xaml"/>
                 <ResourceDictionary Source="Resources/Templates/DomainEntities.xaml"/>
+                <ResourceDictionary Source="Resources/Templates/ColorTemplates.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <local:ViewModelLocator x:Key="Locator"/>
         </ResourceDictionary>

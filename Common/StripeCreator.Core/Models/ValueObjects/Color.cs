@@ -42,6 +42,32 @@ namespace StripeCreator.Core.Models
             set => _colorHex = Regex.IsMatch(value, ColorPattern) ? value : DefaultColor;
         }
 
+        /// <summary>
+        /// Красный канал в битах
+        /// </summary>
+        public byte Red => _colorHex.Length == 9 ?
+            Convert.ToByte(HexValue.Substring(3, 2), 16) :
+            Convert.ToByte(HexValue.Substring(1, 2), 16);
+
+        /// <summary>
+        /// Зеленый канал в битах
+        /// </summary>
+        public byte Green => _colorHex.Length == 9 ?
+            Convert.ToByte(HexValue.Substring(5, 2), 16) :
+            Convert.ToByte(HexValue.Substring(3, 2), 16);
+
+        /// <summary>
+        /// Синий канал в битах
+        /// </summary>
+        public byte Blue => _colorHex.Length == 9 ?
+            Convert.ToByte(HexValue.Substring(7, 2), 16) :
+            Convert.ToByte(HexValue.Substring(5, 2), 16);
+
+        /// <summary>
+        /// Альфа канал в битах
+        /// </summary>
+        public byte Alpha => _colorHex.Length == 9 ? Convert.ToByte(HexValue.Substring(1, 2), 16) : (byte)255;
+
         #endregion
 
         #region Constructors

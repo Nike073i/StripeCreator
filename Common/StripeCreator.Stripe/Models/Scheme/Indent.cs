@@ -1,11 +1,13 @@
 ﻿using StripeCreator.Core.Models;
+using System.Runtime.Serialization;
 
 namespace StripeCreator.Stripe.Models
 {
     /// <summary>
     /// Отступ схемы
     /// </summary>
-    public class Indent
+    [Serializable]
+    public class Indent : ISerializable
     {
         #region Private fields
 
@@ -50,6 +52,30 @@ namespace StripeCreator.Stripe.Models
         {
             Size = size;
             Color = color ?? new Color();
+        }
+
+        /// <summary>
+        /// Приватный конструктор для десериализации объекта
+        /// </summary>
+        /// <param name="info">Данные сериализованного объекта</param>
+        /// <param name="context">Источник потока сериализованного объекта</param>
+        /// <exception cref="SerializationException">Возникает, если нет возможности десериализовать цвет отступа</exception>
+        private Indent(SerializationInfo info, StreamingContext context)
+        {
+            var size = info.GetInt32(nameof(Size));
+            var colorHex = info.GetString(nameof(Color)) ?? throw new SerializationException("Ошибка сериализации цвета отступа");
+            Size = size;
+            Color = new Color(colorHex);
+        }
+
+        #endregion
+
+        #region Interface implemetations
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue(nameof(Size), Size);
+            info.AddValue(nameof(Color), Color.HexValue);
         }
 
         #endregion

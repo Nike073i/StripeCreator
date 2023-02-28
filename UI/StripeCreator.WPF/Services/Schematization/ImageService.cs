@@ -19,7 +19,7 @@ namespace StripeCreator.WPF.Services
         /// <summary>
         /// Доступный максимальный размер стороны вышивки
         /// </summary>
-        public static readonly int[] StripeSizes = new[] { 5, 6, 7, 8, 9, 10, 12, 15, 18, 20, 22, 25, 30, 35, 40, 45, 50, 60, 65, 70, 80, 90, 100, 110, 120, 130 };
+        public static readonly int[] StripeSizes = new[] { 5, 6, 7, 8, 9, 10, 12, 15, 18, 20, 22, 25, 30, 35 };
 
         #endregion
 
@@ -28,13 +28,17 @@ namespace StripeCreator.WPF.Services
         /// <summary>
         /// Хранитель изображения
         /// </summary>
-        private readonly ImageKeeper _imageKeeper;
+        private readonly IDataKeeper<Image> _imageKeeper;
 
         #endregion
 
         #region Constructors
 
-        public ImageService(ImageKeeper imageKeeper)
+        /// <summary>
+        /// Конструктор с полной инициализацией
+        /// </summary>
+        /// <param name="imageKeeper">Хранитель изображения</param>
+        public ImageService(IDataKeeper<Image> imageKeeper)
         {
             _imageKeeper = imageKeeper;
         }

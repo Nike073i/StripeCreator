@@ -20,9 +20,7 @@
                             </Grid>
                         </BulletDecorator.Bullet>
                         <!-- Контент -->
-                        <TextBlock Margin="5 0" Foreground="{TemplateBinding Foreground}">
-                                        <ContentPresenter />
-                        </TextBlock>
+                        <ContentPresenter Margin="5 0"/>
                     </BulletDecorator>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsChecked" Value="true">

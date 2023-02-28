@@ -46,6 +46,25 @@ namespace StripeCreator.Stripe.Extensions
         }
 
         /// <summary>
+        /// Разбивка изображения на 4 части
+        /// </summary>
+        /// <param name="sourceImage">объект <see cref="MagickImage"/> для расширения</param>
+        /// <returns>Список частей изображения</returns>
+        public static IEnumerable<MagickImage> SplitImage(this MagickImage sourceImage)
+        {
+            var list = new List<MagickImage>();
+            int width = sourceImage.Width;
+            int height = sourceImage.Height;
+            int widthHalf = width / 2;
+            int heightHalf = height / 2;
+            list.Add((MagickImage)sourceImage.Clone(0, 0, widthHalf, heightHalf));
+            list.Add((MagickImage)sourceImage.Clone(widthHalf, 0, width - widthHalf, heightHalf));
+            list.Add((MagickImage)sourceImage.Clone(0, heightHalf, widthHalf, height - heightHalf));
+            list.Add((MagickImage)sourceImage.Clone(widthHalf, heightHalf, width - widthHalf, height - heightHalf));
+            return list;
+        }
+
+        /// <summary>
         /// Создание обработчика изображения по бинарным данным
         /// </summary>
         /// <param name="data">бинарные данные изображения</param>
@@ -66,16 +85,23 @@ namespace StripeCreator.Stripe.Extensions
         /// <returns>Обработчик изображения</returns>
         public static MagickImage CreateMagickImage(Size size, Color? color = null)
         {
-            var imageBackground = color != null ? new MagickColor(color.HexValue) : MagickColors.Transparent;
+            var imageBackground = color != null ? CreateColor(color) : MagickColors.Transparent;
             return new(imageBackground, size.Width, size.Height) { Format = MagickFormat.Png };
         }
+
+        /// <summary>
+        /// Создание цвета из <see cref="Color"/>
+        /// </summary>
+        /// <param name="color">Цвет</param>
+        /// <returns></returns>
+        public static MagickColor CreateColor(Color color) => new(color.Red, color.Green, color.Blue, color.Alpha);
 
         /// <summary>
         /// Создание объекта данных изображения <see cref="Image"/>
         /// </summary>
         /// <param name="imageMagick">объект <see cref="MagickImage"/> для расширения</param>
         /// <returns>Данные изображения</returns>
-        public static Image CreateImage(this MagickImage imageMagick) => new(imageMagick.ToByteArray(), imageMagick.Width, imageMagick.Height);
+        public static Image CreateImage(this IMagickImage imageMagick) => new(imageMagick.ToByteArray(), imageMagick.Width, imageMagick.Height);
 
         #endregion
 

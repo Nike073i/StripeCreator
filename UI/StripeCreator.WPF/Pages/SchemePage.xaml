@@ -5,7 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:StripeCreator.WPF"
-             xmlns:core="clr-namespace:StripeCreator.Core.Models;assembly=StripeCreator.Core"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d" 
              xmlns:xceed="http://schemas.xceed.com/wpf/xaml/toolkit"
              d:DesignHeight="900" d:DesignWidth="1300"
@@ -33,38 +33,55 @@
         <!-- Свойства схемы-->
         <GroupBox Header="Свойства" Grid.Column="1"
                   Margin="5">
-            <DockPanel MinWidth="350">
+            <DockPanel MinWidth="350" LastChildFill="True">
                 <!-- Отображение -->
                 <Border DockPanel.Dock="Top" Background="{StaticResource DarkColorBrush}" Padding="10" Margin="5">
                     <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="auto"/>
-                            <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
-                        <TextBlock Grid.Row="0" Grid.ColumnSpan="2" 
+                        <TextBlock Grid.Row="0"
                                         Style="{StaticResource HeaderTextBlock}" Text="Вид отображения"/>
                         <!-- Квадратиками -->
-                        <RadioButton  Grid.ColumnSpan="2" Grid.Row="1" 
-                                            VerticalAlignment="Center"
-                                            Content="Квадратиками" IsChecked="{Binding IsPixelView}"/>
+                        <RadioButton  Grid.Row="1" Content="Квадратиками" 
+                                      IsChecked="{Binding IsPixelView}"/>
                         <!-- Вышивкой -->
-                        <RadioButton  Grid.Column="0" Grid.Row="2"
-                                            Content="Вышивкой"/>
-                        <ComboBox Grid.Column="1" Grid.Row="2"
-                                    ItemsSource="{Binding ЕmbroideryTypes}"
-                                    SelectedItem="{Binding SelectedЕmbroideryType}"/>
-                        
-                        <!-- Размер клетки -->
-                        <TextBlock Text="Размер клетки"
-                                   Grid.Column="0" Grid.Row="3"/>
-                        <xceed:IntegerUpDown Value="{Binding CellSize}"
-                                             Grid.Column="1" Grid.Row="3"/>
+                        <RadioButton  Grid.Row="2" >
+                            <Expander Header="Вышивкой"
+                                      IsExpanded="{Binding IsChecked, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type RadioButton}}}">
+                                <Grid >
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <!-- Тип вышивки -->
+                                    <TextBlock Text="Тип" 
+                                               Grid.Column="0" Grid.Row="0"/>
+                                    <ComboBox Grid.Column="1" Grid.Row="0"
+                                              ItemsSource="{Binding ЕmbroideryTypes}"
+                                              SelectedItem="{Binding SelectedЕmbroideryType}"/>
+                                    <!-- Метод вышивки -->
+                                    <TextBlock Text="Метод" 
+                                               Grid.Column="0" Grid.Row="1"/>
+                                    <ComboBox Grid.Column="1" Grid.Row="1"
+                                              ItemsSource="{Binding ЕmbroideryMethods}"
+                                              SelectedItem="{Binding SelectedЕmbroideryMethod}"/>
+                                    <!-- Цвет ткани -->
+                                    <TextBlock Text="Цвет ткани" 
+                                               Grid.Column="0" Grid.Row="2"/>
+                                    <xceed:ColorPicker Grid.Column="1" Grid.Row="2"
+                                                       SelectedColor="{Binding SelectedClothColor}"
+                                                       UsingAlphaChannel="False"/>
+                                </Grid>
+                            </Expander>
+                        </RadioButton>
                     </Grid>
                 </Border>
 
@@ -83,8 +100,8 @@
                         </Grid.RowDefinitions>
                         <!-- Заголовок-->
                         <TextBlock Style="{StaticResource HeaderTextBlock}" 
-                                            Text="Размеры"
-                                            Grid.Row="0" Grid.ColumnSpan="2"/>
+                                    Text="Размеры"
+                                    Grid.Row="0" Grid.ColumnSpan="2"/>
 
                         <!-- Ширина -->
                         <TextBlock Text="Ширина"
@@ -102,29 +119,15 @@
 
                 <!-- Цвета -->
                 <Border Background="{StaticResource DarkColorBrush}" 
-                            Padding="10" Margin="5">
-                    <StackPanel>
-                        <!-- Заголовок-->
-                        <TextBlock Style="{StaticResource HeaderTextBlock}" Text="Цвета"/>
-                        <!-- Используемые цвета -->
+                        Padding="10" Margin="5">
+                    <DockPanel>
+                        <!--Заголовок-->
+                        <TextBlock Style="{StaticResource HeaderTextBlock}" Text="Цвета"
+                                   DockPanel.Dock="Top"/>
+                         <!--Используемые цвета-->
                         <ListBox ItemsSource="{Binding SchemeColors}" 
-                                 VirtualizingStackPanel.IsVirtualizing="True"
-                                 VirtualizingStackPanel.VirtualizationMode="Recycling">
-                            <ListBox.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <VirtualizingStackPanel />
-                                </ItemsPanelTemplate>
-                            </ListBox.ItemsPanel>
-                            <ListBox.ItemTemplate>
-                                <DataTemplate DataType="core:Color">
-                                    <StackPanel Orientation="Horizontal">
-                                        <xceed:ColorPicker SelectedColor="{Binding HexValue}" IsEnabled="False"/>
-                                        <TextBlock Text="{Binding HexValue}"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
-                    </StackPanel>
+                                 ItemContainerStyle="{StaticResource ColorListItem}"/>
+                    </DockPanel>
                 </Border>
             </DockPanel>
         </GroupBox>
@@ -142,7 +145,7 @@
         <!-- Редактирование схемы -->
         <GroupBox Header="Редактирование" Grid.Column="3"
                   MinWidth="350" Margin="5">
-            <StackPanel Margin="0,8,0,-8">
+            <StackPanel>
                 <!-- Сетка -->
                 <Border Background="{StaticResource DarkColorBrush}" 
                                 Padding="10" Margin="5">
@@ -154,29 +157,10 @@
                             <TextBlock Style="{StaticResource HeaderTextBlock}" Text="Сетка"/>
                         </DockPanel>
                         <!-- Параметры сетки -->
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <!-- Цвет -->
-                                <RowDefinition Height="auto"/>
-                                <!-- Размер -->
-                                <RowDefinition Height="auto"/>
-                            </Grid.RowDefinitions>
-                            <!-- Цвет -->
-                            <TextBlock Text="Цвет" 
-                                           Grid.Column="0" Grid.Row="0"/>
-                            <xceed:ColorPicker Grid.Column="1" Grid.Row="0"
-                                               SelectedColor="{Binding GridColorHex}"/>
-
-                            <!-- Размер -->
-                            <TextBlock Text="Размер" 
-                                           Grid.Column="0" Grid.Row="1"/>
-                            <xceed:IntegerUpDown Grid.Column="1" Grid.Row="1"
-                                                 Value="{Binding GridSize}"/>
-                        </Grid>
+                        <DockPanel>
+                            <TextBlock Text="Цвет" DockPanel.Dock="Left" />
+                            <xceed:ColorPicker SelectedColor="{Binding GridColorHex}"/>
+                        </DockPanel>
                     </StackPanel>
                 </Border>
                 <!-- Отступ -->
@@ -238,19 +222,33 @@
 
                         <!-- Координата x-->
                         <TextBlock Text="Координата X"
-                                   Grid.Column="0" Grid.Row="1"/> 
+                                   Grid.Column="0" Grid.Row="1"/>
                         <xceed:IntegerUpDown Grid.Column="1" Grid.Row="1"
-                                             Value="{Binding CellCoordinateX}"/>
+                                             Value="{Binding CellCoordinateX}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="ValueChanged">
+                                    <i:InvokeCommandAction Command="{Binding GetCellColorCommand}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </xceed:IntegerUpDown>
                         <!-- Координата y-->
                         <TextBlock Text="Координата Y"
                                    Grid.Column="0" Grid.Row="2"/>
                         <xceed:IntegerUpDown Grid.Column="1" Grid.Row="2"
-                                             Value="{Binding CellCoordinateY}"/>
+                                             Value="{Binding CellCoordinateY}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="ValueChanged">
+                                    <i:InvokeCommandAction Command="{Binding GetCellColorCommand}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </xceed:IntegerUpDown>
                         <!-- Текущий цвет -->
                         <TextBlock Text="Текущий цвет"
                                    Grid.Column="0" Grid.Row="3"/>
-                        <xceed:ColorPicker Grid.Column="1" Grid.Row="3"
+                        <xceed:ColorPicker Grid.Column="1" Grid.Row="3" 
+                                           IsEnabled="False"
                                            SelectedColor="{Binding CurrentCellColorHex}"/>
+                        
                         <!-- Новый цвет -->
                         <TextBlock Text="Новый цвет"
                                    Grid.Column="0" Grid.Row="4"/>
@@ -285,8 +283,8 @@
                         <!-- Текущий цвет -->
                         <TextBlock Text="Текущий цвет"
                                    Grid.Column="0" Grid.Row="1"/>
-                        <xceed:ColorPicker Grid.Column="1" Grid.Row="1"
-                                           SelectedColor="{Binding CurrentColorHex}"/>
+                        <ComboBox Grid.Column="1" Grid.Row="1" ItemsSource="{Binding SchemeColors}" 
+                                  SelectedItem="{Binding CurrentColorHex}"/>
                         <!-- Новый цвет -->
                         <TextBlock Text="Новый цвет"
                                    Grid.Column="0" Grid.Row="2"/>

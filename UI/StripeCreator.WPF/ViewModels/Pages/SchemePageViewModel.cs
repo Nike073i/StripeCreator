@@ -1,10 +1,12 @@
 ﻿using FontAwesome5;
+using Microsoft.Win32;
 using StripeCreator.Core.Models;
 using StripeCreator.Stripe.Models;
 using StripeCreator.Stripe.Services;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace StripeCreator.WPF
@@ -14,6 +16,12 @@ namespace StripeCreator.WPF
     /// </summary>
     public class SchemePageViewModel : BaseViewModel
     {
+        #region Constants 
+
+        private static readonly string DefaultColorHex = Color.DefaultColor;
+
+        #endregion
+
         #region Private fields
 
         /// <summary>
@@ -32,12 +40,19 @@ namespace StripeCreator.WPF
         private readonly SchemeVisualizer _schemeVisualizer;
 
         /// <summary>
+        /// Хранитель изображений
+        /// </summary>
+        private readonly IDataKeeper<Image> _imageKeeper;
+
+        /// <summary>
+        /// Хранитель схем
+        /// </summary>
+        private readonly IDataKeeper<Scheme> _schemeKeeper;
+
+        /// <summary>
         /// Схема вышивки
         /// </summary>
         private Scheme? _scheme;
-
-        /// Размер клетки для визуализации схемы в окне
-        private static readonly int PageCellSize = 2;
 
         #endregion
 
@@ -69,9 +84,19 @@ namespace StripeCreator.WPF
         public ЕmbroideryType? SelectedЕmbroideryType { get; set; }
 
         /// <summary>
-        /// Размер клетки в пикселях
+        /// Методы вышивки
         /// </summary>
-        public int CellSize { get; set; } = 5;
+        public static IEnumerable ЕmbroideryMethods => Enum.GetValues(typeof(EmbroideryMethod));
+
+        /// <summary>
+        /// Выбранный метод вышивки
+        /// </summary>
+        public EmbroideryMethod? SelectedЕmbroideryMethod { get; set; }
+
+        /// <summary>
+        /// Выбранный цвет ткани
+        /// </summary>
+        public string SelectedClothColor { get; set; } = DefaultColorHex;
 
         /// <summary>
         /// Схема вышивки
@@ -82,9 +107,8 @@ namespace StripeCreator.WPF
             set
             {
                 _scheme = value;
-                SchemeWidth = _scheme.Width;
-                SchemeHeight = _scheme.Height;
-                SchemeColors = _scheme.GetColors();
+                InitializeSchemeData();
+                RefreshColors();
             }
         }
 
@@ -111,12 +135,7 @@ namespace StripeCreator.WPF
         /// <summary>
         /// Выбранный цвет сетки
         /// </summary>
-        public string GridColorHex { get; set; } = "#696969";
-
-        /// <summary>
-        /// Выбранный размер сетки
-        /// </summary>
-        public int GridSize { get; set; } = 1;
+        public string GridColorHex { get; set; } = DefaultColorHex;
 
         /// <summary>
         /// Флаг использования отступа в схеме
@@ -126,7 +145,7 @@ namespace StripeCreator.WPF
         /// <summary>
         /// Выбранный цвет отступа
         /// </summary>
-        public string IndentColorHex { get; set; } = "#696969";
+        public string IndentColorHex { get; set; } = DefaultColorHex;
 
         /// <summary>
         /// Выбранный размер отступа в клетках
@@ -146,22 +165,22 @@ namespace StripeCreator.WPF
         /// <summary>
         /// Текущий цвет клетки с координатами <see cref="CellCoordinateX"/> <see cref="CellCoordinateY"/> 
         /// </summary>
-        public string CurrentCellColorHex { get; set; } = "#696969";
+        public string CurrentCellColorHex { get; set; } = DefaultColorHex;
 
         /// <summary>
         /// Новый цвет клетки с координатами <see cref="CellCoordinateX"/> <see cref="CellCoordinateY"/> 
         /// </summary>
-        public string NewCellColorHex { get; set; } = "#696969";
+        public string NewCellColorHex { get; set; } = DefaultColorHex;
 
         /// <summary>
         /// Текущий цвет схемы
         /// </summary>
-        public string CurrentColorHex { get; set; } = "#696969";
+        public string CurrentColorHex { get; set; } = DefaultColorHex;
 
         /// <summary>
         /// Новый цвет схемы
         /// </summary>
-        public string NewColorHex { get; set; } = "#696969";
+        public string NewColorHex { get; set; } = DefaultColorHex;
 
         #region Commands
 
@@ -196,6 +215,11 @@ namespace StripeCreator.WPF
         public ICommand MenuCommand { get; }
 
         /// <summary>
+        /// Команда получения цвета клетки
+        /// </summary>
+        public ICommand GetCellColorCommand { get; }
+
+        /// <summary>
         /// Команда изменения цвета клетки
         /// </summary>
         public ICommand ChangeCellColorCommand { get; }
@@ -222,19 +246,22 @@ namespace StripeCreator.WPF
         /// Конструктор с полной инициализацией
         /// </summary>
         /// <param name="applicationViewModel">ViewModel приложения</param>
-        public SchemePageViewModel(ApplicationViewModel applicationViewModel, SchemeVisualizer schemeVisualizer, ImageKeeper imageKeeper)
+        public SchemePageViewModel(ApplicationViewModel applicationViewModel, SchemeVisualizer schemeVisualizer, IDataKeeper<Image> imageKeeper, IDataKeeper<Scheme> schemeKeeper)
         {
             _applicationViewModel = applicationViewModel;
             _schemeVisualizer = schemeVisualizer;
+            _imageKeeper = imageKeeper;
+            _schemeKeeper = schemeKeeper;
 
             //Инициализация комманд
             ShowSchemeCommand = new RelayCommand(OnExecutedShowSchemeCommand) { CanExecutePredicate = CanExecuteShowSchemeCommand };
-            SaveCommand = new RelayCommand(OnExecutedSaveCommand) { CanExecutePredicate = CanExecuteSaveCommand };
+            SaveCommand = new RelayCommand(async (param) => await OnExecutedSaveCommand(param)) { CanExecutePredicate = CanExecuteSaveCommand };
             SaveImageCommand = new RelayCommand(OnExecutedSaveImageCommand) { CanExecutePredicate = CanExecuteSaveImageCommand };
             MaterialCalculateCommand = new RelayCommand(OnExecutedMaterialCalculateCommand) { CanExecutePredicate = CanExecuteMaterialCalculateCommand };
             PriceCalculateCommand = new RelayCommand(OnExecutedPriceCalculateCommand) { CanExecutePredicate = CanExecutePriceCalculateCommand };
             MenuCommand = new RelayCommand(OnExecutedMenuCommand);
 
+            GetCellColorCommand = new RelayCommand(OnExecutedGetCellColorCommand) { CanExecutePredicate = CanExecuteGetCellColorCommand };
             ChangeCellColorCommand = new RelayCommand(OnExecutedChangeCellColorCommand) { CanExecutePredicate = CanExecuteChangeCellColorCommand };
             ChangeColorCommand = new RelayCommand(OnExecutedChangeColorCommand) { CanExecutePredicate = CanExecuteChangeColorCommand };
 
@@ -260,6 +287,36 @@ namespace StripeCreator.WPF
                 new(EFontAwesomeIcon.Solid_ArrowLeft, "В меню", MenuCommand),
             };
 
+        /// <summary>
+        /// Инициализация полей по данным схемы
+        /// </summary>
+        private void InitializeSchemeData()
+        {
+            SchemeWidth = Scheme.Width;
+            SchemeHeight = Scheme.Height;
+            if (Scheme.Grid != null)
+            {
+                GridColorHex = Scheme.Grid.Color.HexValue;
+                IsGridActivated = true;
+            }
+            if (Scheme.Indent != null)
+            {
+                IndentColorHex = Scheme.Indent.Color.HexValue;
+                IsIndentActivated = true;
+                IndentSize = Scheme.Indent.Size;
+            }
+            CellCoordinateX = 0;
+            CellCoordinateY = 0;
+        }
+
+        /// <summary>
+        /// Обновление списка цветов схемы
+        /// </summary>
+        private void RefreshColors()
+        {
+            SchemeColors = Scheme.GetColors();
+            GetCellColorCommand.Execute(null);
+        }
 
         #region Command actions
 
@@ -268,8 +325,8 @@ namespace StripeCreator.WPF
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
         private bool CanExecuteShowSchemeCommand(object? parameter) =>
-            (IsPixelView || SelectedЕmbroideryType != null);
-
+            (IsPixelView || SelectedЕmbroideryType != null && SelectedЕmbroideryMethod != null) &&
+            (!IsIndentActivated || IndentSize > 0 && IndentSize <= 10);
 
         /// <summary>
         /// Действие при команде отображения схемы
@@ -277,19 +334,41 @@ namespace StripeCreator.WPF
         /// <param name="parameter">Параметр команды</param>
         private void OnExecutedShowSchemeCommand(object? parameter)
         {
-            var tmpMeth = EmbroideryMethod.In2Thread;
-            var tmpBack = new Color();
-            var image = IsPixelView ?
-                _schemeVisualizer.CreateCellScheme(Scheme, PageCellSize) :
-                _schemeVisualizer.CreatePrototypeScheme(Scheme, CellSize, SelectedЕmbroideryType!.Value, tmpMeth, tmpBack);
-            SchemeData = image.Data;
+            var grid = IsGridActivated ? new Grid(1, new Color(GridColorHex)) : null;
+            Scheme.Grid = grid;
+            var indent = IsIndentActivated ? new Indent(IndentSize, new Color(IndentColorHex)) : null;
+            Scheme.Indent = indent;
+            var clothColor = new Color(SelectedClothColor);
+            Task.Run(() =>
+            {
+                var image = GetSchemeVisualization(clothColor);
+                SchemeData = image.Data;
+            });
         }
+
+        /// <summary>
+        /// Получить визуализацию схемы
+        /// </summary>
+        /// <param name="clothColor">Цвет ткани</param>
+        /// <returns>Визуализация схемы</returns>
+        private Image GetSchemeVisualization(Color clothColor) =>
+            IsPixelView ?
+            _schemeVisualizer.CreateCellScheme(Scheme, true) :
+            _schemeVisualizer.CreatePrototypeScheme(Scheme, SelectedЕmbroideryType!.Value, SelectedЕmbroideryMethod!.Value, clothColor);
 
         /// <summary>
         /// Действие при команде сохранения схемы
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private void OnExecutedSaveCommand(object? parameter) { }
+        private async Task OnExecutedSaveCommand(object? parameter)
+        {
+            var dialog = new SaveFileDialog
+            {
+                Filter = "Схема StripeCreator|*.sch"
+            };
+            if (dialog.ShowDialog() == false) return;
+            await _schemeKeeper.SaveAsync(dialog.FileName, Scheme);
+        }
 
         /// <summary>
         /// Проверка вызова команды сохранения схемы
@@ -301,13 +380,32 @@ namespace StripeCreator.WPF
         /// Действие при команде экспорта схемы как изображения
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private void OnExecutedSaveImageCommand(object? parameter) { }
+        private void OnExecutedSaveImageCommand(object? parameter)
+        {
+            var dialog = new SaveFileDialog
+            {
+                Filter = "Файлы рисунков (*.bmp, *.jpg, *.jpeg, *.png)|*.bmp;*.jpg;*.jpeg;*.png"
+            };
+            if (dialog.ShowDialog() == false) return;
+            var grid = IsGridActivated ? new Grid(1, new Color(GridColorHex)) : null;
+            Scheme.Grid = grid;
+            var indent = IsIndentActivated ? new Indent(IndentSize, new Color(IndentColorHex)) : null;
+            Scheme.Indent = indent;
+            var clothColor = new Color(SelectedClothColor);
+            Task.Run(async () =>
+            {
+                var image = GetSchemeVisualization(clothColor);
+                await _imageKeeper.SaveAsync(dialog.FileName, image);
+            });
+        }
 
         /// <summary>
         /// Проверка вызова команды экспорта схемы как изображения
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private bool CanExecuteSaveImageCommand(object? parameter) { return true; }
+        private bool CanExecuteSaveImageCommand(object? parameter) =>
+            (IsPixelView || SelectedЕmbroideryType != null && SelectedЕmbroideryMethod != null) &&
+            (!IsIndentActivated || IndentSize > 0 && IndentSize <= 10);
 
         /// <summary>
         /// Проверка вызова команды расчета материлов
@@ -340,28 +438,53 @@ namespace StripeCreator.WPF
         private void OnExecutedMenuCommand(object? parameter) => _applicationViewModel.GoToPage(ApplicationPage.Welcome);
 
         /// <summary>
+        /// Проверка вызова команды получения цвета клетки
+        /// </summary>
+        /// <param name="parameter">Параметр команды</param>
+        private bool CanExecuteGetCellColorCommand(object? parameter) => Scheme != null &&
+            CellCoordinateX >= 0 && CellCoordinateX < SchemeWidth!.Value &&
+            CellCoordinateY >= 0 && CellCoordinateY < SchemeHeight!.Value;
+
+        /// <summary>
         /// Действие при команде изменения цвета клетки
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private void OnExecutedChangeCellColorCommand(object? parameter) { }
+        private void OnExecutedGetCellColorCommand(object? parameter) =>
+            CurrentCellColorHex = Scheme.GetColor(new PointPosition(CellCoordinateX, CellCoordinateY)).HexValue;
 
         /// <summary>
         /// Проверка вызова команды изменения цвета клетки
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private bool CanExecuteChangeCellColorCommand(object? parameter) { return true; }
+        private bool CanExecuteChangeCellColorCommand(object? parameter) => Scheme != null &&
+            CellCoordinateX >= 0 && CellCoordinateX < SchemeWidth!.Value &&
+            CellCoordinateY >= 0 && CellCoordinateY < SchemeHeight!.Value;
 
         /// <summary>
-        /// Действие при команде изменения цвета
+        /// Действие при команде изменения цвета клетки
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private void OnExecutedChangeColorCommand(object? parameter) { }
+        private void OnExecutedChangeCellColorCommand(object? parameter)
+        {
+            Scheme.SetColor(new Color(NewCellColorHex), new PointPosition(CellCoordinateX, CellCoordinateY));
+            RefreshColors();
+        }
 
         /// <summary>
         /// Проверка вызова команды изменения цвета
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private bool CanExecuteChangeColorCommand(object? parameter) { return true; }
+        private bool CanExecuteChangeColorCommand(object? parameter) => Scheme != null;
+
+        /// <summary>
+        /// Действие при команде изменения цвета
+        /// </summary>
+        /// <param name="parameter">Параметр команды</param>
+        private void OnExecutedChangeColorCommand(object? parameter)
+        {
+            Scheme.ChangeColor(new Color(CurrentColorHex), new Color(NewColorHex));
+            RefreshColors();
+        }
 
         #endregion
 

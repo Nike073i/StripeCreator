@@ -1,5 +1,9 @@
 ﻿using FontAwesome5;
+using Microsoft.Win32;
+using StripeCreator.Stripe.Models;
+using StripeCreator.Stripe.Services;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace StripeCreator.WPF
 {
@@ -19,6 +23,11 @@ namespace StripeCreator.WPF
         /// ViewModel приложения
         /// </summary>
         private readonly ApplicationViewModel _applicationViewModel;
+
+        /// <summary>
+        /// Хранитель схем
+        /// </summary>
+        private readonly IDataKeeper<Scheme> _schemeKeeper;
 
         #endregion
 
@@ -44,9 +53,10 @@ namespace StripeCreator.WPF
         /// Конструктор с полной инициализацией
         /// </summary>
         /// <param name="applicationViewModel">ViewModel приложения</param>
-        public WelcomePageViewModel(ApplicationViewModel applicationViewModel)
+        public WelcomePageViewModel(ApplicationViewModel applicationViewModel, IDataKeeper<Scheme> schemeKeeper)
         {
             _applicationViewModel = applicationViewModel;
+            _schemeKeeper = schemeKeeper;
             ActionMenuViewModel = new(_header, GetActionMenuItems());
         }
 
@@ -66,7 +76,7 @@ namespace StripeCreator.WPF
                 new(EFontAwesomeIcon.Solid_BusinessTime, "Заказы", LoadOrderPage),
                 new(EFontAwesomeIcon.Solid_ChartPie, "Отчеты", LoadReportPage),
                 new(EFontAwesomeIcon.Solid_Globe, "Сообщество", LoadCommunityPage),
-                new(EFontAwesomeIcon.Solid_Hashtag, "Загрузить схему", LoadSchemePage),
+                new(EFontAwesomeIcon.Solid_Hashtag, "Загрузить схему", async (param) => await LoadSchemePage(param)),
             };
 
         /// <summary>
@@ -103,7 +113,16 @@ namespace StripeCreator.WPF
         /// Загрузка страницы работы со схемами
         /// </summary>
         /// <param name="parameter">Параметр для команды</param>
-        private void LoadSchemePage(object? parameter) { }
+        private async Task LoadSchemePage(object? parameter)
+        {
+            var dialog = new OpenFileDialog
+            {
+                Filter = "Схема StripeCreator|*.sch"
+            };
+            if (dialog.ShowDialog() == false) return;
+            var scheme = await _schemeKeeper.LoadAsync(dialog.FileName);
+            _applicationViewModel.GoToPage(ApplicationPage.Scheme, scheme);
+        }
 
         #endregion
     }

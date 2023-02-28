@@ -27,6 +27,8 @@ namespace StripeCreator.WPF
                     var viewModel = IoC.GetRequiredService<SchemePageViewModel>();
                     if (applicationViewModel.CurrentPageArg is Image schemeTemplate)
                         viewModel.Scheme = new Scheme(schemeTemplate);
+                    if (applicationViewModel.CurrentPageArg is Scheme scheme)
+                        viewModel.Scheme = scheme;
                     return new SchemePage(viewModel);
                 default:
                     throw new ArgumentException("Получена несуществующая страница для конвертации");
