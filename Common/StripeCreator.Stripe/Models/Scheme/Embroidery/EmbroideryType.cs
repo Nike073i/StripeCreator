@@ -3,7 +3,7 @@ namespace StripeCreator.Stripe.Models
     /// <summary>
     /// Виды вышивки
     /// </summary>
-    public enum ЕmbroideryType
+    public enum EmbroideryType
     {
         /// <summary>
         /// Крестиком

@@ -202,7 +202,7 @@ namespace StripeCreator.WPF
             var maxSize = Math.Max(stripeSize.Width, stripeSize.Height);
 
             var schemeTemplate = await _imageService.CreateSchemaTemplate(ImagePath!, count, maxSize, SelectedResizeMethod!.Value, SelectedReductionMethod!.Value, ReductionCount);
-            _applicationViewModel.GoToPage(ApplicationPage.Scheme, schemeTemplate);
+            _applicationViewModel.GoToPage(ApplicationPage.Scheme, (schemeTemplate, count));
         }
 
         /// <summary>

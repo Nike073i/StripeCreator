@@ -33,6 +33,11 @@ namespace StripeCreator.Stripe.Models
         public int Height => _magickImage.Height;
 
         /// <summary>
+        /// Целевой каунт ткани
+        /// </summary>
+        public int TargetClothCount { get; }
+
+        /// <summary>
         /// Заготовка схемы вышивки
         /// </summary>
         public Image SchemeTemplate => _magickImage.CreateImage();
@@ -57,9 +62,10 @@ namespace StripeCreator.Stripe.Models
         /// Конструктор с полной инициализацией
         /// </summary>
         /// <param name="schemeTemplate">Заготовка схемы вышивки</param>
-        public Scheme(Image schemeTemplate)
+        public Scheme(Image schemeTemplate, int targetClothCount)
         {
             _magickImage = new MagickImage(schemeTemplate.Data);
+            TargetClothCount = targetClothCount;
         }
 
         /// <summary>
@@ -73,6 +79,7 @@ namespace StripeCreator.Stripe.Models
             var dataInfo = info.GetValue("data", typeof(byte[]));
             if (dataInfo is not byte[] data)
                 throw new SerializationException("Ошибка сериализации данных схемы");
+            TargetClothCount = info.GetInt32(nameof(TargetClothCount));
             _magickImage = new MagickImage(data);
             var gridInfo = info.GetValue(nameof(Grid), typeof(Grid));
             Grid = gridInfo is Grid grid ? grid : null;
@@ -131,6 +138,12 @@ namespace StripeCreator.Stripe.Models
         public IEnumerable<Color> GetColors() =>
             _magickImage.Histogram().Select(x => new Color(x.Key.ToHexString()));
 
+        /// <summary>
+        /// Статистика всех использованных цветов в схеме
+        /// </summary>
+        public Dictionary<Color, int> GetColorsStatistic() =>
+            _magickImage.Histogram().ToDictionary(c => new Color(c.Key.ToHexString()), c => c.Value);
+
         #endregion
 
         #region Interface implementations
@@ -145,6 +158,7 @@ namespace StripeCreator.Stripe.Models
             info.AddValue("data", SchemeTemplate.Data);
             info.AddValue(nameof(Grid), Grid);
             info.AddValue(nameof(Indent), Indent);
+            info.AddValue(nameof(TargetClothCount), TargetClothCount);
         }
 
         public void Dispose() => _magickImage.Dispose();

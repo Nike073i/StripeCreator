@@ -2,10 +2,12 @@
 using Microsoft.Win32;
 using StripeCreator.Core.Models;
 using StripeCreator.Stripe.Models;
+using StripeCreator.Stripe.Repositories;
 using StripeCreator.Stripe.Services;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -33,6 +35,21 @@ namespace StripeCreator.WPF
         /// ViewModel приложения
         /// </summary>
         private readonly ApplicationViewModel _applicationViewModel;
+
+        /// <summary>
+        /// Менеджер интерактивного взаимодействия
+        /// </summary>
+        private readonly IUiManager _uiManager;
+
+        /// <summary>
+        /// Репозиторий тканей
+        /// </summary>
+        private readonly IClothRepository _clothRepository;
+
+        /// <summary>
+        /// Репозиторий нитей
+        /// </summary>
+        private readonly IThreadRepository _threadRepository;
 
         /// <summary>
         /// Визуализатор схемы
@@ -76,12 +93,12 @@ namespace StripeCreator.WPF
         /// <summary>
         /// Типы вышивки
         /// </summary>
-        public static IEnumerable ЕmbroideryTypes => Enum.GetValues(typeof(ЕmbroideryType));
+        public static IEnumerable ЕmbroideryTypes => Enum.GetValues(typeof(EmbroideryType));
 
         /// <summary>
         /// Выбранный тип вышивки
         /// </summary>
-        public ЕmbroideryType? SelectedЕmbroideryType { get; set; }
+        public EmbroideryType? SelectedЕmbroideryType { get; set; }
 
         /// <summary>
         /// Методы вышивки
@@ -246,24 +263,27 @@ namespace StripeCreator.WPF
         /// Конструктор с полной инициализацией
         /// </summary>
         /// <param name="applicationViewModel">ViewModel приложения</param>
-        public SchemePageViewModel(ApplicationViewModel applicationViewModel, SchemeVisualizer schemeVisualizer, IDataKeeper<Image> imageKeeper, IDataKeeper<Scheme> schemeKeeper)
+        public SchemePageViewModel(ApplicationViewModel applicationViewModel, SchemeVisualizer schemeVisualizer, IDataKeeper<Image> imageKeeper, IDataKeeper<Scheme> schemeKeeper, IUiManager uiManager, IClothRepository clothRepository, IThreadRepository threadRepository)
         {
             _applicationViewModel = applicationViewModel;
             _schemeVisualizer = schemeVisualizer;
             _imageKeeper = imageKeeper;
             _schemeKeeper = schemeKeeper;
+            _uiManager = uiManager;
+            _clothRepository = clothRepository;
+            _threadRepository = threadRepository;
 
             //Инициализация комманд
             ShowSchemeCommand = new RelayCommand(OnExecutedShowSchemeCommand) { CanExecutePredicate = CanExecuteShowSchemeCommand };
             SaveCommand = new RelayCommand(async (param) => await OnExecutedSaveCommand(param)) { CanExecutePredicate = CanExecuteSaveCommand };
             SaveImageCommand = new RelayCommand(OnExecutedSaveImageCommand) { CanExecutePredicate = CanExecuteSaveImageCommand };
-            MaterialCalculateCommand = new RelayCommand(OnExecutedMaterialCalculateCommand) { CanExecutePredicate = CanExecuteMaterialCalculateCommand };
-            PriceCalculateCommand = new RelayCommand(OnExecutedPriceCalculateCommand) { CanExecutePredicate = CanExecutePriceCalculateCommand };
+            MaterialCalculateCommand = new RelayCommand(OnExecutedMaterialCalculateCommand);
+            PriceCalculateCommand = new RelayCommand(async (param) => await OnExecutedPriceCalculateCommand(param));
             MenuCommand = new RelayCommand(OnExecutedMenuCommand);
 
             GetCellColorCommand = new RelayCommand(OnExecutedGetCellColorCommand) { CanExecutePredicate = CanExecuteGetCellColorCommand };
             ChangeCellColorCommand = new RelayCommand(OnExecutedChangeCellColorCommand) { CanExecutePredicate = CanExecuteChangeCellColorCommand };
-            ChangeColorCommand = new RelayCommand(OnExecutedChangeColorCommand) { CanExecutePredicate = CanExecuteChangeColorCommand };
+            ChangeColorCommand = new RelayCommand(OnExecutedChangeColorCommand);
 
             ActionMenuViewModel = new(_header, GetMenuItems());
         }
@@ -408,28 +428,31 @@ namespace StripeCreator.WPF
             (!IsIndentActivated || IndentSize > 0 && IndentSize <= 10);
 
         /// <summary>
-        /// Проверка вызова команды расчета материлов
-        /// </summary>
-        /// <param name="parameter">Параметр команды</param>
-        private bool CanExecuteMaterialCalculateCommand(object? parameter) { return true; }
-
-        /// <summary>
         /// Действие при команде расчета материлов
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private void OnExecutedMaterialCalculateCommand(object? parameter) { }
+        private void OnExecutedMaterialCalculateCommand(object? parameter) => _uiManager.CalculateMaterial(Scheme);
 
         /// <summary>
         /// Действие при команде расчета стоимости
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private void OnExecutedPriceCalculateCommand(object? parameter) { }
-
-        /// <summary>
-        /// Проверка вызова команды расчета стоимости
-        /// </summary>
-        /// <param name="parameter">Параметр команды</param>
-        private bool CanExecutePriceCalculateCommand(object? parameter) { return true; }
+        private async Task OnExecutedPriceCalculateCommand(object? parameter)
+        {
+            var threads = await _threadRepository.GetAllAsync();
+            if (!threads.Any())
+            {
+                await _uiManager.ShowError(new("Ошибка расчета", "В хранилище отсутствуют нити"));
+                return;
+            }
+            var cloths = await _clothRepository.GetAllAsync();
+            if (!cloths.Any())
+            {
+                await _uiManager.ShowError(new("Ошибка расчета", "В хранилище отсутствуют ткани"));
+                return;
+            }
+            await _uiManager.CalculatePrice(Scheme, threads, cloths);
+        }
 
         /// <summary>
         /// Действие при команде выхода в главное меню
@@ -441,7 +464,7 @@ namespace StripeCreator.WPF
         /// Проверка вызова команды получения цвета клетки
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private bool CanExecuteGetCellColorCommand(object? parameter) => Scheme != null &&
+        private bool CanExecuteGetCellColorCommand(object? parameter) =>
             CellCoordinateX >= 0 && CellCoordinateX < SchemeWidth!.Value &&
             CellCoordinateY >= 0 && CellCoordinateY < SchemeHeight!.Value;
 
@@ -456,7 +479,7 @@ namespace StripeCreator.WPF
         /// Проверка вызова команды изменения цвета клетки
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private bool CanExecuteChangeCellColorCommand(object? parameter) => Scheme != null &&
+        private bool CanExecuteChangeCellColorCommand(object? parameter) =>
             CellCoordinateX >= 0 && CellCoordinateX < SchemeWidth!.Value &&
             CellCoordinateY >= 0 && CellCoordinateY < SchemeHeight!.Value;
 
@@ -469,12 +492,6 @@ namespace StripeCreator.WPF
             Scheme.SetColor(new Color(NewCellColorHex), new PointPosition(CellCoordinateX, CellCoordinateY));
             RefreshColors();
         }
-
-        /// <summary>
-        /// Проверка вызова команды изменения цвета
-        /// </summary>
-        /// <param name="parameter">Параметр команды</param>
-        private bool CanExecuteChangeColorCommand(object? parameter) => Scheme != null;
 
         /// <summary>
         /// Действие при команде изменения цвета

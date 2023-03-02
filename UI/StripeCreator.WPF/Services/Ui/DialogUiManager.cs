@@ -1,4 +1,6 @@
 ﻿using StripeCreator.Business.Models;
+using StripeCreator.Stripe.Models;
+using StripeCreator.Stripe.Services;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -114,6 +116,42 @@ namespace StripeCreator.WPF
             window.ShowDialog();
             return Task.CompletedTask;
         }
+
+        public Task CalculateMaterial(Scheme scheme)
+        {
+            DialogWindow window = new();
+            var materialCalculator = new SchemeMaterialCalculator();
+            var schemeMaterialCalculateViewModel = new SchemeMaterialCalculateViewModel(this, materialCalculator, scheme);
+            var schemeMaterialCalculateView = new SchemeMaterialCalculateView(schemeMaterialCalculateViewModel);
+
+            void closeAction(object? param) => window.Close();
+            void okAction(object? param) => schemeMaterialCalculateViewModel?.CalculateMaterial();
+
+            var windowViewModel = new DialogWindowViewModel(schemeMaterialCalculateView, "Расчет", "Материалы", okAction, closeAction, okText: "Рассчитать");
+
+            window.DataContext = windowViewModel;
+            window.ShowDialog();
+            return Task.CompletedTask;
+        }
+
+        public Task CalculatePrice(Scheme scheme, IEnumerable<Thread> threads, IEnumerable<Cloth> cloths)
+        {
+            DialogWindow window = new();
+            var materialCalculator = new SchemeMaterialCalculator();
+            var priceCalculator = new SchemePriceCalculator(materialCalculator);
+            var schemePriceCalculateViewModel = new SchemePriceCalculateViewModel(this, priceCalculator, scheme, cloths, threads);
+            var schemePriceCalculateView = new SchemePriceCalculateView(schemePriceCalculateViewModel);
+
+            void closeAction(object? param) => window.Close();
+            void okAction(object? param) => schemePriceCalculateViewModel?.CalculatePrice();
+
+            var windowViewModel = new DialogWindowViewModel(schemePriceCalculateView, "Расчет", "Стоимость", okAction, closeAction, okText: "Рассчитать");
+
+            window.DataContext = windowViewModel;
+            window.ShowDialog();
+            return Task.CompletedTask;
+        }
+
 
         #endregion
 

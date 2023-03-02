@@ -1,0 +1,79 @@
+﻿<local:BasePage x:Class="StripeCreator.WPF.SchemePriceCalculateView"
+                x:TypeArguments="local:SchemePriceCalculateViewModel" 
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:StripeCreator.WPF"
+             xmlns:xceed="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d"
+             d:DataContext="{x:Static local:SchemePriceCalculateDesignViewModel.Instance}">
+    <Grid MinWidth="1200"
+          Height="600">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <!-- Опции расчета -->
+        <GroupBox Grid.Column="0"
+                  Header="Опции" Width="350"
+                  Margin="5" Padding="25">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <!-- Тип вышивки -->
+                <TextBlock Text="Тип" Grid.Column="0" Grid.Row="0" Style="{StaticResource GridDataTitleTextBlock}"/>
+                <ComboBox Grid.Column="1" Grid.Row="0"
+                    SelectedIndex="0"
+                    ItemsSource="{Binding EmbroideryTypes}"
+                    SelectedItem="{Binding SelectedЕmbroideryType}"/>
+                <!-- Метод вышивки-->
+                <TextBlock Text="Метод" Grid.Column="0" Grid.Row="1" Style="{StaticResource GridDataTitleTextBlock}"/>
+                <ComboBox Grid.Column="1" Grid.Row="1"
+                    SelectedIndex="0"
+                    ItemsSource="{Binding EmbroideryMethods}"
+                    SelectedItem="{Binding SelectedЕmbroideryMethod}"/>
+                <!-- Ткань -->
+                <TextBlock Text="Ткань" Grid.Column="0" Grid.Row="2" Style="{StaticResource GridDataTitleTextBlock}"/>
+                <ComboBox Grid.Column="1" Grid.Row="2"
+                    SelectedIndex="0"
+                    ItemsSource="{Binding Cloths}"
+                    SelectedItem="{Binding SelectedCloth}"/>
+            </Grid>
+        </GroupBox>
+        <GroupBox Grid.Column="1"
+                  Header="Нити" 
+                  Margin="5" Padding="25">
+            <ListBox ItemsSource="{Binding ColorThreads}" 
+                     ItemContainerStyle="{StaticResource ThreadLengthListItem}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate DataType="{x:Type local:ColorThreadViewModel}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <xceed:ColorPicker Grid.Column="0"
+                                               SelectedColor="{Binding Color.HexValue}" 
+                                               IsEnabled="False" />
+                            <TextBlock Text="{Binding Color.HexValue}"
+                                       Style="{StaticResource ValueTextBlock}"
+                                       HorizontalAlignment="Center" Grid.Column="1"/>
+                            <ComboBox SelectedItem="{Binding Thread}" 
+                                      Grid.Column="2"
+                                ItemsSource="{Binding DataContext.Threads, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:BasePage}}}"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </GroupBox>
+    </Grid>
+</local:BasePage>

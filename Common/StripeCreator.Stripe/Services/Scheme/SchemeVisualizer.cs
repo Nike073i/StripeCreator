@@ -61,7 +61,7 @@ namespace StripeCreator.Stripe.Services
         /// <param name="backgroundColor">Фоновый цвет</param>
         /// <returns>Данные по изображению</returns>
 
-        public Image CreatePrototypeScheme(Scheme scheme, ЕmbroideryType type, EmbroideryMethod method, Color? backgroundColor = null)
+        public Image CreatePrototypeScheme(Scheme scheme, EmbroideryType type, EmbroideryMethod method, Color? backgroundColor = null)
         {
             var cellSize = GetCellSize(method);
             return CreateScheme(scheme, cellSize, () => DrawEmbroideryView(scheme.SchemeTemplate, type, method, backgroundColor ?? new Color()));
@@ -163,7 +163,7 @@ namespace StripeCreator.Stripe.Services
         /// <param name="schemeTemplate">Заготовка схемы вышивки</param>
         /// <param name="backgroundColor">Фоновый цвет</param>
         /// <returns>Визуализация схемы</returns>
-        private Image DrawEmbroideryView(Image schemeTemplate, ЕmbroideryType type, EmbroideryMethod method, Color backgroundColor)
+        private Image DrawEmbroideryView(Image schemeTemplate, EmbroideryType type, EmbroideryMethod method, Color backgroundColor)
         {
             var cellSize = GetCellSize(method);
             var imageCells = DrawFilledCells(cellSize, schemeTemplate);
@@ -183,7 +183,7 @@ namespace StripeCreator.Stripe.Services
         /// <param name="type"></param>
         /// <param name="method"></param>
         /// <returns></returns>
-        private static MagickImage GetEmbroideryMethodPatternImage(ЕmbroideryType type, EmbroideryMethod method)
+        private static MagickImage GetEmbroideryMethodPatternImage(EmbroideryType type, EmbroideryMethod method)
         {
             var cellSize = GetCellSize(method);
             var patternImage = MagickImageExtensions.CreateMagickImage(new Size(cellSize, cellSize));
@@ -197,23 +197,23 @@ namespace StripeCreator.Stripe.Services
         /// </summary>
         /// <param name="type">Тип вышивки</param>
         /// <returns>Паттерн</returns>
-        private static Drawables Get1ThreadPattern(ЕmbroideryType type)
+        private static Drawables Get1ThreadPattern(EmbroideryType type)
         {
             var drawables = new Drawables();
             drawables.DisableStrokeAntialias();
             switch (type)
             {
-                case ЕmbroideryType.Cross:
+                case EmbroideryType.Cross:
                     drawables.Line(0, 0, 2, 2);
                     drawables.Line(0, 2, 2, 0);
                     break;
-                case ЕmbroideryType.SmoothHorizontal:
+                case EmbroideryType.SmoothHorizontal:
                     drawables.Line(0, 1, 2, 1);
                     break;
-                case ЕmbroideryType.SmoothVertical:
+                case EmbroideryType.SmoothVertical:
                     drawables.Line(1, 0, 1, 2);
                     break;
-                case ЕmbroideryType.SmoothDiagonal:
+                case EmbroideryType.SmoothDiagonal:
                     drawables.Line(0, 2, 2, 0);
                     break;
             }
@@ -225,13 +225,13 @@ namespace StripeCreator.Stripe.Services
         /// </summary>
         /// <param name="type">Тип вышивки</param>
         /// <returns>Паттерн</returns>
-        private static Drawables Get2ThreadPattern(ЕmbroideryType type)
+        private static Drawables Get2ThreadPattern(EmbroideryType type)
         {
             var drawables = new Drawables();
             drawables.DisableStrokeAntialias();
             switch (type)
             {
-                case ЕmbroideryType.Cross:
+                case EmbroideryType.Cross:
                     // Диагональ левый верх - правый низ
                     drawables.Line(1, 0, 4, 3);
                     drawables.Line(0, 0, 4, 4);
@@ -241,17 +241,17 @@ namespace StripeCreator.Stripe.Services
                     drawables.Line(0, 4, 4, 0);
                     drawables.Line(1, 4, 4, 1);
                     break;
-                case ЕmbroideryType.SmoothHorizontal:
+                case EmbroideryType.SmoothHorizontal:
                     drawables.Line(0, 1, 4, 1);
                     drawables.Line(0, 2, 4, 2);
                     drawables.Line(0, 3, 4, 3);
                     break;
-                case ЕmbroideryType.SmoothVertical:
+                case EmbroideryType.SmoothVertical:
                     drawables.Line(1, 0, 1, 4);
                     drawables.Line(2, 0, 2, 4);
                     drawables.Line(3, 0, 3, 4);
                     break;
-                case ЕmbroideryType.SmoothDiagonal:
+                case EmbroideryType.SmoothDiagonal:
                     drawables.Line(0, 3, 3, 0);
                     drawables.Line(0, 4, 4, 0);
                     drawables.Line(1, 4, 4, 1);

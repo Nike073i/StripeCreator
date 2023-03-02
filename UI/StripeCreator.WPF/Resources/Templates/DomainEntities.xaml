@@ -29,4 +29,15 @@
             <Run Text="{Binding Type}"/>
         </TextBlock>
     </DataTemplate>
+
+    <!-- Нить -->
+    <DataTemplate DataType="{x:Type stripe:Thread}">
+        <TextBlock>
+            <Run Text="{Binding Name}"/>
+            <Run Text=","/>
+            <Run Text="{Binding Weight}"/>
+            <Run Text="-"/>
+            <Run Text="{Binding Type}"/>
+        </TextBlock>
+    </DataTemplate>
 </ResourceDictionary>

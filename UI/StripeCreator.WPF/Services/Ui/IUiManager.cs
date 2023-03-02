@@ -1,4 +1,5 @@
 ﻿using StripeCreator.Business.Models;
+using StripeCreator.Stripe.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -48,5 +49,19 @@ namespace StripeCreator.WPF
         /// </summary>
         /// <param name="orderDetailViewModel">ViewModel информации по заказу</param>
         Task ShowOrderDetail(OrderDetailViewModel orderDetailViewModel);
+
+        /// <summary>
+        /// Отобразить окно расчета материалов
+        /// </summary>
+        /// <param name="scheme">Схема</param>
+        Task CalculateMaterial(Scheme scheme);
+
+        /// <summary>
+        /// Отобразить окно расчета стоимости
+        /// </summary>
+        /// <param name="scheme">Схема</param>
+        /// <param name="threads">Хранимые нити</param>
+        /// <param name="cloths">Хранимые ткани</param>
+        Task CalculatePrice(Scheme scheme, IEnumerable<Thread> threads, IEnumerable<Cloth> cloths);
     }
 }

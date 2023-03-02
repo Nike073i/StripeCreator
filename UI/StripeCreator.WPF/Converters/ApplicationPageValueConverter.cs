@@ -25,8 +25,8 @@ namespace StripeCreator.WPF
                     return new ImageProcessingPage(IoC.GetRequiredService<ImageProcessingPageViewModel>());
                 case ApplicationPage.Scheme:
                     var viewModel = IoC.GetRequiredService<SchemePageViewModel>();
-                    if (applicationViewModel.CurrentPageArg is Image schemeTemplate)
-                        viewModel.Scheme = new Scheme(schemeTemplate);
+                    if (applicationViewModel.CurrentPageArg is (Image schemeTemplate, int targetClothCount))
+                        viewModel.Scheme = new Scheme(schemeTemplate, targetClothCount);
                     if (applicationViewModel.CurrentPageArg is Scheme scheme)
                         viewModel.Scheme = scheme;
                     return new SchemePage(viewModel);
