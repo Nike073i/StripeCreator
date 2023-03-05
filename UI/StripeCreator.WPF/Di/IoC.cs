@@ -71,7 +71,9 @@ namespace StripeCreator.WPF
             services.AddSqlServer(host.Configuration.GetSection("Database"))
                 .AddDbRepository()
                 .AddServices()
-                .AddViewModel();
+                .AddVkServices(host.Configuration.GetSection("VK"))
+                .AddVkRepositories()
+                .AddPagesViewModel();
         }
 
         #endregion

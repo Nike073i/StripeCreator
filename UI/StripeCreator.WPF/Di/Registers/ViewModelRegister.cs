@@ -12,7 +12,7 @@ namespace StripeCreator.WPF
         /// </summary>
         /// <param name="services">Коллекция сервисов</param>
         /// <returns>Коллекция сервисов</returns>
-        public static IServiceCollection AddViewModel(this IServiceCollection services)
+        public static IServiceCollection AddPagesViewModel(this IServiceCollection services)
         {
             services.AddSingleton<ApplicationViewModel>();
             services.AddTransient<WelcomePageViewModel>();
@@ -21,6 +21,7 @@ namespace StripeCreator.WPF
             services.AddTransient<ReportPageViewModel>();
             services.AddTransient<ImageProcessingPageViewModel>();
             services.AddTransient<SchemePageViewModel>();
+            services.AddTransient<CommunityPageViewModel>();
             return services;
         }
     }

@@ -29,6 +29,11 @@ namespace StripeCreator.WPF
         /// </summary>
         private readonly IDataKeeper<Scheme> _schemeKeeper;
 
+        /// <summary>
+        /// Менеджер интерактивного взаимодействия
+        /// </summary>
+        private readonly IUiManager _uiManager;
+
         #endregion
 
         #region Public Properties 
@@ -53,10 +58,13 @@ namespace StripeCreator.WPF
         /// Конструктор с полной инициализацией
         /// </summary>
         /// <param name="applicationViewModel">ViewModel приложения</param>
-        public WelcomePageViewModel(ApplicationViewModel applicationViewModel, IDataKeeper<Scheme> schemeKeeper)
+        /// <param name="schemeKeeper">Хранитель схем</param>
+        /// <param name="uiManager">Менеджер интерактивного взаимодействия</param>
+        public WelcomePageViewModel(ApplicationViewModel applicationViewModel, IDataKeeper<Scheme> schemeKeeper, IUiManager uiManager)
         {
             _applicationViewModel = applicationViewModel;
             _schemeKeeper = schemeKeeper;
+            _uiManager = uiManager;
             ActionMenuViewModel = new(_header, GetActionMenuItems());
         }
 
@@ -107,7 +115,15 @@ namespace StripeCreator.WPF
         /// Загрузка страницы работы с сообществом
         /// </summary>
         /// <param name="parameter">Параметр для команды</param>
-        private void LoadCommunityPage(object? parameter) { }
+        private void LoadCommunityPage(object? parameter)
+        {
+            if (!InternetChecker.IsConnectedToInternet())
+            {
+                _uiManager.ShowError(new MessageBoxDialogViewModel("Ошибка", "Отсутствует подключение к интернету"));
+                return;
+            }
+            _applicationViewModel.GoToPage(ApplicationPage.Community);
+        }
 
         /// <summary>
         /// Загрузка страницы работы со схемами

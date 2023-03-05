@@ -1,6 +1,7 @@
 ﻿using StripeCreator.Business.Models;
 using StripeCreator.Stripe.Models;
 using StripeCreator.Stripe.Services;
+using StripeCreator.VK.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -152,6 +153,113 @@ namespace StripeCreator.WPF
             return Task.CompletedTask;
         }
 
+        public Task<MarketCreateModel?> CreateMarket()
+        {
+            DialogWindow window = new();
+            var createMarketViewModel = new MarketCreateViewModel();
+            MarketCreateModel? createMarketModel = null;
+            async void okAction(object? param)
+            {
+                var newViewModel = createMarketViewModel.GetData();
+                if (newViewModel == null)
+                {
+                    await ShowError(new("Ошибка заполнения полей", createMarketViewModel.ErrorString));
+                    return;
+                }
+                createMarketModel = newViewModel;
+                window.DialogResult = true;
+                window.Close();
+            }
+
+            void cancelAction(object? param)
+            {
+                window.DialogResult = false;
+                window.Close();
+            }
+
+            var createMarketView = new MarketCreateView(createMarketViewModel);
+            string title = "Создание товара";
+            string caption = "Новый товар";
+
+            var windowViewModel = new DialogWindowViewModel(createMarketView, title, caption, okAction, cancelAction, okText: "Сохранить");
+
+            window.DataContext = windowViewModel;
+            window.ShowDialog();
+
+            return Task.FromResult(createMarketModel);
+        }
+
+        public Task<Market?> EditMarket(MarketViewModel viewModel)
+        {
+            DialogWindow window = new();
+            var editMarketViewModel = new MarketEditViewModel(viewModel.Market);
+            Market? editMarket = null;
+            async void okAction(object? param)
+            {
+                var newMarket = editMarketViewModel.GetData();
+                if (newMarket == null)
+                {
+                    await ShowError(new("Ошибка заполнения полей", editMarketViewModel.ErrorString));
+                    return;
+                }
+                editMarket = newMarket;
+                window.DialogResult = true;
+                window.Close();
+            }
+
+            void cancelAction(object? param)
+            {
+                window.DialogResult = false;
+                window.Close();
+            }
+
+            var editMarketView = new MarketEditView(editMarketViewModel);
+            string title = "Редактирование товара";
+            string caption = $"Товар - {viewModel.Market.Id}";
+
+            var windowViewModel = new DialogWindowViewModel(editMarketView, title, caption, okAction, cancelAction, okText: "Сохранить");
+
+            window.DataContext = windowViewModel;
+            window.ShowDialog();
+
+            return Task.FromResult(editMarket);
+        }
+
+        public Task<PublishMessageModel?> PublishMessage(PublishMessageViewModel? publishMessageViewModel = null)
+        {
+            DialogWindow window = new();
+            publishMessageViewModel ??= new PublishMessageViewModel();
+            PublishMessageModel? publishMessageModel = null;
+            async void okAction(object? param)
+            {
+                var newViewModel = publishMessageViewModel.GetData();
+                if (newViewModel == null)
+                {
+                    await ShowError(new("Ошибка заполнения полей", publishMessageViewModel.ErrorString));
+                    return;
+                }
+                publishMessageModel = newViewModel;
+                window.DialogResult = true;
+                window.Close();
+            }
+
+            void cancelAction(object? param)
+            {
+                window.DialogResult = false;
+                window.Close();
+            }
+
+            var publishMessageView = new PublishMessageView(publishMessageViewModel);
+            string title = "Публикация записи";
+            string caption = "Новая запись";
+
+            var windowViewModel = new DialogWindowViewModel(publishMessageView, title, caption, okAction, cancelAction, okText: "Сохранить");
+
+            window.DataContext = windowViewModel;
+            window.ShowDialog();
+
+            return Task.FromResult(publishMessageModel);
+        }
 
         #endregion
 

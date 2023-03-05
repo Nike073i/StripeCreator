@@ -20,6 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Common\StripeCreator.Statistic\StripeCreator.Statistic.csproj" />
     <ProjectReference Include="..\..\Data\StripeCreator.DAL.SqlServer\StripeCreator.DAL.SqlServer.csproj" />
+    <ProjectReference Include="..\..\Data\StripeCreator.VK\StripeCreator.VK.csproj" />
   </ItemGroup>
 
   <ItemGroup>

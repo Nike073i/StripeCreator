@@ -1,0 +1,104 @@
+﻿<local:BasePage x:Class="StripeCreator.WPF.CommunityPage"
+                x:TypeArguments="local:CommunityPageViewModel" 
+                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+                xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+                xmlns:local="clr-namespace:StripeCreator.WPF"
+                mc:Ignorable="d" 
+                d:DesignHeight="700" d:DesignWidth="1200"
+                d:DataContext="{x:Static local:CommunityPageDesignViewModel.Instance}">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding RefreshCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <Grid Background="{StaticResource DarkColorBrush}" Margin="-15 0 0 0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="400" MinWidth="400"/>
+            <ColumnDefinition Width="*" MinWidth="300"/>
+        </Grid.ColumnDefinitions>
+
+        <!--Меню действий-->
+        <local:SideIconMenuControl Grid.Column="0" 
+                                   DataContext="{Binding ActionMenuViewModel}"
+                                   VerticalAlignment="Top" />
+
+        <!-- Товары -->
+        <GroupBox Header="Товары" Grid.Column="1" Margin="5">
+            <ListBox ItemsSource="{Binding Markets}"
+                         SelectedItem="{Binding SelectedMarket}" />
+        </GroupBox>
+
+        <GridSplitter Grid.Column="1" HorizontalAlignment="Right" 
+                      Width="3" Background="Transparent"/>
+
+        <!-- Информация по товару-->
+        <GroupBox Header="Информация" Grid.Column="2" Margin="5">
+            <DockPanel>
+                <!-- Общая информация-->
+                <Grid DockPanel.Dock="Left" Width="400">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <!-- Название -->
+                        <RowDefinition Height="auto"/>
+                        <!-- Категория -->
+                        <RowDefinition Height="auto"/>
+                        <!-- Стоимость -->
+                        <RowDefinition Height="auto"/>
+                        <!-- Дата создания -->
+                        <RowDefinition Height="auto"/>
+                        <!-- Описание -->
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+
+                    <!-- Название -->
+                    <TextBlock Grid.Column="0" Grid.Row="0"
+                               Text="Название" Style="{StaticResource GridDataTitleTextBlock}"/>
+                    <TextBlock Grid.Column="1" Grid.Row="0"
+                               Text="{Binding SelectedMarket.Title, TargetNullValue=Неизвестно, FallbackValue=Неизвестно}" 
+                               Style="{StaticResource ValueTextBlock}"/>
+                    <!-- Категория -->
+                    <TextBlock Grid.Column="0" Grid.Row="1"
+                               Text="Категория" Style="{StaticResource GridDataTitleTextBlock}"/>
+                    <TextBlock Grid.Column="1" Grid.Row="1"
+                               Text="{Binding SelectedMarket.CategoryName, TargetNullValue=Неизвестно, FallbackValue=Неизвестно}" 
+                               Style="{StaticResource ValueTextBlock}"/>
+                    <!-- Стоимость -->
+                    <TextBlock Grid.Column="0" Grid.Row="2"
+                               Text="Стоимость" Style="{StaticResource GridDataTitleTextBlock}"/>
+                    <TextBlock Grid.Column="1" Grid.Row="2"
+                               Text="{Binding SelectedMarket.Price, StringFormat=N2, TargetNullValue=Неизвестно, FallbackValue=Неизвестно}" 
+                               Style="{StaticResource ValueTextBlock}"/>
+                    <!-- Дата создания -->
+                    <TextBlock Grid.Column="0" Grid.Row="3"
+                               Text="Дата создания" Style="{StaticResource GridDataTitleTextBlock}"/>
+                    <TextBlock Grid.Column="1" Grid.Row="3"
+                               Text="{Binding SelectedMarket.Date, StringFormat=dd.MM.yyyy, TargetNullValue=Неизвестно, FallbackValue=Неизвестно}" 
+                               Style="{StaticResource ValueTextBlock}"/>
+                    <!-- Описание -->
+                    <TextBlock Grid.Column="0" Grid.Row="4"
+                               Text="Описание" Style="{StaticResource GridDataTitleTextBlock}"/>
+                    <ScrollViewer Grid.Column="1" Grid.Row="4" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden"
+                                  HorizontalAlignment="Stretch">
+                        <TextBlock Text="{Binding SelectedMarket.Description, TargetNullValue=Неизвестно, FallbackValue=Неизвестно}"
+                                   Style="{StaticResource ValueTextBlock}" 
+                                   TextWrapping="Wrap"/>
+                    </ScrollViewer>
+
+                </Grid>
+                <!-- Изображение -->
+                <Image Source="{Binding 
+                    SelectedMarket.PhotoUri, 
+                    TargetNullValue={StaticResource DefaultImage}, 
+                    FallbackValue={StaticResource DefaultImage}}"/>
+            </DockPanel>
+        </GroupBox>
+
+    </Grid>
+</local:BasePage>

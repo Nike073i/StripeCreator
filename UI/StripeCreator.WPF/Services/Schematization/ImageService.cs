@@ -64,6 +64,7 @@ namespace StripeCreator.WPF.Services
         {
             var sourceImage = await _imageKeeper.LoadAsync(imagePath);
             using var imageProcessor = new ImageProccesor(sourceImage);
+            imageProcessor.Trim();
             var schemeSize = GetSchemeSize(sourceImage.Width, sourceImage.Height, clothCount, stripeMaxSize);
             ResizeImage(resizeMethod, imageProcessor, schemeSize);
             ReduceColors(reductiveMethod, reductiveCount, imageProcessor);
