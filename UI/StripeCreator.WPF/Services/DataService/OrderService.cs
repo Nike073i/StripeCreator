@@ -58,7 +58,7 @@ namespace StripeCreator.WPF
         /// <summary>
         /// Запрос на создание заказа
         /// </summary>
-        /// <param name="viewModel">Модель данных нового заказа</param>
+        /// <param name="orderModel">Модель данных нового заказа</param>
         /// <returns>Созданный заказ</returns>
         public async Task<OrderViewModel> CreateAsync(OrderCreateModel orderModel)
         {
@@ -108,7 +108,7 @@ namespace StripeCreator.WPF
         /// <summary>
         /// Создание ViewModel для доменной сущности
         /// </summary>
-        /// <param name="entity">доменная сущность</param>
+        /// <param name="order">доменная сущность</param>
         /// <returns>ViewModel сущности</returns>
         private OrderViewModel CreateViewModel(Order order) => new(order);
 

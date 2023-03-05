@@ -30,6 +30,8 @@ namespace StripeCreator.WPF
                     if (applicationViewModel.CurrentPageArg is Scheme scheme)
                         viewModel.Scheme = scheme;
                     return new SchemePage(viewModel);
+                case ApplicationPage.Community:
+                    return new CommunityPage(IoC.GetRequiredService<CommunityPageViewModel>());
                 default:
                     throw new ArgumentException("Получена несуществующая страница для конвертации");
             }

@@ -59,7 +59,7 @@ namespace StripeCreator.WPF
         /// <summary>
         /// Конструктор с инициализацией полей по ViewModel сущности ткани
         /// </summary>
-        /// <param name="viewModel">ViewModel сущности ткани</param>
+        /// <param name="entity">Cущность ткани</param>
         public ClothFormationViewModel(Cloth entity)
         {
             Id = entity.Id;

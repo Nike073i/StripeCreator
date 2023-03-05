@@ -4,7 +4,7 @@
     <Style TargetType="{x:Type ListBox}" BasedOn="{StaticResource BaseStyle}">
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden"/>
-        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden"/>
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
         <Setter Property="Background" Value="Transparent"/>
     </Style>
     

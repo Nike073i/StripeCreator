@@ -90,4 +90,16 @@
             </StackPanel>
         </StackPanel>
     </DataTemplate>
+
+    <!-- Товар -->
+    <DataTemplate DataType="{x:Type local:MarketViewModel}">
+        <DockPanel>
+            <DockPanel.Resources>
+                <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource ListItemTextBlock}"/>
+            </DockPanel.Resources>
+            <TextBlock DockPanel.Dock="Right" 
+                       Text="{Binding Price, StringFormat=N2}"/>
+            <TextBlock FontWeight="Bold" Text="{Binding Title}"/>
+        </DockPanel>
+    </DataTemplate>
 </ResourceDictionary>

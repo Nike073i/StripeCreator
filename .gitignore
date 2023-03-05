@@ -12,3 +12,6 @@ obj/
 *.user
 *.userosscache
 *.sln.docstates
+
+# appsettings
+/UI/StripeCreator.WPF/appsettings.json

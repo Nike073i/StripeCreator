@@ -1,0 +1,54 @@
+﻿<local:BasePage x:TypeArguments="local:PublishMessageViewModel" 
+                x:Class="StripeCreator.WPF.PublishMessageView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:StripeCreator.WPF"
+             mc:Ignorable="d" 
+             d:DataContext="{x:Static local:PublishMessageDesignViewModel.Instance}"
+             Width="1000" Height="600">
+    <Grid>
+        <Grid.Resources>
+            <Style TargetType="TextBlock" BasedOn="{StaticResource GridDataTitleTextBlock}"/>
+            <Style TargetType="TextBox" BasedOn="{StaticResource GridDataTextBox}"/>
+        </Grid.Resources>
+        <Grid.ColumnDefinitions>
+            <!-- Информация о товаре -->
+            <ColumnDefinition />
+            <!-- Изображение -->
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <!-- Сообщение -->
+        <GroupBox Header="Сообщение" 
+                  Grid.Column="0" 
+                  Margin="5" Padding="25">
+            <!-- Сообщение -->
+            <DockPanel Grid.Row="2">
+                <TextBlock DockPanel.Dock="Top" 
+                               VerticalAlignment="Center" HorizontalAlignment="Left"
+                               Text="Текст" Margin="5"  />
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden">
+                    <TextBox Margin="3 0"
+                                 Text="{Binding Message}"
+                                 TextWrapping="Wrap" VerticalAlignment="Top"/>
+                </ScrollViewer>
+            </DockPanel>
+        </GroupBox>
+
+        <!-- Изображение -->
+        <GroupBox Header="Изображение" Grid.Column="1" Margin="5">
+            <DockPanel>
+                <!-- Кнопка выбора -->
+                <Button DockPanel.Dock="Bottom" HorizontalAlignment="Right"
+                       Content="Выбрать" Command="{Binding ChooseCommand}"/>
+                <!-- Выбранное изображение -->
+                <Image Source="{Binding 
+                   PhotoPath, 
+                   TargetNullValue={StaticResource DefaultImage}, 
+                   FallbackValue={StaticResource DefaultImage}}"/>
+            </DockPanel>
+        </GroupBox>
+    </Grid>
+</local:BasePage>

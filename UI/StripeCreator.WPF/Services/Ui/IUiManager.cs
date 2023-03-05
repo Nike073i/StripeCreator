@@ -1,5 +1,6 @@
 ﻿using StripeCreator.Business.Models;
 using StripeCreator.Stripe.Models;
+using StripeCreator.VK.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -32,8 +33,11 @@ namespace StripeCreator.WPF
         /// <summary>
         /// Отобразить окно формирования сущности
         /// </summary>
-        /// <param name="entity">ViewModel сформированной сущности, если формирование прошло успешно
-        /// null - если формирование отмененно</param>
+        /// <param name="entityFormationViewModel">ViewModel формируемой сущности</param>
+        /// <returns>
+        /// ViewModel сформированной сущности, если формирование прошло успешно
+        /// null - если формирование отмененно
+        /// </returns>>
         Task<IEntityViewModel?> FormationEntity(EntityFormationViewModel entityFormationViewModel);
 
         /// <summary>
@@ -41,7 +45,7 @@ namespace StripeCreator.WPF
         /// </summary>
         /// <param name="products">Список продукции</param>
         /// <param name="clients">Список клиентов</param>
-        /// <returns></returns>
+        /// <returns>Модель создания заказа</returns>
         Task<OrderCreateModel?> CreateOrder(IEnumerable<Product> products, IEnumerable<Client> clients);
 
         /// <summary>
@@ -63,5 +67,25 @@ namespace StripeCreator.WPF
         /// <param name="threads">Хранимые нити</param>
         /// <param name="cloths">Хранимые ткани</param>
         Task CalculatePrice(Scheme scheme, IEnumerable<Thread> threads, IEnumerable<Cloth> cloths);
+
+        /// <summary>
+        /// Отобразить окно создания товара
+        /// </summary>
+        /// <returns>Модель создания товара</returns>
+        Task<MarketCreateModel?> CreateMarket();
+
+        /// <summary>
+        /// Отобразить окно редактирования товара
+        /// </summary>
+        /// <param name="viewModel">ViewModel редактируемого товара</param>
+        /// <returns>Модель редактирования товара</returns>
+        Task<Market?> EditMarket(MarketViewModel viewModel);
+
+        /// <summary>
+        /// Отобразить окно публикации записи
+        /// </summary>
+        /// <param name="publishMessageViewModel">ViewModel сообщения для публикации</param>
+        /// <returns>Модель публикации записи</returns>
+        Task<PublishMessageModel?> PublishMessage(PublishMessageViewModel? publishMessageViewModel = null);
     }
 }
