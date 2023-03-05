@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace StripeCreator.WPF
@@ -52,6 +53,8 @@ namespace StripeCreator.WPF
         /// <param name="settingsFile">Путь к файлу-конфигурации</param>
         public static void CreateHost(string[] args, string contentPath, string settingsFile)
         {
+            if (!File.Exists(settingsFile)) 
+                throw new ArgumentNullException(nameof(settingsFile), $"Отсутствует файл конфигурации {settingsFile}");
             Container = Host.CreateDefaultBuilder(args)
                         .UseContentRoot(contentPath)
                         .ConfigureAppConfiguration((host, cfg) =>

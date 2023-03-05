@@ -22,7 +22,15 @@ namespace StripeCreator.WPF
         protected override async void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            IoC.CreateHost(e.Args, CurrentDirectory, "appsettings.json");
+            try
+            {
+                IoC.CreateHost(e.Args, CurrentDirectory, "appsettings.json");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка запуска приложения", MessageBoxButton.OK, MessageBoxImage.Error);
+                Environment.Exit(-1);
+            }
             await IoC.StartAsync();
         }
 

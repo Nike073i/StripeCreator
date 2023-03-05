@@ -110,6 +110,7 @@ namespace StripeCreator.WPF
         /// Конструктор с полной инициализацией
         /// </summary>
         /// <param name="applicationViewModel">ViewModel приложения</param>
+        /// <param name="uiManager">Менеджер интерактивного взаимодействия</param>
         /// <param name="statisticService">Сервис статистики</param>
         /// <param name="reportService">Сервис формирования отчетов</param>
         public ReportPageViewModel(ApplicationViewModel applicationViewModel, IUiManager uiManager, StatisticService statisticService, ReportService reportService)
@@ -135,15 +136,13 @@ namespace StripeCreator.WPF
         /// Получить список элементов меню действий
         /// </summary>
         /// <returns>Список элементов меню действий</returns>
-        private List<ActionMenuItemViewModel> GetMenuItems()
-        {
-            return new List<ActionMenuItemViewModel>
+        private List<ActionMenuItemViewModel> GetMenuItems()=> 
+            new()
             {
                 new(EFontAwesomeIcon.Solid_FilePdf, "Создать отчет", ReportCommand),
                 new(EFontAwesomeIcon.Solid_ChartLine, "Отрисовать график", ShowPlotCommand),
                 new(EFontAwesomeIcon.Solid_ArrowLeft, "В меню", MenuCommand),
             };
-        }
 
         #region Commands action and predicate
 
@@ -166,11 +165,18 @@ namespace StripeCreator.WPF
                 Filter = "pdf|*.pdf"
             };
             if (dialog.ShowDialog() == false) return;
-            var IsCreated = await _reportService.CreateReport(dialog.FileName, dateStart, dateEnd);
-            if (IsCreated)
-                await _uiManager.ShowInfo(new("Отчет сохранен", "Успех"));
-            else
-                await _uiManager.ShowError(new("Ошибка сохранения отчета", "Неудача"));
+            try
+            {
+                var IsCreated = await _reportService.CreateReport(dialog.FileName, dateStart, dateEnd);
+                if (IsCreated)
+                    await _uiManager.ShowInfo(new("Отчет сохранен", "Успех"));
+                else
+                    await _uiManager.ShowError(new("Ошибка сохранения отчета", "Неудача"));
+            }
+            catch (Exception ex)
+            {
+                await _uiManager.ShowError(new("Ошибдка создания отчета", ex.Message));
+            }
         }
 
         /// <summary>
@@ -181,7 +187,14 @@ namespace StripeCreator.WPF
         {
             DateTime? dateStart = IsDateStartSet ? DateStart : null;
             DateTime? dateEnd = IsDateEndSet ? DateEnd : null;
-            PlotData = await _statisticService.GetOrderIncomeData(dateStart, dateEnd);
+            try
+            {
+                PlotData = await _statisticService.GetOrderIncomeData(dateStart, dateEnd);
+            }
+            catch (Exception ex)
+            {
+                await _uiManager.ShowError(new("Ошибдка получения данных для графика", ex.Message));
+            }
         }
 
         #endregion

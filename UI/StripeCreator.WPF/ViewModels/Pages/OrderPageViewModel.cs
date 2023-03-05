@@ -120,6 +120,9 @@ namespace StripeCreator.WPF
         /// </summary>
         /// <param name="applicationViewModel">ViewModel приложения</param>
         /// <param name="uiManager">Менеджер интерактивного взаимодействия</param>
+        /// <param name="orderService">Сервис работы с заказами</param>
+        /// <param name="productRepository">Репозиторий продуктов</param>
+        /// <param name="clientRepository">Репозиторий клиентов</param>
         public OrderPageViewModel(ApplicationViewModel applicationViewModel, IUiManager uiManager, OrderService orderService, IProductRepository productRepository, IClientRepository clientRepository)
         {
             _applicationViewModel = applicationViewModel;

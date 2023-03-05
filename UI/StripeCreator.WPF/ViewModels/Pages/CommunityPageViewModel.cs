@@ -218,15 +218,22 @@ namespace StripeCreator.WPF
         /// <param name="parameter">Параметр команды</param>
         private async Task OnExecutedRemoveCommand(object? parameter)
         {
-            var selectedMarket = SelectedMarket!.Market;
-            var isSuccessful = await _communityService.RemoveAsync(selectedMarket);
-            if (isSuccessful)
+            try
             {
-                await _uiManager.ShowInfo(new MessageBoxDialogViewModel("Удалено успешно", $"Удален товар {selectedMarket.Title}"));
-                Markets?.Remove(SelectedMarket);
+                var selectedMarket = SelectedMarket!.Market;
+                var isSuccessful = await _communityService.RemoveAsync(selectedMarket);
+                if (isSuccessful)
+                {
+                    await _uiManager.ShowInfo(new MessageBoxDialogViewModel("Удалено успешно", $"Удален товар {selectedMarket.Title}"));
+                    Markets?.Remove(SelectedMarket);
+                }
+                else
+                    await _uiManager.ShowInfo(new MessageBoxDialogViewModel("Отказ при удалении", $"Товар {selectedMarket.Title} не был удален"));
             }
-            else
-                await _uiManager.ShowInfo(new MessageBoxDialogViewModel("Отказ при удалении", $"Товар {selectedMarket.Title} не был удален"));
+            catch (Exception ex)
+            {
+                await _uiManager.ShowError(new("Ошибка удаления товара", ex.Message));
+            }
         }
 
         /// <summary>
@@ -242,8 +249,15 @@ namespace StripeCreator.WPF
         /// <param name="parameter">Параметр команды</param>
         private async Task OnExecutedRefreshCommand(object? parameter)
         {
-            var data = await _communityService.GetAllAsync();
-            Markets = new ObservableCollection<MarketViewModel>(data);
+            try
+            {
+                var data = await _communityService.GetAllAsync();
+                Markets = new ObservableCollection<MarketViewModel>(data);
+            }
+            catch (Exception ex)
+            {
+                await _uiManager.ShowError(new("Ошибка получения товаров", ex.Message));
+            }
         }
 
         /// <summary>

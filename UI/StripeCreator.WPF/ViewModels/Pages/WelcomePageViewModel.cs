@@ -2,6 +2,7 @@
 using Microsoft.Win32;
 using StripeCreator.Stripe.Models;
 using StripeCreator.Stripe.Services;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -18,6 +19,10 @@ namespace StripeCreator.WPF
         /// Заголовок меню действий
         /// </summary>
         private readonly string _header = "Добро пожаловать!";
+
+        #endregion
+
+        #region Private fields
 
         /// <summary>
         /// ViewModel приложения
@@ -80,10 +85,10 @@ namespace StripeCreator.WPF
             new()
             {
                 new(EFontAwesomeIcon.Solid_Image, "Обработать изображение", LoadImagePage),
-                new(EFontAwesomeIcon.Solid_Database, "Справочники", LoadDataPage),
-                new(EFontAwesomeIcon.Solid_BusinessTime, "Заказы", LoadOrderPage),
-                new(EFontAwesomeIcon.Solid_ChartPie, "Отчеты", LoadReportPage),
-                new(EFontAwesomeIcon.Solid_Globe, "Сообщество", LoadCommunityPage),
+                new(EFontAwesomeIcon.Solid_Database, "Справочники", async param => await LoadDataPage(param)),
+                new(EFontAwesomeIcon.Solid_BusinessTime, "Заказы", async param => await LoadOrderPage(param)),
+                new(EFontAwesomeIcon.Solid_ChartPie, "Отчеты", async param => await LoadReportPage(param)),
+                new(EFontAwesomeIcon.Solid_Globe, "Сообщество", async param => await LoadCommunityPage(param)),
                 new(EFontAwesomeIcon.Solid_Hashtag, "Загрузить схему", async (param) => await LoadSchemePage(param)),
             };
 
@@ -97,32 +102,69 @@ namespace StripeCreator.WPF
         /// Загрузка страницы работы со справочниками
         /// </summary>
         /// <param name="parameter">Параметр для команды</param>
-        private void LoadDataPage(object? parameter) => _applicationViewModel.GoToPage(ApplicationPage.DataStore);
+        private async Task LoadDataPage(object? parameter)
+        {
+            try
+            {
+                _applicationViewModel.GoToPage(ApplicationPage.DataStore);
+            }
+            catch (Exception ex)
+            {
+                await _uiManager.ShowError(new("Ошибка запуска страницы работы со справочниками", ex.Message));
+            }
+        }
 
         /// <summary>
         /// Загрузка страницы взаимодействия с заказами
         /// </summary>
         /// <param name="parameter">Параметр для команды</param>
-        private void LoadOrderPage(object? parameter) => _applicationViewModel.GoToPage(ApplicationPage.Order);
+        private async Task LoadOrderPage(object? parameter)
+        {
+            try
+            {
+                _applicationViewModel.GoToPage(ApplicationPage.Order);
+            }
+            catch (Exception ex)
+            {
+                await _uiManager.ShowError(new("Ошибка запуска страницы работы с заказами", ex.Message));
+            }
+        }
 
         /// <summary>
         /// Загрузка страницы формирования отчетов
         /// </summary>
         /// <param name="parameter">Параметр для команды</param>
-        private void LoadReportPage(object? parameter) => _applicationViewModel.GoToPage(ApplicationPage.Report);
+        private async Task LoadReportPage(object? parameter)
+        {
+            try
+            {
+                _applicationViewModel.GoToPage(ApplicationPage.Report);
+            }
+            catch (Exception ex)
+            {
+                await _uiManager.ShowError(new("Ошибка запуска страницы работы с отчетами", ex.Message));
+            }
+        }
 
         /// <summary>
         /// Загрузка страницы работы с сообществом
         /// </summary>
         /// <param name="parameter">Параметр для команды</param>
-        private void LoadCommunityPage(object? parameter)
+        private async Task LoadCommunityPage(object? parameter)
         {
             if (!InternetChecker.IsConnectedToInternet())
             {
-                _uiManager.ShowError(new MessageBoxDialogViewModel("Ошибка", "Отсутствует подключение к интернету"));
+                await _uiManager.ShowError(new MessageBoxDialogViewModel("Ошибка", "Отсутствует подключение к интернету"));
                 return;
             }
-            _applicationViewModel.GoToPage(ApplicationPage.Community);
+            try
+            {
+                _applicationViewModel.GoToPage(ApplicationPage.Community);
+            }
+            catch (Exception ex)
+            {
+                await _uiManager.ShowError(new("Ошибка запуска страницы работы с сообществом", ex.Message));
+            }
         }
 
         /// <summary>
@@ -136,8 +178,15 @@ namespace StripeCreator.WPF
                 Filter = "Схема StripeCreator|*.sch"
             };
             if (dialog.ShowDialog() == false) return;
-            var scheme = await _schemeKeeper.LoadAsync(dialog.FileName);
-            _applicationViewModel.GoToPage(ApplicationPage.Scheme, scheme);
+            try
+            {
+                var scheme = await _schemeKeeper.LoadAsync(dialog.FileName);
+                _applicationViewModel.GoToPage(ApplicationPage.Scheme, scheme);
+            }
+            catch (Exception ex)
+            {
+                await _uiManager.ShowError(new("Ошибка загрузки схемы", ex.Message));
+            }
         }
 
         #endregion

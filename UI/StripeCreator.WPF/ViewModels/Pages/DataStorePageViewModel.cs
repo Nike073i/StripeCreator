@@ -181,18 +181,19 @@ namespace StripeCreator.WPF
             _clothService = clothService;
             _productService = productService;
 
-            ActionMenuViewModel = new(_header, GetSideMenuItems());
 
             // Инициализация команд
-            ShowThreadStoreCommand = new RelayCommand(ShowThreadStore);
-            ShowClothStoreCommand = new RelayCommand(ShowClothStore);
-            ShowClientStoreCommand = new RelayCommand(ShowClientStore);
-            ShowProductStoreCommand = new RelayCommand(ShowProductStore);
+            ShowThreadStoreCommand = new RelayCommand(async param => await ShowThreadStore(param));
+            ShowClothStoreCommand = new RelayCommand(async param => await ShowClothStore(param));
+            ShowClientStoreCommand = new RelayCommand(async param => await ShowClientStore(param));
+            ShowProductStoreCommand = new RelayCommand(async param => await ShowProductStore(param));
 
             AddCommand = new RelayCommand(async param => await OnExecutedAddCommand(param)) { CanExecutePredicate = CanExecuteAddCommand };
             EditCommand = new RelayCommand(async param => await OnExecutedEditCommand(param)) { CanExecutePredicate = CanExecuteEditCommand };
             RemoveCommand = new RelayCommand(async param => await OnExecutedRemoveCommand(param)) { CanExecutePredicate = CanExecuteRemoveCommand };
             RefreshCommand = new RelayCommand(async param => await OnExecutedRefreshCommand(param)) { CanExecutePredicate = CanExecuteRefreshCommand };
+
+            ActionMenuViewModel = new(_header, GetSideMenuItems());
         }
 
         #endregion
@@ -207,10 +208,10 @@ namespace StripeCreator.WPF
         {
             return new List<ActionMenuItemViewModel>
             {
-                new(EFontAwesomeIcon.Solid_Bars, "Нитки", ShowThreadStore),
-                new(EFontAwesomeIcon.Solid_CropAlt, "Ткани", ShowClothStore),
-                new(EFontAwesomeIcon.Solid_Users, "Клиенты", ShowClientStore),
-                new(EFontAwesomeIcon.Brands_Slack, "Продукты", ShowProductStore),
+                new(EFontAwesomeIcon.Solid_Bars, "Нитки", ShowThreadStoreCommand),
+                new(EFontAwesomeIcon.Solid_CropAlt, "Ткани", ShowClothStoreCommand),
+                new(EFontAwesomeIcon.Solid_Users, "Клиенты", ShowClientStoreCommand),
+                new(EFontAwesomeIcon.Brands_Slack, "Продукты", ShowProductStoreCommand),
                 new(EFontAwesomeIcon.Solid_ArrowLeft, "В меню", ShowMenu)
             };
         }
@@ -227,40 +228,68 @@ namespace StripeCreator.WPF
         /// Показать список хранимых нитей
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private void ShowThreadStore(object? parameter)
+        private async Task ShowThreadStore(object? parameter)
         {
-            DataService = _threadService;
-            DataHeader = "Нити";
+            try
+            {
+                DataService = _threadService;
+                DataHeader = "Нити";
+            }
+            catch (Exception ex)
+            {
+                await _uiManager.ShowError(new("Ошибка загрузки нитей", ex.Message));
+            }
         }
 
         /// <summary>
         /// Показать список хранимых тканей
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private void ShowClothStore(object? parameter)
+        private async Task ShowClothStore(object? parameter)
         {
-            DataService = _clothService;
-            DataHeader = "Ткани";
+            try
+            {
+                DataService = _clothService;
+                DataHeader = "Ткани";
+            }
+            catch (Exception ex)
+            {
+                await _uiManager.ShowError(new("Ошибка загрузки тканей", ex.Message));
+            }
         }
 
         /// <summary>
         /// Показать список хранимых нитей
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private void ShowClientStore(object? parameter)
+        private async Task ShowClientStore(object? parameter)
         {
-            DataService = _clientService;
-            DataHeader = "Клиенты";
+            try
+            {
+                DataService = _clientService;
+                DataHeader = "Клиенты";
+            }
+            catch (Exception ex)
+            {
+                await _uiManager.ShowError(new("Ошибка загрузки клиентов", ex.Message));
+            }
         }
 
         /// <summary>
         /// Показать список хранимых продуктов
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private void ShowProductStore(object? parameter)
+        private async Task ShowProductStore(object? parameter)
         {
-            DataService = _productService;
-            DataHeader = "Продукция";
+            try
+            {
+                DataService = _productService;
+                DataHeader = "Продукция";
+            }
+            catch (Exception ex)
+            {
+                await _uiManager.ShowError(new("Ошибка загрузки продукции", ex.Message));
+            }
         }
 
         /// <summary>
@@ -276,8 +305,15 @@ namespace StripeCreator.WPF
                 await _uiManager.ShowInfo(new("Отмена", "Создание записи отменено"));
                 return;
             }
-            var newEntity = await DataService.SaveAsync(formationData);
-            Entities?.Add(newEntity);
+            try
+            {
+                var newEntity = await DataService.SaveAsync(formationData);
+                Entities?.Add(newEntity);
+            }
+            catch (Exception ex)
+            {
+                await _uiManager.ShowError(new("Ошибка добавления сущности", ex.Message));
+            }
         }
 
         /// <summary>
@@ -302,8 +338,15 @@ namespace StripeCreator.WPF
                 await _uiManager.ShowInfo(new("Отмена", "Редактирование записи отменено"));
                 return;
             }
-            var newEntity = await DataService.SaveAsync(changedEntity);
-            Entities[Entities.IndexOf(SelectedEntity)] = newEntity;
+            try
+            {
+                var newEntity = await DataService.SaveAsync(changedEntity);
+                Entities[Entities.IndexOf(SelectedEntity)] = newEntity;
+            }
+            catch (Exception ex)
+            {
+                await _uiManager.ShowError(new("Ошибка редактирования сущности", ex.Message));
+            }
         }
 
         /// <summary>
@@ -321,9 +364,16 @@ namespace StripeCreator.WPF
         {
             if (Entities is null || SelectedEntity is null)
                 throw new InvalidOperationException(NonSelectedEntityError);
-            var removeId = await _dataService!.RemoveAsync(SelectedEntity);
-            await _uiManager.ShowInfo(new MessageBoxDialogViewModel("Удалено успешно", $"Удалена сущность с Id {removeId}"));
-            Entities?.Remove(SelectedEntity);
+            try
+            {
+                var removeId = await _dataService!.RemoveAsync(SelectedEntity);
+                await _uiManager.ShowInfo(new MessageBoxDialogViewModel("Удалено успешно", $"Удалена сущность с Id {removeId}"));
+                Entities?.Remove(SelectedEntity);
+            }
+            catch (Exception ex)
+            {
+                await _uiManager.ShowError(new("Ошибка удаления сущности", ex.Message));
+            }
         }
 
         /// <summary>
@@ -339,8 +389,15 @@ namespace StripeCreator.WPF
         /// <param name="parameter">Параметр команды</param>
         private async Task OnExecutedRefreshCommand(object? parameter)
         {
-            var data = await _dataService!.GetAllAsync();
-            Entities = new ObservableCollection<IEntityViewModel>(data);
+            try
+            {
+                var data = await _dataService!.GetAllAsync();
+                Entities = new ObservableCollection<IEntityViewModel>(data);
+            }
+            catch (Exception ex)
+            {
+                await _uiManager.ShowError(new("Ошибка загрузки данных", ex.Message));
+            }
         }
 
         /// <summary>

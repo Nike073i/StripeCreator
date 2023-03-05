@@ -30,9 +30,19 @@
         {
             // Если текущая страница соответствует новой, то ничего не делаем
             if (CurrentPage == page) return;
-
-            CurrentPageArg = pageArg;
-            CurrentPage = page;
+            var tmpPage = CurrentPage;
+            var tmpArgs = CurrentPageArg;
+            try
+            {
+                CurrentPageArg = pageArg;
+                CurrentPage = page;
+            }
+            catch
+            {
+                CurrentPage = tmpPage; 
+                CurrentPageArg = tmpArgs;
+                throw;
+            }
         }
 
         #endregion

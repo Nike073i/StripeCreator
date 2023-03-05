@@ -34,6 +34,11 @@ namespace StripeCreator.WPF
         /// </summary>
         private readonly IClothRepository _clothRepository;
 
+        /// <summary>
+        /// Менеджер интерактивного взаимодействия
+        /// </summary>
+        private readonly IUiManager _uiManager;
+
         #endregion
 
         #region Public Properties
@@ -151,11 +156,13 @@ namespace StripeCreator.WPF
         /// <param name="applicationViewModel">ViewModel приложения</param>
         /// <param name="imageService">Сервис работы с изображением</param>
         /// <param name="clothRepository">Репозиторий тканей</param>
-        public ImageProcessingPageViewModel(ApplicationViewModel applicationViewModel, ImageService imageService, IClothRepository clothRepository)
+        /// <param name="uiManager">Менеджер интерактивного взаимодействия</param>
+        public ImageProcessingPageViewModel(ApplicationViewModel applicationViewModel, ImageService imageService, IClothRepository clothRepository, IUiManager uiManager)
         {
             _applicationViewModel = applicationViewModel;
             _imageService = imageService;
             _clothRepository = clothRepository;
+            _uiManager = uiManager;
             SelectedClothCount = ClothCounts.First();
 
             //Инициализация комманд
@@ -200,9 +207,15 @@ namespace StripeCreator.WPF
             var count = IsClothData ? SelectedCloth!.Count : SelectedClothCount;
             var stripeSize = SelectedStripeSize!;
             var maxSize = Math.Max(stripeSize.Width, stripeSize.Height);
-
-            var schemeTemplate = await _imageService.CreateSchemaTemplate(ImagePath!, count, maxSize, SelectedResizeMethod!.Value, SelectedReductionMethod!.Value, ReductionCount);
-            _applicationViewModel.GoToPage(ApplicationPage.Scheme, (schemeTemplate, count));
+            try
+            {
+                var schemeTemplate = await _imageService.CreateSchemaTemplate(ImagePath!, count, maxSize, SelectedResizeMethod!.Value, SelectedReductionMethod!.Value, ReductionCount);
+                _applicationViewModel.GoToPage(ApplicationPage.Scheme, (schemeTemplate, count));
+            }
+            catch (Exception ex)
+            {
+                await _uiManager.ShowError(new("Ошибка обработки изображения", ex.Message));
+            }
         }
 
         /// <summary>
@@ -222,7 +235,17 @@ namespace StripeCreator.WPF
         /// Действие при команде обработки изображения
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private async Task OnExecutedLoadClothsCommand(object? parameter) => Cloths = await _clothRepository.GetAllAsync();
+        private async Task OnExecutedLoadClothsCommand(object? parameter)
+        {
+            try
+            {
+                Cloths = await _clothRepository.GetAllAsync();
+            }
+            catch (Exception ex)
+            {
+                await _uiManager.ShowError(new("Ошибка загрузки тканей", ex.Message));
+            }
+        }
 
         #endregion
     }

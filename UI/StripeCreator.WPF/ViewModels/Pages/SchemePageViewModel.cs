@@ -276,7 +276,7 @@ namespace StripeCreator.WPF
             //Инициализация комманд
             ShowSchemeCommand = new RelayCommand(OnExecutedShowSchemeCommand) { CanExecutePredicate = CanExecuteShowSchemeCommand };
             SaveCommand = new RelayCommand(async (param) => await OnExecutedSaveCommand(param)) { CanExecutePredicate = CanExecuteSaveCommand };
-            SaveImageCommand = new RelayCommand(OnExecutedSaveImageCommand) { CanExecutePredicate = CanExecuteSaveImageCommand };
+            SaveImageCommand = new RelayCommand(async (param) => await OnExecutedSaveImageCommand(param)) { CanExecutePredicate = CanExecuteSaveImageCommand };
             MaterialCalculateCommand = new RelayCommand(OnExecutedMaterialCalculateCommand);
             PriceCalculateCommand = new RelayCommand(async (param) => await OnExecutedPriceCalculateCommand(param));
             MenuCommand = new RelayCommand(OnExecutedMenuCommand);
@@ -387,7 +387,15 @@ namespace StripeCreator.WPF
                 Filter = "Схема StripeCreator|*.sch"
             };
             if (dialog.ShowDialog() == false) return;
-            await _schemeKeeper.SaveAsync(dialog.FileName, Scheme);
+            try
+            {
+
+                await _schemeKeeper.SaveAsync(dialog.FileName, Scheme);
+            }
+            catch (Exception ex)
+            {
+                await _uiManager.ShowError(new("Ошибка сохранения схемы", ex.Message));
+            }
         }
 
         /// <summary>
@@ -400,7 +408,7 @@ namespace StripeCreator.WPF
         /// Действие при команде экспорта схемы как изображения
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private void OnExecutedSaveImageCommand(object? parameter)
+        private async Task OnExecutedSaveImageCommand(object? parameter)
         {
             var dialog = new SaveFileDialog
             {
@@ -412,11 +420,18 @@ namespace StripeCreator.WPF
             var indent = IsIndentActivated ? new Indent(IndentSize, new Color(IndentColorHex)) : null;
             Scheme.Indent = indent;
             var clothColor = new Color(SelectedClothColor);
-            Task.Run(async () =>
+            try
             {
-                var image = GetSchemeVisualization(clothColor);
-                await _imageKeeper.SaveAsync(dialog.FileName, image);
-            });
+                await Task.Run(async () =>
+                {
+                    var image = GetSchemeVisualization(clothColor);
+                    await _imageKeeper.SaveAsync(dialog.FileName, image);
+                });
+            }
+            catch (Exception ex)
+            {
+                await _uiManager.ShowError(new("Ошибка визуализации схемы", ex.Message));
+            }
         }
 
         /// <summary>
@@ -439,19 +454,26 @@ namespace StripeCreator.WPF
         /// <param name="parameter">Параметр команды</param>
         private async Task OnExecutedPriceCalculateCommand(object? parameter)
         {
-            var threads = await _threadRepository.GetAllAsync();
-            if (!threads.Any())
+            try
             {
-                await _uiManager.ShowError(new("Ошибка расчета", "В хранилище отсутствуют нити"));
-                return;
+                var threads = await _threadRepository.GetAllAsync();
+                if (!threads.Any())
+                {
+                    await _uiManager.ShowError(new("Ошибка расчета", "В хранилище отсутствуют нити"));
+                    return;
+                }
+                var cloths = await _clothRepository.GetAllAsync();
+                if (!cloths.Any())
+                {
+                    await _uiManager.ShowError(new("Ошибка расчета", "В хранилище отсутствуют ткани"));
+                    return;
+                }
+                await _uiManager.CalculatePrice(Scheme, threads, cloths);
             }
-            var cloths = await _clothRepository.GetAllAsync();
-            if (!cloths.Any())
+            catch (Exception ex)
             {
-                await _uiManager.ShowError(new("Ошибка расчета", "В хранилище отсутствуют ткани"));
-                return;
+                await _uiManager.ShowError(new("Ошибка расчета стоимости схемы", ex.Message));
             }
-            await _uiManager.CalculatePrice(Scheme, threads, cloths);
         }
 
         /// <summary>
