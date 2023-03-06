@@ -40,7 +40,7 @@ namespace StripeCreator.WPF
         /// <returns>Коллекция сервисов</returns>
         public static IServiceCollection AddVkRepositories(this IServiceCollection services)
         {
-            services.AddTransient<WallRepository>();
+            services.AddTransient<VkWallRepository>();
             services.AddTransient<MarketRepository>();
             return services;
         }

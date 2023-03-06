@@ -5,7 +5,7 @@ using VkNet.Model.RequestParams;
 namespace StripeCreator.VK.Repositories
 {
     /// <summary>Репозиторий записей сообщества</summary>
-    public class WallRepository : VkRepository
+    public class VkWallRepository : VkRepository
     {
         #region Constants
 
@@ -18,7 +18,7 @@ namespace StripeCreator.VK.Repositories
 
         /// <summary>Конструктор с полной инициализацией</summary>
         /// <param name="vkParameters">Параметры взаимодействия</param>
-        public WallRepository(VkParameters vkParameters) : base(vkParameters) { }
+        public VkWallRepository(VkParameters vkParameters) : base(vkParameters) { }
 
         #endregion
 

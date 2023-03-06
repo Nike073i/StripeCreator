@@ -15,7 +15,7 @@ namespace StripeCreator.WPF.Services
         #region Private fields
 
         /// <summary>Репозиторий записей сообщества</summary>
-        private readonly WallRepository _wallRepository;
+        private readonly VkWallRepository _wallRepository;
 
         /// <summary>Репозиторий товаров сообщества</summary>
         private readonly MarketRepository _marketRepository;
@@ -27,7 +27,7 @@ namespace StripeCreator.WPF.Services
         /// <summary>Конструктор с полной инициализацией</summary>
         /// <param name="wallRepository">Репозиторий записей</param>
         /// <param name="marketRepository">Репозиторий товаров</param>
-        public CommunityService(WallRepository wallRepository, MarketRepository marketRepository)
+        public CommunityService(VkWallRepository wallRepository, MarketRepository marketRepository)
         {
             _wallRepository = wallRepository;
             _marketRepository = marketRepository;
