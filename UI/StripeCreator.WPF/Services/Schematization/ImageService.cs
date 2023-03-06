@@ -63,7 +63,7 @@ namespace StripeCreator.WPF.Services
             bool colorNormalize = false)
         {
             var sourceImage = await _imageKeeper.LoadAsync(imagePath);
-            using var imageProcessor = new ImageProccesor(sourceImage);
+            using var imageProcessor = new ImageProcessor(sourceImage);
             imageProcessor.Trim();
             var schemeSize = GetSchemeSize(sourceImage.Width, sourceImage.Height, clothCount, stripeMaxSize);
             ResizeImage(resizeMethod, imageProcessor, schemeSize);
@@ -108,7 +108,7 @@ namespace StripeCreator.WPF.Services
         /// <param name="resizeMethod">Метод изменения</param>
         /// <param name="imageProcessor">Обработчик изображения</param>
         /// <param name="newSize">Новый размер изображения</param>
-        private void ResizeImage(ResizeMethod resizeMethod, ImageProccesor imageProcessor, Size newSize)
+        private void ResizeImage(ResizeMethod resizeMethod, ImageProcessor imageProcessor, Size newSize)
         {
             switch (resizeMethod)
             {
@@ -134,7 +134,7 @@ namespace StripeCreator.WPF.Services
         /// <param name="reductiveMethod">Метод уменьшения</param>
         /// <param name="reductiveCount">Аргумент метода уменьшения</param>
         /// <param name="imageProcessor">Обработчик изображения</param>
-        private void ReduceColors(ReductiveMethod reductiveMethod, int reductiveCount, ImageProccesor imageProcessor)
+        private void ReduceColors(ReductiveMethod reductiveMethod, int reductiveCount, ImageProcessor imageProcessor)
         {
             switch (reductiveMethod)
             {

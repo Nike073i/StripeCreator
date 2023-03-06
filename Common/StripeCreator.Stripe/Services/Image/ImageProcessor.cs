@@ -8,7 +8,7 @@ namespace StripeCreator.Stripe.Services
     /// <summary>
     /// Обработчик изображений
     /// </summary>
-    public class ImageProccesor : IDisposable
+    public class ImageProcessor : IDisposable
     {
         #region Private fields
 
@@ -31,7 +31,7 @@ namespace StripeCreator.Stripe.Services
         /// Конструктор с полной инициализацией
         /// </summary>
         /// <param name="image">Исходные данные изображения</param>
-        public ImageProccesor(Image image)
+        public ImageProcessor(Image image)
         {
             _imageMagick = MagickImageExtensions.CreateMagickImage(image);
         }
