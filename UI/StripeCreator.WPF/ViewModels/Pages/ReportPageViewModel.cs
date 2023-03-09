@@ -136,7 +136,7 @@ namespace StripeCreator.WPF
         /// Получить список элементов меню действий
         /// </summary>
         /// <returns>Список элементов меню действий</returns>
-        private List<ActionMenuItemViewModel> GetMenuItems()=> 
+        private List<ActionMenuItemViewModel> GetMenuItems() =>
             new()
             {
                 new(EFontAwesomeIcon.Solid_FilePdf, "Создать отчет", ReportCommand),
@@ -158,8 +158,7 @@ namespace StripeCreator.WPF
         /// <param name="parameter">Параметр команды</param>
         private async Task OnExecutedReportCommand(object? parameter)
         {
-            DateTime? dateStart = IsDateStartSet ? DateStart : null;
-            DateTime? dateEnd = IsDateEndSet ? DateEnd : null;
+            var (dateStart, dateEnd) = GetUserPeriod();
             var dialog = new SaveFileDialog
             {
                 Filter = "pdf|*.pdf"
@@ -185,8 +184,7 @@ namespace StripeCreator.WPF
         /// <param name="parameter">Параметр команды</param>
         private async Task OnExecutedShowPlotCommand(object? parameter)
         {
-            DateTime? dateStart = IsDateStartSet ? DateStart : null;
-            DateTime? dateEnd = IsDateEndSet ? DateEnd : null;
+            var (dateStart, dateEnd) = GetUserPeriod();
             try
             {
                 PlotData = await _statisticService.GetOrderIncomeData(dateStart, dateEnd);
@@ -195,6 +193,27 @@ namespace StripeCreator.WPF
             {
                 await _uiManager.ShowError(new("Ошибдка получения данных для графика", ex.Message));
             }
+        }
+
+        /// <summary>
+        /// Получить период, указанный пользователем
+        /// </summary>
+        /// <returns>
+        /// Период в 2х датах
+        /// 1 значение - Дата начала
+        /// 2 значение Дата окончания
+        /// </returns>
+        private (DateTime?, DateTime?) GetUserPeriod()
+        {
+            DateTime? dateStart = IsDateStartSet ? DateStart : null;
+            DateTime? dateEnd = IsDateEndSet ? DateEnd : null;
+            if (dateEnd.HasValue && dateStart.HasValue && dateStart > dateEnd)
+            {
+                var tmp = dateStart.Value;
+                dateStart = dateEnd.Value;
+                dateEnd = tmp;
+            }
+            return (dateStart, dateEnd);
         }
 
         #endregion

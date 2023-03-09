@@ -206,6 +206,7 @@ namespace StripeCreator.Statistic.Reports
         /// <param name="data">Данные по статусам заказов</param>
         private void InsertOrderStatus(IEnumerable<OrderStatusDataModel> data)
         {
+            if (!data.Any()) return;
             var chart = new Chart
             {
                 Type = ChartType.Pie2D,

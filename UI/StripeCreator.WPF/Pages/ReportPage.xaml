@@ -9,7 +9,7 @@
                 mc:Ignorable="d" 
                 d:DesignHeight="700" d:DesignWidth="1250"
                 d:DataContext="{x:Static local:ReportPageDesignViewModel.Instance}">
-    <GroupBox Header="Отчетные данные">
+    <GroupBox Header="Отчетные данные" Padding="0">
         <GroupBox.Resources>
             <Style TargetType="TextBlock" BasedOn="{StaticResource HeaderTextBlock}"/>
         </GroupBox.Resources>
