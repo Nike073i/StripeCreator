@@ -52,7 +52,7 @@
         <!-- Цвет -->
         <TextBlock Text="Код цвета" Style="{StaticResource Title}"
                    Grid.Column="0" Grid.Row="3"/>
-        <xceed:ColorPicker SelectedColor="{Binding ColorHex, TargetNullValue=#000000, FallbackValue=#000000}"
+        <xceed:ColorPicker SelectedColor="{Binding ColorHex}"
                  Grid.Column="1" Grid.Row="3"/>
 
         <!-- Вес -->

@@ -54,7 +54,10 @@ namespace StripeCreator.WPF
         /// <summary>
         /// Конструктор по умолчанию
         /// </summary>
-        public ThreadFormationViewModel() { }
+        public ThreadFormationViewModel()
+        {
+            ColorHex = Color.DefaultColor;
+        }
 
         /// <summary>
         /// Конструктор с инициализацией полей по ViewModel сущности нити
