@@ -6,7 +6,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:StripeCreator.WPF"
-             mc:Ignorable="d" 
+             mc:Ignorable="d"
+             Width="600"
              d:DataContext="{x:Static local:ProductFormationDesignViewModel.Instance}">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -41,6 +42,6 @@
         <TextBlock Text="Описание"
                    Grid.Column="0" Grid.Row="2"/>
         <TextBox Text="{Binding Description}"
-                 Grid.Column="1" Grid.Row="2"/>
+                 Grid.Column="1" Grid.Row="2" AcceptsReturn="True"/>
     </Grid>
 </local:BasePage>
