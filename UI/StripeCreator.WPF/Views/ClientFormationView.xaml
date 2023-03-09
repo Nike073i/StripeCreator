@@ -6,6 +6,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:StripeCreator.WPF"
              mc:Ignorable="d" 
+             Width="500"
              d:DataContext="{x:Static local:ClientFormationDesignViewModel.Instance}">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -56,6 +57,6 @@
         <TextBlock Text="Иные сведения"
                    Grid.Column="0" Grid.Row="4"/>
         <TextBox Text="{Binding Other}"
-                 Grid.Column="1" Grid.Row="4"/>
+                 Grid.Column="1" Grid.Row="4" AcceptsReturn="True"/>
     </Grid>
 </local:BasePage>
