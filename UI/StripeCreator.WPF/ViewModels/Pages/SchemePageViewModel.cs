@@ -135,6 +135,11 @@ namespace StripeCreator.WPF
         public IEnumerable<Color>? SchemeColors { get; set; }
 
         /// <summary>
+        /// Количество цветов, используемых в схеме
+        /// </summary>
+        public int? SchemeColorsCount => SchemeColors?.Count();
+
+        /// <summary>
         /// Ширина схемы
         /// </summary>
         public int? SchemeWidth { get; set; }

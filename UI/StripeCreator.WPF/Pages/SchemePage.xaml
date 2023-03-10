@@ -122,8 +122,12 @@
                         Padding="10" Margin="5">
                     <DockPanel>
                         <!--Заголовок-->
-                        <TextBlock Style="{StaticResource HeaderTextBlock}" Text="Цвета"
-                                   DockPanel.Dock="Top"/>
+                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                            <TextBlock Style="{StaticResource HeaderTextBlock}" Text="Цвета"/>
+                            <TextBlock Text=" - "/>
+                            <TextBlock Style="{StaticResource ValueTextBlock}" Text="{Binding SchemeColorsCount, FallbackValue=Неизвестно, TargetNullValue=Неизвестно}"/>
+                        </StackPanel>
+
                          <!--Используемые цвета-->
                         <ListBox ItemsSource="{Binding SchemeColors}" 
                                  ItemContainerStyle="{StaticResource ColorListItem}"/>
