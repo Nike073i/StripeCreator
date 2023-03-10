@@ -65,7 +65,7 @@
                     <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden">
                         <TextBox Margin="3 0"
                                  Text="{Binding Description}"
-                                 TextWrapping="Wrap" VerticalAlignment="Top"/>
+                                 TextWrapping="Wrap" VerticalAlignment="Top" AcceptsReturn="True"/>
                     </ScrollViewer>
                 </DockPanel>
             </Grid>
