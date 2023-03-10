@@ -32,7 +32,7 @@ namespace StripeCreator.VK.Repositories
             var uploadServer = await VkApi.Photo.GetMarketUploadServerAsync(GroupId);
             using var httpClient = new HttpClient();
             var imageBytes = await File.ReadAllBytesAsync(photoPath);
-            var requestContent = new MultipartFormDataContent
+            using var requestContent = new MultipartFormDataContent
             {
                 { new ByteArrayContent(imageBytes), "file", photoInfo.Name },
             };
@@ -40,6 +40,8 @@ namespace StripeCreator.VK.Repositories
             if (!uploadResponse.IsSuccessStatusCode)
                 throw new InvalidOperationException("Ошибка запроса загрузки изображения");
             var responseContent = await uploadResponse.Content.ReadAsStringAsync();
+            if (responseContent.Contains("error"))
+                throw new InvalidOperationException("Ошибка запроса загрузки изображения");
             var photo = await VkApi.Photo.SaveMarketPhotoAsync(GroupId, responseContent);
             var mainPhotoId = photo.First().Id ??
                               throw new InvalidOperationException(

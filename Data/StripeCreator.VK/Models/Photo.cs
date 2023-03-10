@@ -16,6 +16,9 @@
 
         /// <summary>Максимально допустимая высота изображения</summary>
         public static readonly int ImageMaxHeight = 1500;
+        
+        /// <summary>Паттерн названия файла изображения. Допускаются только цифры и латинские буквы</summary>
+        public static readonly string PhotoNamePattern = @"^[A-Za-z0-9]+";
 
         #endregion
 

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace StripeCreator.WPF.Services
@@ -52,6 +53,8 @@ namespace StripeCreator.WPF.Services
             var photoPath = createModel.PhotoPath;
             if (!File.Exists(photoPath))
                 throw new ArgumentException($"Изображение по пути {photoPath} не найдено");
+            if (!Regex.IsMatch(Path.GetFileNameWithoutExtension(photoPath), Photo.PhotoNamePattern))
+                throw new ArgumentException($"В названии изображения могут быть только латинские буквы и цифры");
             var imageInfo = new MagickImageInfo(photoPath);
             if (imageInfo.Width < Photo.ImageMinWidth || imageInfo.Width > Photo.ImageMaxWidth)
                 throw new ArgumentException($"Ширина изображения должна быть от {Photo.ImageMinWidth} до {Photo.ImageMaxWidth}");
@@ -83,6 +86,8 @@ namespace StripeCreator.WPF.Services
             {
                 if (!File.Exists(photoPath))
                     throw new ArgumentException($"Изображение по пути {photoPath} не найдено");
+                if (!Regex.IsMatch(Path.GetFileNameWithoutExtension(photoPath), Photo.PhotoNamePattern))
+                    throw new ArgumentException($"В названии изображения могут быть только латинские буквы и цифры");
                 var imageInfo = new MagickImageInfo(photoPath);
                 if (imageInfo.Width < Photo.ImageMinWidth || imageInfo.Width > Photo.ImageMaxWidth)
                     throw new ArgumentException($"Ширина изображения должна быть от {Photo.ImageMinWidth} до {Photo.ImageMaxWidth}");
