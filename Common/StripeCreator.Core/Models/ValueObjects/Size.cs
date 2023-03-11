@@ -30,7 +30,7 @@
         {
             if (width <= 0)
                 throw new ArgumentOutOfRangeException(nameof(width), "Ширина не может быть <= 0");
-            if (width <= 0)
+            if (height <= 0)
                 throw new ArgumentOutOfRangeException(nameof(height), "Высота не может быть <= 0");
 
             Width = width;
