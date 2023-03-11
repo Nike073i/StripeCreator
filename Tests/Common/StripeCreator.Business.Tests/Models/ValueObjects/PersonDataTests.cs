@@ -40,7 +40,7 @@ namespace StripeCreator.Business.Tests.Models.ValueObjects
 
         [Test]
         [TestCaseSource(nameof(Equals_PersonData_ReturnFalse_Cases))]
-        public void Equals_Colors_ReturnFalse(PersonData a, PersonData b) => Assert.That(b, Is.Not.EqualTo(a));
+        public void Equals_PersonData_ReturnFalse(PersonData a, PersonData b) => Assert.That(b, Is.Not.EqualTo(a));
 
         static readonly object[] Equals_PersonData_ReturnFalse_Cases =
         {
