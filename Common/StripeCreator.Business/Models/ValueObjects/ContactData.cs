@@ -60,7 +60,7 @@ namespace StripeCreator.Business.Models
 
         public bool Equals(ContactData other) => other != null &&
                                                 ContactNumber == other.ContactNumber &&
-                                                Email == other.Email &&
+                                                Email.Equals(other.Email, StringComparison.OrdinalIgnoreCase) &&
                                                 Other == other.Other;
 
         public override int GetHashCode() => HashCode.Combine(ContactNumber, Email, Other);
