@@ -42,8 +42,8 @@ namespace StripeCreator.Business.Models
         public override bool Equals(object? obj) => (obj is PersonData other) && Equals(other);
 
         public bool Equals(PersonData other) => other != null &&
-                                                FirstName == other.FirstName &&
-                                                SecondName == other.SecondName;
+                                                FirstName.Equals(other.FirstName, StringComparison.OrdinalIgnoreCase) &&
+                                                SecondName.Equals(other.SecondName, StringComparison.OrdinalIgnoreCase);
 
         public override int GetHashCode() => HashCode.Combine(FirstName, SecondName);
 
