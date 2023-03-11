@@ -93,7 +93,7 @@ namespace StripeCreator.Core.Models
         public override bool Equals(object? obj) => (obj is Color other) && Equals(other);
 
         public bool Equals(Color other) =>
-            other != null && _colorHex.Equals(other.HexValue);
+            other != null && _colorHex.Equals(other.HexValue, StringComparison.OrdinalIgnoreCase);
 
         public override int GetHashCode() => _colorHex.GetHashCode();
 
