@@ -21,8 +21,8 @@ namespace StripeCreator.Business.Tests.Models.Entities
 
         static readonly object?[] Create_Client_Correct_Cases =
         {
-            new object?[] { PersonDataHelper.CreatePersonData(), ContactDataHelper.CreateContactData(), null },
-            new object[] { PersonDataHelper.CreatePersonData(), ContactDataHelper.CreateContactData(), new Guid("e9e43c3f-cb55-4877-854f-b92263948506") },
+            new object?[] { ClientHelper.TestPersonData, ClientHelper.TestContactData, null },
+            new object[] { ClientHelper.TestPersonData, ClientHelper.TestContactData, ClientHelper.TestId },
         };
     }
 }

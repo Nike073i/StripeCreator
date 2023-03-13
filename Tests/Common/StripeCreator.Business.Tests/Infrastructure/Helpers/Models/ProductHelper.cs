@@ -7,8 +7,8 @@ namespace StripeCreator.Business.Tests.Infrastructure.Helpers.Models
         public const string TestName = "Продукт";
         public const decimal TestPrice = 150m;
         public const string TestDescription = "Описание";
-        public const string TestGuidString = "e9e43c3f-cb55-4877-854f-b92263948506";
+        public static readonly Guid TestId = new("e9e43c3f-cb55-4877-854f-b92263948506");
         public static Product CreateProduct(string name = TestName, decimal price = TestPrice, string description = TestDescription, Guid? id = null) =>
-            new(name, price, description, id ?? new Guid(TestGuidString));
+            new(name, price, description, id ?? TestId);
     }
 }

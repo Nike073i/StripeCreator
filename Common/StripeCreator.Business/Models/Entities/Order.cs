@@ -35,7 +35,7 @@ namespace StripeCreator.Business.Models
         public Guid ClientId
         {
             get => _clientId;
-            set
+            private set
             {
                 if (value == Guid.Empty)
                     throw new ArgumentNullException(nameof(ClientId), "Идентификатор клиента не может быть null");

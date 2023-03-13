@@ -22,9 +22,9 @@ namespace StripeCreator.Business.Tests.Models.Entities
 
         static readonly object?[] Create_Product_Correct_Cases =
         {
-            new object?[] { "Продукт", 150m, "Описание", null },
-            new object?[] { "Продукт", 1m, "Описание", null },
-            new object?[] { "Продукт", 150m, "Описание", new Guid("e9e43c3f-cb55-4877-854f-b92263948506") },
+            new object?[] { ProductHelper.TestName, ProductHelper.TestPrice, ProductHelper.TestDescription, null },
+            new object?[] { ProductHelper.TestName, 1m, ProductHelper.TestDescription, null },
+            new object?[] { ProductHelper.TestName, 1m, ProductHelper.TestDescription, ProductHelper.TestId },
         };
 
         [Test]

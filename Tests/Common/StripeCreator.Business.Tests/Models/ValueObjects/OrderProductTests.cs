@@ -20,8 +20,8 @@ namespace StripeCreator.Business.Tests.Models.ValueObjects
 
         static readonly object[] Create_OrderProduct_Correct_Cases =
         {
-            new object[] { new Guid(OrderProductHelper.TestProductGuidString), 10},
-            new object[] { new Guid(OrderProductHelper.TestProductGuidString), 1},
+            new object[] { OrderProductHelper.TestProductId, 10},
+            new object[] { OrderProductHelper.TestProductId, 1},
         };
 
         [Test]
@@ -41,7 +41,7 @@ namespace StripeCreator.Business.Tests.Models.ValueObjects
         [TestCaseSource(nameof(Create_OrderProduct_IncorrectQuantity_Cases))]
         public void Create_OrderProduct_IncorrectQuantity(int quantity)
         {
-            void construct() => new OrderProduct(new Guid(OrderProductHelper.TestProductGuidString), quantity);
+            void construct() => new OrderProduct(OrderProductHelper.TestProductId, quantity);
             Assert.Throws<ArgumentOutOfRangeException>(construct);
         }
 
