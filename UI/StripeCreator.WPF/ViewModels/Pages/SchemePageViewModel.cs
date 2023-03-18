@@ -376,9 +376,9 @@ namespace StripeCreator.WPF
         /// </summary>
         /// <param name="clothColor">Цвет ткани</param>
         /// <returns>Визуализация схемы</returns>
-        private Image GetSchemeVisualization(Color clothColor) =>
+        private Image GetSchemeVisualization(Color clothColor, bool isPageScheme = true) =>
             IsPixelView ?
-            _schemeVisualizer.CreateCellScheme(Scheme, true) :
+            _schemeVisualizer.CreateCellScheme(Scheme, isPageScheme) :
             _schemeVisualizer.CreatePrototypeScheme(Scheme, SelectedЕmbroideryType!.Value, SelectedЕmbroideryMethod!.Value, clothColor);
 
         /// <summary>
@@ -429,7 +429,7 @@ namespace StripeCreator.WPF
             {
                 await Task.Run(async () =>
                 {
-                    var image = GetSchemeVisualization(clothColor);
+                    var image = GetSchemeVisualization(clothColor, false);
                     await _imageKeeper.SaveAsync(dialog.FileName, image);
                 });
             }
