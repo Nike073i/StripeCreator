@@ -71,7 +71,7 @@ namespace StripeCreator.WPF
         /// <param name="services">Сервисы</param>
         private static void ConfigureServices(HostBuilderContext host, IServiceCollection services)
         {
-            services.AddSqlServer(host.Configuration.GetSection("Database"))
+            services.AddDatabase(host.Configuration.GetSection("Database"))
                 .AddDbRepository()
                 .AddServices()
                 .AddVkServices(host.Configuration.GetSection("VK"))

@@ -11,7 +11,7 @@ namespace StripeCreator.DAL
         /// Конструктор с опциями подключения к БД
         /// </summary>
         /// <param name="options">Опции подключения к БД</param>
-        public StripeCreatorDb(DbContextOptions<StripeCreatorDb> options) : base(options) { }
+        public StripeCreatorDb(DbContextOptions<StripeCreatorDb> options) : base(options) => Database.EnsureCreated();
 
         #endregion
 
