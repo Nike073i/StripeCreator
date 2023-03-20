@@ -28,9 +28,6 @@ namespace StripeCreator.WPF
                     throw new InvalidOperationException($"Строка подключения не указана");
                 switch (type)
                 {
-                    case "MSSQL":
-                        opt.UseSqlServer(connectionString);
-                        break;
                     case "SQLite":
                         opt.UseSqlite(connectionString);
                         break;
