@@ -8,6 +8,35 @@ namespace StripeCreator.WPF
     /// </summary>
     public class ClientViewModel : EntityViewModel<Client>
     {
+        #region Public properties
+
+        /// <summary>
+        /// Имя 
+        /// </summary>
+        public string FirstName => Entity.PersonData.FirstName;
+
+        /// <summary>
+        /// Фамилия 
+        /// </summary>
+        public string SecondName => Entity.PersonData.SecondName;
+
+        /// <summary>
+        /// Номер телефона
+        /// </summary>
+        public string ContactNumber => Entity.ContactData.ContactNumber;
+
+        /// <summary>
+        /// Адрес электронной почты
+        /// </summary>
+        public string Email => Entity.ContactData.Email;
+
+        /// <summary>
+        /// Иные контактные сведения
+        /// </summary>
+        public string? Other => Entity.ContactData.Other;
+
+        #endregion
+
         #region Constructors
 
         /// <summary>
@@ -24,17 +53,14 @@ namespace StripeCreator.WPF
         {
             get
             {
-                var data = new List<EntityInfoValueViewModel>();
-
-                var personData = Entity.PersonData;
-                data.Add(new("Имя", personData.FirstName));
-                data.Add(new("Фамилия", personData.SecondName));
-
-                var contactData = Entity.ContactData;
-                data.Add(new("Н.тел.", contactData.ContactNumber));
-                data.Add(new("Почта", contactData.Email));
-                data.Add(new("Иное", contactData.Other ?? "Отсутствует"));
-
+                var data = new List<EntityInfoValueViewModel>
+                {
+                    new("Имя", FirstName),
+                    new("Фамилия", SecondName),
+                    new("Н.тел.", ContactNumber),
+                    new("Почта", Email),
+                    new("Иное", Other ?? "Отсутствует")
+                };
                 return new EntityInfoViewModel(data);
             }
         }

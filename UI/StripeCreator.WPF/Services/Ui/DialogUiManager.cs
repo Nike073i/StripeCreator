@@ -15,6 +15,28 @@ namespace StripeCreator.WPF
     /// </summary>
     public class DialogUiManager : IUiManager
     {
+        #region Private fields
+
+        /// <summary>
+        /// Сервис работы с клиентами
+        /// </summary>
+        private readonly ClientService _clientService;
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Конструктор с полной инициализацией
+        /// </summary>
+        /// <param name="clientService">Сервис клиентов</param>
+        public DialogUiManager(ClientService clientService)
+        {
+            _clientService = clientService;
+        }
+
+        #endregion
+
         #region Interface implementations
 
         public Task ShowInfo(MessageBoxDialogViewModel viewModel)
@@ -69,7 +91,7 @@ namespace StripeCreator.WPF
         public Task<OrderCreateModel?> CreateOrder(IEnumerable<Product> products, IEnumerable<Client> clients)
         {
             DialogWindow window = new();
-            var createOrderViewModel = new OrderCreateViewModel(clients, products);
+            var createOrderViewModel = new OrderCreateViewModel(this, _clientService, clients, products);
             OrderCreateModel? createOrderModel = null;
             async void okAction(object? param)
             {

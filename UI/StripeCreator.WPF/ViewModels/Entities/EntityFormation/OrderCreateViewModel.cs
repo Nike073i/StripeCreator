@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace StripeCreator.WPF
@@ -17,7 +18,17 @@ namespace StripeCreator.WPF
         /// <summary>
         /// Выбранный клиент
         /// </summary>
-        private Client? _selectedClient;
+        private ClientViewModel? _selectedClient;
+
+        /// <summary>
+        /// Менеджер интерактивного взаимодействия
+        /// </summary>
+        private readonly IUiManager _uiManager;
+
+        /// <summary>
+        /// Сервис работы с клеинтами
+        /// </summary>
+        private readonly ClientService _clientService;
 
         #endregion
 
@@ -36,21 +47,23 @@ namespace StripeCreator.WPF
         /// <summary>
         /// Список доступных клиентов
         /// </summary>
-        public IEnumerable<Client> Clients { get; set; }
+        public ObservableCollection<ClientViewModel> Clients { get; set; }
 
         /// <summary>
         /// Выбранный клиент
         /// </summary>
-        public Client? SelectedClient
+        public ClientViewModel? SelectedClient
         {
             get => _selectedClient;
             set
             {
                 _selectedClient = value;
-                var contactData = _selectedClient?.ContactData;
-                ContactNumber = contactData?.ContactNumber;
-                Email = contactData?.Email;
-                Other = contactData?.Other;
+                var client = _selectedClient?.Entity;
+                if (client == null) return;
+                var contactData = client.ContactData;
+                ContactNumber = contactData.ContactNumber;
+                Email = contactData.Email;
+                Other = contactData.Other;
             }
         }
 
@@ -101,6 +114,11 @@ namespace StripeCreator.WPF
         /// </summary>
         public ICommand AddOrderProductCommand { get; }
 
+        /// <summary>
+        /// Команда создания клиента
+        /// </summary>
+        public ICommand CreateClientCommand { get; }
+
         #endregion
 
         #endregion
@@ -117,15 +135,18 @@ namespace StripeCreator.WPF
         /// <summary>
         /// Конструктор с полной инициализацией
         /// </summary>
-        public OrderCreateViewModel(IEnumerable<Client> clients, IEnumerable<Product> products)
+        public OrderCreateViewModel(IUiManager uiManager, ClientService clientService, IEnumerable<Client> clients, IEnumerable<Product> products)
         {
-            Clients = clients;
+            _uiManager = uiManager;
+            _clientService = clientService;
+            Clients = new ObservableCollection<ClientViewModel>(clients.Select(client => new ClientViewModel(client)));
             Products = products;
             OrderLines = new ObservableCollection<OrderProductViewModel>();
 
             // Инициализация комманд
             AddOrderProductCommand = new RelayCommand(OnExecutedAddOrderProductCommand) { CanExecutePredicate = CanExecuteAddOrderProductCommand };
             RemoveOrderProductCommand = new RelayCommand(OnExecutedRemoveOrderProductCommand) { CanExecutePredicate = CanExecuteRemoveOrderProductCommand };
+            CreateClientCommand = new RelayCommand(async param => await OnExecutedCreateClientCommand(param));
         }
 
         #endregion
@@ -144,7 +165,7 @@ namespace StripeCreator.WPF
         /// <returns></returns>
         private bool ValidateData()
         {
-            if (_selectedClient == null || !OrderLines.Any()
+            if (SelectedClient == null || !OrderLines.Any()
                  || string.IsNullOrWhiteSpace(ContactNumber) || string.IsNullOrWhiteSpace(Email))
             {
                 ErrorString = "Заполните обязательные поля";
@@ -164,7 +185,7 @@ namespace StripeCreator.WPF
             {
                 // Проверка введенных контактных данных
                 var contactData = new ContactData(ContactNumber!, Email!, Other);
-                return new OrderCreateModel(_selectedClient!.Id!.Value, contactData,
+                return new OrderCreateModel(SelectedClient!.GetEntityId()!.Value, contactData,
                     OrderLines.Select(line => line.OrderProduct));
             }
             catch (Exception ex)
@@ -175,7 +196,7 @@ namespace StripeCreator.WPF
         }
 
         /// <summary>
-        /// Добавить продукт в заказ
+        /// Действие при команде добавления продукта в заказ
         /// </summary>
         /// <param name="obj"></param>
         private void OnExecutedAddOrderProductCommand(object? obj)
@@ -198,7 +219,7 @@ namespace StripeCreator.WPF
         private bool CanExecuteAddOrderProductCommand(object? obj) => SelectedProduct != null && Quantity > 0 && Quantity < 250;
 
         /// <summary>
-        /// Удалить продукт из заказ
+        /// Действие при команде удаления продукта из заказ
         /// </summary>
         /// <param name="obj"></param>
         private void OnExecutedRemoveOrderProductCommand(object? obj)
@@ -212,6 +233,33 @@ namespace StripeCreator.WPF
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
         private bool CanExecuteRemoveOrderProductCommand(object? obj) => obj is OrderProductViewModel;
+
+        /// <summary>
+        /// Действие при команде создания клиента
+        /// </summary>
+        /// <param name="obj"></param>
+        private async Task OnExecutedCreateClientCommand(object? obj)
+        {
+            var formationViewModel = new ClientFormationViewModel();
+            var formationData = await _uiManager.FormationEntity(formationViewModel);
+            if (formationData == null)
+            {
+                await _uiManager.ShowInfo(new("Отмена", "Создание клиента отменено"));
+                return;
+            }
+            try
+            {
+                var newClient = await _clientService.SaveAsync(formationData);
+                if (newClient is not ClientViewModel clientViewModel) 
+                    throw new InvalidOperationException();
+                Clients.Add(clientViewModel);
+                SelectedClient = clientViewModel;
+            }
+            catch (Exception ex)
+            {
+                await _uiManager.ShowError(new("Ошибка создания клиента", ex.Message));
+            }
+        }
 
         #endregion
     }

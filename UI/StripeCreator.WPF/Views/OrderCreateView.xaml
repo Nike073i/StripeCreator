@@ -31,8 +31,10 @@
                     <RowDefinition Height="auto"/>
                     <!-- Email -->
                     <RowDefinition Height="auto"/>
-                    <!-- Other -->
+                    <!-- Иные сведения -->
                     <RowDefinition Height="*"/>
+                    <!-- Кнопки -->
+                    <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
                 
                 <!-- Клиент -->
@@ -45,7 +47,16 @@
                                Margin="5" Grid.Column="0"/>
                     <ComboBox ItemsSource="{Binding Clients}" 
                               SelectedItem="{Binding SelectedClient}" 
-                              Grid.Column="1"/>
+                              Grid.Column="1">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate DataType="{x:Type local:ClientViewModel}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Grid.Column="0" Text="{Binding SecondName}" Margin="5"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding ContactNumber}" Margin="5"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
                 </Grid>
                 
                 <!-- Номер телефона -->
@@ -73,7 +84,7 @@
                              Style="{StaticResource GridDataTextBox}"/>
                 </Grid>
                 
-                <!-- Other -->
+                <!-- Иные -->
                 <Grid Grid.Row="3">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
@@ -85,6 +96,11 @@
                     <TextBox Grid.Row="1" Margin="3 0" Text="{Binding Other}"
                              VerticalAlignment="Top"/>
                 </Grid>
+                
+                <!-- Кнопки -->
+                <Button Grid.Row="4" HorizontalAlignment="Right" 
+                        Content="Создать клиента"
+                        Command="{Binding CreateClientCommand}"/>
             </Grid>
         </GroupBox>
         
