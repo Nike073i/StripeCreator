@@ -97,18 +97,38 @@
                              VerticalAlignment="Top"/>
                 </Grid>
                 
-                <!-- Кнопки -->
-                <Button Grid.Row="4" HorizontalAlignment="Right" 
-                        Content="Создать клиента"
-                        Command="{Binding CreateClientCommand}"/>
+                <!-- Создать клиента -->
+                <Button Grid.Row="4" Content="Создать клиента" 
+                        HorizontalAlignment="Right" 
+                        Command="{Binding CreateClientCommand}"
+                        FontSize="{StaticResource FontSizeRegular}" FontWeight="DemiBold"
+                        Padding="15 5" Foreground="{StaticResource DarkColorBrush}"/>
             </Grid>
         </GroupBox>
         
         <!-- Продукция в заказе -->
         <GroupBox Header="Продукция в заказе" Grid.Column="1" Margin="5">
             <DockPanel>
+                <!-- Расчет стоимости -->
+                <Border DockPanel.Dock="Bottom" 
+                        CornerRadius="10" 
+                        Padding="5" Margin="3"
+                        Background="{StaticResource DarkColorBrush}">
+                    <DockPanel>
+                        <TextBlock Text="Стоимость" DockPanel.Dock="Left"/>
+                        <!-- Рассчитать -->
+                        <Button Grid.Column="1" Content="Рассчитать" DockPanel.Dock="Right"
+                                Command="{Binding CalculatePriceCommand}"
+                                FontSize="{StaticResource FontSizeRegular}" FontWeight="DemiBold"
+                                Padding="15 5" Foreground="{StaticResource DarkColorBrush}"/>
+                        <xceed:DecimalUpDown Value="{Binding OrderPrice}" Minimum="1"/>
+                    </DockPanel>
+                </Border>
                 <!-- Добавление новой продукции -->
-                <Border DockPanel.Dock="Bottom" CornerRadius="10" Padding="5" Background="{StaticResource DarkColorBrush}">
+                <Border DockPanel.Dock="Bottom" 
+                        CornerRadius="10" 
+                        Padding="5" Margin="3" 
+                        Background="{StaticResource DarkColorBrush}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <!-- Поля для ввода -->

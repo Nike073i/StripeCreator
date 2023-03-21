@@ -133,17 +133,6 @@ namespace StripeCreator.Business.Models
         #region Public methods
 
         /// <summary>
-        /// Добавление санкций к стоимости заказа
-        /// </summary>
-        /// <param name="cost">Значение санкции</param>
-        /// <returns>Текущий заказ</returns>
-        public Order AddSanctions(decimal cost)
-        {
-            Price -= cost;
-            return this;
-        }
-
-        /// <summary>
         /// Смена статуса текущего заказа
         /// </summary>
         /// <param name="newStatus">Новый статус заказа</param>
@@ -166,6 +155,5 @@ namespace StripeCreator.Business.Models
         }
 
         #endregion
-
     }
 }

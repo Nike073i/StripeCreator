@@ -62,7 +62,7 @@ namespace StripeCreator.WPF
         /// <returns>Созданный заказ</returns>
         public async Task<OrderViewModel> CreateAsync(OrderCreateModel orderModel)
         {
-            var newOrder = await _saleService.CreateOrderAsync(orderModel.ClientId, orderModel.OrderProducts, orderModel.ContactData);
+            var newOrder = await _saleService.CreateOrderAsync(orderModel.ClientId, orderModel.OrderProducts, orderModel.ContactData, orderModel.OrderPrice);
             return CreateViewModel(newOrder);
         }
 

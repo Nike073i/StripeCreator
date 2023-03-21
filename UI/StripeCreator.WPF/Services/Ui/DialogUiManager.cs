@@ -1,4 +1,5 @@
 ﻿using StripeCreator.Business.Models;
+using StripeCreator.Business.Services;
 using StripeCreator.Stripe.Models;
 using StripeCreator.Stripe.Services;
 using StripeCreator.VK.Models;
@@ -22,6 +23,11 @@ namespace StripeCreator.WPF
         /// </summary>
         private readonly ClientService _clientService;
 
+        /// <summary>
+        /// Сервис расчета стоимости заказа
+        /// </summary>
+        private readonly OrderPriceCalculator _orderPriceCalculator;
+
         #endregion
 
         #region Constructors
@@ -30,9 +36,10 @@ namespace StripeCreator.WPF
         /// Конструктор с полной инициализацией
         /// </summary>
         /// <param name="clientService">Сервис клиентов</param>
-        public DialogUiManager(ClientService clientService)
+        public DialogUiManager(ClientService clientService, OrderPriceCalculator orderPriceCalculator)
         {
             _clientService = clientService;
+            _orderPriceCalculator = orderPriceCalculator;
         }
 
         #endregion
@@ -91,7 +98,7 @@ namespace StripeCreator.WPF
         public Task<OrderCreateModel?> CreateOrder(IEnumerable<Product> products, IEnumerable<Client> clients)
         {
             DialogWindow window = new();
-            var createOrderViewModel = new OrderCreateViewModel(this, _clientService, clients, products);
+            var createOrderViewModel = new OrderCreateViewModel(this, _clientService, _orderPriceCalculator, clients, products);
             OrderCreateModel? createOrderModel = null;
             async void okAction(object? param)
             {

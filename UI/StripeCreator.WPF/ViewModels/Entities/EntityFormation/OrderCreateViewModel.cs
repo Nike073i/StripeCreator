@@ -1,4 +1,5 @@
 ﻿using StripeCreator.Business.Models;
+using StripeCreator.Business.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -29,6 +30,11 @@ namespace StripeCreator.WPF
         /// Сервис работы с клеинтами
         /// </summary>
         private readonly ClientService _clientService;
+
+        /// <summary>
+        /// Сервис подсчета стоимости заказа
+        /// </summary>
+        private readonly OrderPriceCalculator _orderPriceCalculator;
 
         #endregion
 
@@ -83,6 +89,11 @@ namespace StripeCreator.WPF
         /// </summary>
         public int Quantity { get; set; }
 
+        /// <summary>
+        /// Стоимость заказа
+        /// </summary>
+        public decimal? OrderPrice { get; set; }
+
         #region ContactData
 
         /// <summary>
@@ -119,6 +130,11 @@ namespace StripeCreator.WPF
         /// </summary>
         public ICommand CreateClientCommand { get; }
 
+        /// <summary>
+        /// Команда подсчета стоимости заказа
+        /// </summary>
+        public ICommand CalculatePriceCommand { get; }
+
         #endregion
 
         #endregion
@@ -135,10 +151,12 @@ namespace StripeCreator.WPF
         /// <summary>
         /// Конструктор с полной инициализацией
         /// </summary>
-        public OrderCreateViewModel(IUiManager uiManager, ClientService clientService, IEnumerable<Client> clients, IEnumerable<Product> products)
+        public OrderCreateViewModel(IUiManager uiManager, ClientService clientService, OrderPriceCalculator orderPriceCalculator,
+            IEnumerable<Client> clients, IEnumerable<Product> products)
         {
             _uiManager = uiManager;
             _clientService = clientService;
+            _orderPriceCalculator = orderPriceCalculator;
             Clients = new ObservableCollection<ClientViewModel>(clients.Select(client => new ClientViewModel(client)));
             Products = products;
             OrderLines = new ObservableCollection<OrderProductViewModel>();
@@ -147,6 +165,7 @@ namespace StripeCreator.WPF
             AddOrderProductCommand = new RelayCommand(OnExecutedAddOrderProductCommand) { CanExecutePredicate = CanExecuteAddOrderProductCommand };
             RemoveOrderProductCommand = new RelayCommand(OnExecutedRemoveOrderProductCommand) { CanExecutePredicate = CanExecuteRemoveOrderProductCommand };
             CreateClientCommand = new RelayCommand(async param => await OnExecutedCreateClientCommand(param));
+            CalculatePriceCommand = new RelayCommand(async param => await OnExecutedCalculatePriceCommand(param)) { CanExecutePredicate = CanExecuteCalculatePriceCommand };
         }
 
         #endregion
@@ -165,8 +184,11 @@ namespace StripeCreator.WPF
         /// <returns></returns>
         private bool ValidateData()
         {
-            if (SelectedClient == null || !OrderLines.Any()
-                 || string.IsNullOrWhiteSpace(ContactNumber) || string.IsNullOrWhiteSpace(Email))
+            if (SelectedClient == null
+                 || !OrderLines.Any()
+                 || string.IsNullOrWhiteSpace(ContactNumber)
+                 || string.IsNullOrWhiteSpace(Email)
+                 || !OrderPrice.HasValue)
             {
                 ErrorString = "Заполните обязательные поля";
                 return false;
@@ -186,7 +208,7 @@ namespace StripeCreator.WPF
                 // Проверка введенных контактных данных
                 var contactData = new ContactData(ContactNumber!, Email!, Other);
                 return new OrderCreateModel(SelectedClient!.GetEntityId()!.Value, contactData,
-                    OrderLines.Select(line => line.OrderProduct));
+                    OrderLines.Select(line => line.OrderProduct), OrderPrice);
             }
             catch (Exception ex)
             {
@@ -250,7 +272,7 @@ namespace StripeCreator.WPF
             try
             {
                 var newClient = await _clientService.SaveAsync(formationData);
-                if (newClient is not ClientViewModel clientViewModel) 
+                if (newClient is not ClientViewModel clientViewModel)
                     throw new InvalidOperationException();
                 Clients.Add(clientViewModel);
                 SelectedClient = clientViewModel;
@@ -260,6 +282,22 @@ namespace StripeCreator.WPF
                 await _uiManager.ShowError(new("Ошибка создания клиента", ex.Message));
             }
         }
+
+        /// <summary>
+        /// Действие при команде подсчета стоимости заказа
+        /// </summary>
+        /// <param name="parameter">Параметр команды</param>
+        private async Task OnExecutedCalculatePriceCommand(object? parameter)
+        {
+            var orderProdutcs = OrderLines.Select(line => line.OrderProduct);
+            OrderPrice = await _orderPriceCalculator.CalculatePriceAsync(orderProdutcs);
+        }
+
+        /// <summary>
+        /// Проверка вызова команды удаления продукта из заказ
+        /// </summary>
+        /// <param name="parameter">Параметр команды</param>
+        private bool CanExecuteCalculatePriceCommand(object? parameter) => OrderLines.Any();
 
         #endregion
     }

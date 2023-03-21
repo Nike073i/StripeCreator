@@ -54,14 +54,15 @@ namespace StripeCreator.Business.Services
         /// <param name="clientId">Идентификатор клиента</param>
         /// <param name="orderProducts">Список заказанной продукции</param>
         /// <param name="contactData">Контактная информация получателя</param>
+        /// <param name="price">Стоимость заказа, указанная вручную</param>
         /// <returns>Новый заказ</returns>
         /// <exception cref="ArgumentException">Возникает, если клиент с указанным <paramref name="clientId"/> не найден</exception>
-        public async Task<Order> CreateOrderAsync(Guid clientId, IEnumerable<OrderProduct> orderProducts, ContactData contactData)
+        public async Task<Order> CreateOrderAsync(Guid clientId, IEnumerable<OrderProduct> orderProducts, ContactData contactData, decimal? price = null)
         {
             var client = await _clientRepository.GetByIdAsync(clientId);
             if (client == null)
                 throw new ArgumentException($"Клиент с указанным Id - {clientId} не найден");
-            var totalPrice = await _orderPriceCalculator.CalculatePriceAsync(orderProducts);
+            var totalPrice = price ?? await _orderPriceCalculator.CalculatePriceAsync(orderProducts);
             var order = new Order(clientId, totalPrice, orderProducts, contactData);
             return await _orderRepository.SaveAsync(order);
         }

@@ -86,34 +86,6 @@ namespace StripeCreator.Business.Tests.Models.Entities
         };
 
         [Test]
-        [TestCaseSource(nameof(Add_Sanctions_DiscountLessThanCost_Cases))]
-        public void Add_Sanctions_DiscountLessThanCost(Order order, decimal cost, decimal expectedPrice)
-        {
-            order.AddSanctions(cost);
-            Assert.That(order.Price, Is.EqualTo(expectedPrice));
-        }
-
-        static readonly object[] Add_Sanctions_DiscountLessThanCost_Cases =
-        {
-            new object[] { OrderHelper.CreateNewOrder(price: 500m), 150m, 350m },
-            new object[] { OrderHelper.CreateNewOrder(price: 150m), 150m, 0m },
-        };
-
-        [Test]
-        [TestCaseSource(nameof(Add_Sanctions_DiscountMoreThanCost_Cases))]
-        public void Add_Sanctions_DiscountMoreThanCost(Order order, decimal cost)
-        {
-            void addSanctions() => order.AddSanctions(cost);
-            Assert.Throws<ArgumentOutOfRangeException>(addSanctions);
-        }
-
-        static readonly object[] Add_Sanctions_DiscountMoreThanCost_Cases =
-        {
-            new object[] { OrderHelper.CreateNewOrder(price: 500m), 501m },
-            new object[] { OrderHelper.CreateNewOrder(price: 0), 150m },
-        };
-
-        [Test]
         [TestCaseSource(nameof(Change_Status_CancelActiveOrder_Cases))]
         public void Change_Status_CancelActiveOrder(Order order)
         {
