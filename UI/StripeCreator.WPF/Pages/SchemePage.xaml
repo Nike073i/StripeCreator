@@ -8,7 +8,7 @@
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d" 
              xmlns:xceed="http://schemas.xceed.com/wpf/xaml/toolkit"
-             d:DesignHeight="900" d:DesignWidth="1300"
+             d:DesignHeight="800" d:DesignWidth="1300"
              d:DataContext="{x:Static local:SchemePageDesignViewModel.Instance}">
     <Grid Margin="-15 0 0 0">
         <Grid.ColumnDefinitions>
