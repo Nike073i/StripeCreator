@@ -47,7 +47,7 @@
                         <StackPanel>
                             <TextBlock Style="{StaticResource HeaderTextBlock}" Text="Метод дискретизации"/>
                             <ComboBox ItemsSource="{Binding ResizeMethods}" 
-                                      SelectedItem="{Binding SelectedResizeMethod}"/>
+                                      SelectedItem="{Binding SelectedResizeMethod}" />
                         </StackPanel>
                     </Border>
                     <!-- Уменьшение цветов -->
@@ -64,8 +64,8 @@
                                 <TextBlock Style="{StaticResource ValueTextBlock}" 
                                            Text="Метод" 
                                            Grid.Column="0"/>
-                                <ComboBox ItemsSource="{Binding ReductionMethods}" 
-                                          SelectedItem="{Binding SelectedReductionMethod}" 
+                                <ComboBox ItemsSource="{Binding ReductiveMethods}" 
+                                          SelectedItem="{Binding SelectedReductiveMethod}" 
                                           Grid.Column="1"/>
                             </Grid>
                             <!-- Аргумент метода -->
@@ -77,7 +77,7 @@
                                 <TextBlock Style="{StaticResource ValueTextBlock}" 
                                            Text="Количество" 
                                            Grid.Column="0"/>
-                                <xceed:IntegerUpDown Value="{Binding ReductionCount}" 
+                                <xceed:IntegerUpDown Value="{Binding ReductiveCount}" 
                                                      Grid.Column="1"/>
                             </Grid>
                         </StackPanel>

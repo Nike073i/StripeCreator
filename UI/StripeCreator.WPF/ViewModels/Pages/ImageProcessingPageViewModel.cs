@@ -4,8 +4,8 @@ using StripeCreator.Stripe.Models;
 using StripeCreator.Stripe.Repositories;
 using StripeCreator.WPF.Services;
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -18,6 +18,16 @@ namespace StripeCreator.WPF
     public class ImageProcessingPageViewModel : BaseViewModel
     {
         #region Private fields
+
+        /// <summary>
+        /// Адрес ресурсов
+        /// </summary>
+        private readonly Uri _resourceUri = new("Resources/Localizations/ImageProcessing.xaml", UriKind.Relative);
+
+        /// <summary> 
+        /// Ресурсы приложения
+        /// </summary>
+        private readonly System.Windows.ResourceDictionary _resources;
 
         /// <summary>
         /// ViewModel приложения
@@ -51,7 +61,7 @@ namespace StripeCreator.WPF
         /// <summary>
         /// Выбранный метод дискретизации
         /// </summary>
-        public ResizeMethod? SelectedResizeMethod { get; set; }
+        public ResizeMethodViewModel? SelectedResizeMethod { get; set; }
 
         /// <summary>
         /// Распространенные каунты тканей
@@ -61,22 +71,22 @@ namespace StripeCreator.WPF
         /// <summary>
         /// Список доступных методов уменьшения цветов
         /// </summary>
-        public IEnumerable ReductionMethods => Enum.GetValues(typeof(ReductiveMethod));
+        public ObservableCollection<ReductiveMethodViewModel> ReductiveMethods { get; }
 
         /// <summary>
         /// Список доступных методов дискретизации
         /// </summary>
-        public IEnumerable ResizeMethods => Enum.GetValues(typeof(ResizeMethod));
+        public ObservableCollection<ResizeMethodViewModel> ResizeMethods { get; }
 
         /// <summary>
         /// Выбранный метод уменьшения цветов
         /// </summary>
-        public ReductiveMethod? SelectedReductionMethod { get; set; }
+        public ReductiveMethodViewModel? SelectedReductiveMethod { get; set; }
 
         /// <summary>
         /// Аргумент для метода уменьшения цветов.
         /// </summary>
-        public int ReductionCount { get; set; } = 8;
+        public int ReductiveCount { get; set; } = 8;
 
         /// <summary>
         /// Флаг установки значения у распределения цветов
@@ -165,6 +175,37 @@ namespace StripeCreator.WPF
             _uiManager = uiManager;
             SelectedClothCount = ClothCounts.First();
 
+            _resources = new System.Windows.ResourceDictionary
+            {
+                Source = _resourceUri
+            };
+
+            ResizeMethods = new ObservableCollection<ResizeMethodViewModel>
+            {
+                new ResizeMethodViewModel(ResizeMethod.Adaptive,
+                    _resources["ResizeMethod_Adaptive_Label"]?.ToString() ?? ResizeMethod.Adaptive.ToString(),
+                    _resources["ResizeMethod_Adaptive_Description"]?.ToString() ?? string.Empty),
+                new ResizeMethodViewModel(ResizeMethod.Sample,
+                    _resources["ResizeMethod_Sample_Label"]?.ToString() ?? ResizeMethod.Sample.ToString(),
+                    _resources["ResizeMethod_Sample_Description"]?.ToString() ?? string.Empty),
+                new ResizeMethodViewModel(ResizeMethod.Scale,
+                    _resources["ResizeMethod_Scale_Label"]?.ToString() ?? ResizeMethod.Scale.ToString(),
+                    _resources["ResizeMethod_Scale_Description"]?.ToString() ?? string.Empty),
+                new ResizeMethodViewModel(ResizeMethod.Liquid,
+                    _resources["ResizeMethod_Liquid_Label"] ?.ToString() ?? ResizeMethod.Liquid.ToString(),
+                    _resources["ResizeMethod_Liquid_Description"] ?.ToString() ?? string.Empty)
+            };
+
+            ReductiveMethods = new ObservableCollection<ReductiveMethodViewModel>
+            {
+                new ReductiveMethodViewModel(ReductiveMethod.Quantization,
+                    _resources["ReductiveMethod_Quantization_Label"]?.ToString() ?? ReductiveMethod.Quantization.ToString(),
+                    _resources["ReductiveMethod_Quantization_Description"]?.ToString() ?? string.Empty),
+                new ReductiveMethodViewModel(ReductiveMethod.Posterization,
+                    _resources["ReductiveMethod_Posterization_Label"]?.ToString() ?? ReductiveMethod.Posterization.ToString(),
+                    _resources["ReductiveMethod_Posterization_Description"]?.ToString() ?? string.Empty)
+            };
+
             //Инициализация комманд
             MenuCommand = new RelayCommand(OnExecutedMenuCommand);
             ChooseCommand = new RelayCommand(OnExecutedChooseCommand);
@@ -209,9 +250,9 @@ namespace StripeCreator.WPF
             var maxSize = Math.Max(stripeSize.Width, stripeSize.Height);
             try
             {
-                var schemeTemplate = await _imageService.CreateSchemaTemplate(ImagePath!, count, maxSize, 
-                    SelectedResizeMethod!.Value, 
-                    SelectedReductionMethod!.Value, ReductionCount,
+                var schemeTemplate = await _imageService.CreateSchemaTemplate(ImagePath!, count, maxSize,
+                    SelectedResizeMethod!.Method,
+                    SelectedReductiveMethod!.Method, ReductiveCount,
                     IsColorNormalizeSet);
                 _applicationViewModel.GoToPage(ApplicationPage.Scheme, (schemeTemplate, count));
             }
@@ -227,10 +268,10 @@ namespace StripeCreator.WPF
         /// <param name="parameter">Параметр команды</param>
         private bool CanExecuteHandleCommand(object? parameter)
              => !string.IsNullOrWhiteSpace(ImagePath)
-            && SelectedReductionMethod != null
+            && SelectedReductiveMethod != null
             && (!IsClothData || SelectedCloth != null)
-            && ReductionCount > 0
-            && ReductionCount <= 255
+            && ReductiveCount > 0
+            && ReductiveCount <= 255
             && SelectedResizeMethod != null
             && SelectedStripeSize != null;
 

@@ -1,0 +1,10 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:StripeCreator.WPF">
+    <DataTemplate DataType="{x:Type local:ResizeMethodViewModel}">
+        <TextBlock Text="{Binding Name}" ToolTip="{Binding Description}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type local:ReductiveMethodViewModel}">
+        <TextBlock Text="{Binding Name}" ToolTip="{Binding Description}"/>
+    </DataTemplate>
+</ResourceDictionary>

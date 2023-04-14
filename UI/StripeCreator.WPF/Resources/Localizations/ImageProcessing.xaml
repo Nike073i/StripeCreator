@@ -1,0 +1,19 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+    <!-- Методы дискретизации -->
+    <system:String x:Key="ResizeMethod_Adaptive_Label">Адаптивный</system:String>
+    <system:String x:Key="ResizeMethod_Adaptive_Description">Описание адаптивного метода</system:String>
+    <system:String x:Key="ResizeMethod_Sample_Label">Репликация</system:String>
+    <system:String x:Key="ResizeMethod_Sample_Description">Описание метода репликации</system:String>
+    <system:String x:Key="ResizeMethod_Scale_Label">Усреднение</system:String>
+    <system:String x:Key="ResizeMethod_Scale_Description">Описание метода усреднения</system:String>
+    <system:String x:Key="ResizeMethod_Liquid_Label">Резьба по шву</system:String>
+    <system:String x:Key="ResizeMethod_Liquid_Description">Описание метода резьбы по шву</system:String>
+    
+    <!-- Методы уменьшения цветов -->
+    <system:String x:Key="ReductiveMethod_Quantization_Label">Квантизация</system:String>
+    <system:String x:Key="ReductiveMethod_Quantization_Description">Описание квантизации</system:String>
+    <system:String x:Key="ReductiveMethod_Posterization_Label">Постеризация</system:String>
+    <system:String x:Key="ReductiveMethod_Posterization_Description">Описание постеризации</system:String>
+</ResourceDictionary>
