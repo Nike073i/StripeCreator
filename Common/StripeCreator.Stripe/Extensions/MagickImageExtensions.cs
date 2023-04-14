@@ -50,13 +50,15 @@ namespace StripeCreator.Stripe.Extensions
         /// </summary>
         /// <param name="sourceImage">объект <see cref="MagickImage"/> для расширения</param>
         /// <returns>Список частей изображения</returns>
-        public static IEnumerable<MagickImage> SplitImage(this MagickImage sourceImage)
+        public static IEnumerable<MagickImage> SplitImage(this MagickImage sourceImage, int cellSize)
         {
             var list = new List<MagickImage>();
             int width = sourceImage.Width;
             int height = sourceImage.Height;
             int widthHalf = width / 2;
             int heightHalf = height / 2;
+            widthHalf -= widthHalf % cellSize;
+            heightHalf -= heightHalf % cellSize;
             list.Add((MagickImage)sourceImage.Clone(0, 0, widthHalf, heightHalf));
             list.Add((MagickImage)sourceImage.Clone(widthHalf, 0, width - widthHalf, heightHalf));
             list.Add((MagickImage)sourceImage.Clone(0, heightHalf, widthHalf, height - heightHalf));

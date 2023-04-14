@@ -394,7 +394,6 @@ namespace StripeCreator.WPF
             if (dialog.ShowDialog() == false) return;
             try
             {
-
                 await _schemeKeeper.SaveAsync(dialog.FileName, Scheme);
             }
             catch (Exception ex)

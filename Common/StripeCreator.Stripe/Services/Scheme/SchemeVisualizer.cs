@@ -126,7 +126,7 @@ namespace StripeCreator.Stripe.Services
         {
             using var magickImage = MagickImageExtensions.CreateMagickImage(sourceImage);
 
-            var parts = magickImage.SplitImage();
+            var parts = magickImage.SplitImage(cellSize);
             parts.AsParallel().ForAll(part => part.DrawGrid(cellSize, gridSize, MagickImageExtensions.CreateColor(gridColor)));
             using var collection = new MagickImageCollection(parts);
             var image = collection.Montage(new MontageSettings()
