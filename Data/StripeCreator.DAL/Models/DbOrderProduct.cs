@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StripeCreator.DAL.Models
 {
@@ -27,18 +26,20 @@ namespace StripeCreator.DAL.Models
         /// </summary>
         public Guid OrderId { get; protected set; }
 
-#nullable disable
         /// <summary>
         /// Навигационное свойство заказа
         /// </summary>
-        [ForeignKey(nameof(OrderId))]
         public DbOrder DbOrder { get; protected set; }
-#nullable enable
+
+        /// <summary>
+        /// Навигационное свойство продукции
+        /// </summary>
+        public DbProduct DbProduct { get; protected set; }
 
         #endregion
 
         #region Constructors 
-
+#nullable disable
         /// <summary>
         /// Конструктор по умолчанию для EFC
         /// </summary>
@@ -54,6 +55,7 @@ namespace StripeCreator.DAL.Models
             ProductId = productId;
             Quantity = quantity;
         }
+#nullable enable
 
         #endregion
     }

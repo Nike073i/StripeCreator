@@ -15,12 +15,12 @@
 	<PackageReference Include="OxyPlot.Wpf" Version="2.0.0" />
     <PackageReference Include="PropertyChanged.Fody" Version="4.0.1" />
 	<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.2" />
-	<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Common\StripeCreator.Statistic\StripeCreator.Statistic.csproj" />
     <ProjectReference Include="..\..\Data\StripeCreator.VK\StripeCreator.VK.csproj" />
+    <ProjectReference Include="..\..\Data\StripeCreator.DAL.Sqlite\StripeCreator.DAL.Sqlite.csproj" />
   </ItemGroup>
 
   <ItemGroup>

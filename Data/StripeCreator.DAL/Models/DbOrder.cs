@@ -61,6 +61,11 @@ namespace StripeCreator.DAL.Models
         [Required]
         public DateTime DateCreated { get; protected set; }
 
+        /// <summary>
+        /// Навигационное свойство клиента
+        /// </summary>
+        public DbClient Client { get; protected set; }
+
         #endregion
 
         #region Constructors

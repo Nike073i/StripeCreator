@@ -33,6 +33,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StripeCreator.Business.Test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StripeCreator.Stripe.Tests", "Tests\Common\StripeCreator.Stripe.Tests\StripeCreator.Stripe.Tests.csproj", "{F6E0130A-1ECA-4F90-8C59-062D1DD1EDFC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StripeCreator.DAL.Sqlite", "Data\StripeCreator.DAL.Sqlite\StripeCreator.DAL.Sqlite.csproj", "{567FD47E-35A8-4970-97A6-D7081AA91825}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -79,6 +81,10 @@ Global
 		{F6E0130A-1ECA-4F90-8C59-062D1DD1EDFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6E0130A-1ECA-4F90-8C59-062D1DD1EDFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6E0130A-1ECA-4F90-8C59-062D1DD1EDFC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{567FD47E-35A8-4970-97A6-D7081AA91825}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{567FD47E-35A8-4970-97A6-D7081AA91825}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{567FD47E-35A8-4970-97A6-D7081AA91825}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{567FD47E-35A8-4970-97A6-D7081AA91825}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -95,6 +101,7 @@ Global
 		{16636BBB-B9FC-42F4-88F3-7F568BF6EA8C} = {58366A5F-94AA-49C3-B753-350F198C3520}
 		{EBC604D6-B3B4-4CE7-A38D-3C11433A8F6F} = {58366A5F-94AA-49C3-B753-350F198C3520}
 		{F6E0130A-1ECA-4F90-8C59-062D1DD1EDFC} = {58366A5F-94AA-49C3-B753-350F198C3520}
+		{567FD47E-35A8-4970-97A6-D7081AA91825} = {BD0533D7-6F55-4630-A543-290E8B0F2A6E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C289F5AB-BDD1-4D92-8A40-3163E4F9D792}

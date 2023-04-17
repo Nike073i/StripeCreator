@@ -1,6 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using StripeCreator.DAL;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -53,7 +55,7 @@ namespace StripeCreator.WPF
         /// <param name="settingsFile">Путь к файлу-конфигурации</param>
         public static void CreateHost(string[] args, string contentPath, string settingsFile)
         {
-            if (!File.Exists(settingsFile)) 
+            if (!File.Exists(settingsFile))
                 throw new ArgumentNullException(nameof(settingsFile), $"Отсутствует файл конфигурации {settingsFile}");
             Container = Host.CreateDefaultBuilder(args)
                         .UseContentRoot(contentPath)
@@ -62,6 +64,9 @@ namespace StripeCreator.WPF
                                 .AddJsonFile(settingsFile, true, true))
                         .ConfigureServices(ConfigureServices)
                         .Build();
+            using var scope = Container.Services.CreateScope();
+            using var context = scope.ServiceProvider.GetRequiredService<StripeCreatorDb>();
+            context.Database.Migrate();
         }
 
         /// <summary>

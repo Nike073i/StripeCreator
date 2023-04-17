@@ -29,7 +29,7 @@ namespace StripeCreator.WPF
                 switch (type)
                 {
                     case "SQLite":
-                        opt.UseSqlite(connectionString);
+                        opt.UseSqlite(connectionString, options => options.MigrationsAssembly("StripeCreator.DAL.Sqlite"));
                         break;
                     default:
                         throw new InvalidOperationException($"Тип подключения {type} не поддерживается");

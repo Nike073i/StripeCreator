@@ -46,6 +46,11 @@ namespace StripeCreator.DAL.Models
 
         #endregion
 
+        /// <summary>
+        /// Навигационное свойство заказов
+        /// </summary>
+        public IEnumerable<DbOrder> Orders { get; set; }
+
         #endregion
 
         #region Constructors
