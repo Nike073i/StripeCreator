@@ -27,10 +27,16 @@ namespace StripeCreator.DAL.Models
         [Required]
         public string Description { get; set; } = "Описание";
 
+        /// <summary>
+        /// Навигационное свойство связки заказ-продукция и продукции
+        /// </summary>
+        public IEnumerable<DbOrderProduct> OrderProducts { get; protected set; }
+
         #endregion
 
         #region Constructors
 
+#nullable disable
         /// <summary>
         /// Конструктор по умолчанию для EFC
         /// </summary>
@@ -49,6 +55,7 @@ namespace StripeCreator.DAL.Models
             Price = price;
             Description = description;
         }
+#nullable enable
 
         #endregion
     }

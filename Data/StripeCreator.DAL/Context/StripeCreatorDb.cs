@@ -68,7 +68,10 @@ namespace StripeCreator.DAL
 
             // Связь заказа-продукции с продукцией
             modelBuilder.Entity<DbOrderProduct>()
-                .HasOne(orderProduct => orderProduct.DbProduct);
+                .HasOne(orderProduct => orderProduct.DbProduct)
+                .WithMany(product => product.OrderProducts)
+                .HasForeignKey(orderProduct => orderProduct.ProductId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             #endregion
         }
