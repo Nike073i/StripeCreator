@@ -33,6 +33,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StripeCreator.Business.Test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StripeCreator.Stripe.Tests", "Tests\Common\StripeCreator.Stripe.Tests\StripeCreator.Stripe.Tests.csproj", "{F6E0130A-1ECA-4F90-8C59-062D1DD1EDFC}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ui", "Ui", "{24022345-9E25-48DC-B82B-724818966D4E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StripeCreator.WPF.Tests", "Tests\Ui\StripeCreator.WPF.Tests\StripeCreator.WPF.Tests.csproj", "{FAB13E35-616B-44E8-B852-D2AF08AA9E94}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -79,6 +83,10 @@ Global
 		{F6E0130A-1ECA-4F90-8C59-062D1DD1EDFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6E0130A-1ECA-4F90-8C59-062D1DD1EDFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6E0130A-1ECA-4F90-8C59-062D1DD1EDFC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAB13E35-616B-44E8-B852-D2AF08AA9E94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAB13E35-616B-44E8-B852-D2AF08AA9E94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAB13E35-616B-44E8-B852-D2AF08AA9E94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAB13E35-616B-44E8-B852-D2AF08AA9E94}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -95,6 +103,8 @@ Global
 		{16636BBB-B9FC-42F4-88F3-7F568BF6EA8C} = {58366A5F-94AA-49C3-B753-350F198C3520}
 		{EBC604D6-B3B4-4CE7-A38D-3C11433A8F6F} = {58366A5F-94AA-49C3-B753-350F198C3520}
 		{F6E0130A-1ECA-4F90-8C59-062D1DD1EDFC} = {58366A5F-94AA-49C3-B753-350F198C3520}
+		{24022345-9E25-48DC-B82B-724818966D4E} = {4A6FB208-7072-4205-BB80-A586F2D7A445}
+		{FAB13E35-616B-44E8-B852-D2AF08AA9E94} = {24022345-9E25-48DC-B82B-724818966D4E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C289F5AB-BDD1-4D92-8A40-3163E4F9D792}
