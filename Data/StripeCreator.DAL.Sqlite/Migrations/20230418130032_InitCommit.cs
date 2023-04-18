@@ -1,14 +1,9 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
-
-#nullable disable
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace StripeCreator.DAL.Sqlite.Migrations
 {
-    /// <inheritdoc />
     public partial class InitCommit : Migration
     {
-        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -106,8 +101,7 @@ namespace StripeCreator.DAL.Sqlite.Migrations
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     ProductId = table.Column<Guid>(type: "TEXT", nullable: false),
                     Quantity = table.Column<int>(type: "INTEGER", nullable: false),
-                    OrderId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    DbProductId = table.Column<Guid>(type: "TEXT", nullable: false)
+                    OrderId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -119,11 +113,11 @@ namespace StripeCreator.DAL.Sqlite.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_DbOrderProduct_DbProduct_DbProductId",
-                        column: x => x.DbProductId,
+                        name: "FK_DbOrderProduct_DbProduct_ProductId",
+                        column: x => x.ProductId,
                         principalTable: "DbProduct",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -132,17 +126,16 @@ namespace StripeCreator.DAL.Sqlite.Migrations
                 column: "ClientId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DbOrderProduct_DbProductId",
-                table: "DbOrderProduct",
-                column: "DbProductId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_DbOrderProduct_OrderId",
                 table: "DbOrderProduct",
                 column: "OrderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DbOrderProduct_ProductId",
+                table: "DbOrderProduct",
+                column: "ProductId");
         }
 
-        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(

@@ -11,7 +11,7 @@ using StripeCreator.DAL;
 namespace StripeCreator.DAL.Sqlite.Migrations
 {
     [DbContext(typeof(StripeCreatorDb))]
-    [Migration("20230417103850_'InitCommit'")]
+    [Migration("20230418130032_InitCommit")]
     partial class InitCommit
     {
         /// <inheritdoc />
@@ -124,9 +124,6 @@ namespace StripeCreator.DAL.Sqlite.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("DbProductId")
-                        .HasColumnType("TEXT");
-
                     b.Property<Guid>("OrderId")
                         .HasColumnType("TEXT");
 
@@ -138,9 +135,9 @@ namespace StripeCreator.DAL.Sqlite.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DbProductId");
-
                     b.HasIndex("OrderId");
+
+                    b.HasIndex("ProductId");
 
                     b.ToTable("DbOrderProduct");
                 });
@@ -212,15 +209,15 @@ namespace StripeCreator.DAL.Sqlite.Migrations
 
             modelBuilder.Entity("StripeCreator.DAL.Models.DbOrderProduct", b =>
                 {
-                    b.HasOne("StripeCreator.DAL.Models.DbProduct", "DbProduct")
-                        .WithMany()
-                        .HasForeignKey("DbProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("StripeCreator.DAL.Models.DbOrder", "DbOrder")
                         .WithMany("Products")
                         .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("StripeCreator.DAL.Models.DbProduct", "DbProduct")
+                        .WithMany("OrderProducts")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -237,6 +234,11 @@ namespace StripeCreator.DAL.Sqlite.Migrations
             modelBuilder.Entity("StripeCreator.DAL.Models.DbOrder", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("StripeCreator.DAL.Models.DbProduct", b =>
+                {
+                    b.Navigation("OrderProducts");
                 });
 #pragma warning restore 612, 618
         }
