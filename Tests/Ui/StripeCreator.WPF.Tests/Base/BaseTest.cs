@@ -37,6 +37,6 @@ namespace StripeCreator.WPF.Tests.Base
             }
         }
 
-        protected virtual void DetectComponents() {  }
+        protected virtual void DetectComponents() { }
     }
 }
