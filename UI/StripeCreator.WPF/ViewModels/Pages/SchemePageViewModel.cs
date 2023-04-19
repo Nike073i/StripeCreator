@@ -1,6 +1,7 @@
 ﻿using FontAwesome5;
 using Microsoft.Win32;
 using StripeCreator.Core.Models;
+using StripeCreator.Stripe.Interfaces;
 using StripeCreator.Stripe.Models;
 using StripeCreator.Stripe.Repositories;
 using StripeCreator.Stripe.Services;
@@ -65,6 +66,11 @@ namespace StripeCreator.WPF
         /// Хранитель схем
         /// </summary>
         private readonly IDataKeeper<Scheme> _schemeKeeper;
+
+        /// <summary>
+        /// Создатель описания схемы
+        /// </summary>
+        private readonly ISchemeDescriptor _schemeDescriptor;
 
         /// <summary>
         /// Схема вышивки
@@ -251,6 +257,11 @@ namespace StripeCreator.WPF
         /// </summary>
         public ICommand ChangeColorCommand { get; }
 
+        /// <summary>
+        /// Команда создания описания схемы
+        /// </summary>
+        public ICommand CreateSchemeDecriptionCommand { get; }
+
         #endregion
 
         #endregion
@@ -268,7 +279,15 @@ namespace StripeCreator.WPF
         /// Конструктор с полной инициализацией
         /// </summary>
         /// <param name="applicationViewModel">ViewModel приложения</param>
-        public SchemePageViewModel(ApplicationViewModel applicationViewModel, SchemeVisualizer schemeVisualizer, IDataKeeper<Image> imageKeeper, IDataKeeper<Scheme> schemeKeeper, IUiManager uiManager, IClothRepository clothRepository, IThreadRepository threadRepository)
+        public SchemePageViewModel(
+            ApplicationViewModel applicationViewModel,
+            SchemeVisualizer schemeVisualizer,
+            IDataKeeper<Image> imageKeeper,
+            IDataKeeper<Scheme> schemeKeeper,
+            IUiManager uiManager,
+            IClothRepository clothRepository,
+            IThreadRepository threadRepository,
+            ISchemeDescriptor schemeDescriptor)
         {
             _applicationViewModel = applicationViewModel;
             _schemeVisualizer = schemeVisualizer;
@@ -277,6 +296,7 @@ namespace StripeCreator.WPF
             _uiManager = uiManager;
             _clothRepository = clothRepository;
             _threadRepository = threadRepository;
+            _schemeDescriptor = schemeDescriptor;
 
             //Инициализация комманд
             ShowSchemeCommand = new RelayCommand(OnExecutedShowSchemeCommand) { CanExecutePredicate = CanExecuteShowSchemeCommand };
@@ -289,6 +309,9 @@ namespace StripeCreator.WPF
             GetCellColorCommand = new RelayCommand(OnExecutedGetCellColorCommand) { CanExecutePredicate = CanExecuteGetCellColorCommand };
             ChangeCellColorCommand = new RelayCommand(OnExecutedChangeCellColorCommand) { CanExecutePredicate = CanExecuteChangeCellColorCommand };
             ChangeColorCommand = new RelayCommand(OnExecutedChangeColorCommand);
+
+            CreateSchemeDecriptionCommand = new RelayCommand(async (param) => await OnExecutedCreateSchemeDescriptionCommand(param))
+            { CanExecutePredicate = CanExecuteCreateSchemeDescriptionCommand };
 
             ActionMenuViewModel = new(_header, GetMenuItems());
         }
@@ -528,6 +551,44 @@ namespace StripeCreator.WPF
             Scheme.ChangeColor(new Color(CurrentColorHex), new Color(NewColorHex));
             RefreshColors();
         }
+
+        /// <summary>
+        /// Действие при команде создания описания схемы
+        /// </summary>
+        /// <param name="parameter">Путь к месту сохранения описания</param>
+        private async Task OnExecutedCreateSchemeDescriptionCommand(object? parameter)
+        {
+            if (parameter is not string path)
+            {
+                var dialog = new SaveFileDialog
+                {
+                    Filter = "Текстовые файлы (*.txt)|*.txt"
+                };
+                if (dialog.ShowDialog() == false) return;
+                path = dialog.FileName;
+            }
+            var indent = IsIndentActivated ? new Indent(IndentSize, new Color(IndentColorHex)) : null;
+            Scheme.Indent = indent;
+            try
+            {
+                //await Task.Run(async () =>
+                //{
+                //    var image = GetSchemeVisualization(clothColor, false);
+                //    await _imageKeeper.SaveAsync(path, image);
+                //});
+            }
+            catch (Exception ex)
+            {
+                //await _uiManager.ShowError(new("Ошибка визуализации схемы", ex.Message));
+            }
+        }
+
+        /// <summary>
+        /// Проверка вызова команды создания описания схемы
+        /// </summary>
+        /// <param name="parameter">Путь к месту сохранения описания</param>
+        private bool CanExecuteCreateSchemeDescriptionCommand(object? parameter) =>
+            (!IsIndentActivated || IndentSize > 0 && IndentSize <= 10);
 
         #endregion
 

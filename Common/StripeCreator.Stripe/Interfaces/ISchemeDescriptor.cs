@@ -4,6 +4,6 @@ namespace StripeCreator.Stripe.Interfaces
 {
     public interface ISchemeDescriptor
     {
-        bool SaveDescription(string path, Scheme scheme);
+        void SaveDescription(string path, Scheme scheme);
     }
 }
