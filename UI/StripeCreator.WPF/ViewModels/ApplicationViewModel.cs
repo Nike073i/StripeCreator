@@ -8,6 +8,11 @@
         #region Public properties
 
         /// <summary>
+        /// Заголовок окна приложения
+        /// </summary>
+        public string WindowTitle { get; set; } = "StripeCreator";
+
+        /// <summary>
         /// Текущая страница приложения
         /// </summary>
         public ApplicationPage CurrentPage { get; private set; } = ApplicationPage.Welcome;
@@ -39,7 +44,7 @@
             }
             catch
             {
-                CurrentPage = tmpPage; 
+                CurrentPage = tmpPage;
                 CurrentPageArg = tmpArgs;
                 throw;
             }

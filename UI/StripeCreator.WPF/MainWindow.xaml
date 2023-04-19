@@ -5,12 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StripeCreator.WPF"
         mc:Ignorable="d"
-        Title="StripeCreator"
         d:Height="450" d:Width="600"
-        Background="{StaticResource DarkColorBrush}">
+        Background="{StaticResource DarkColorBrush}"
+        Title="{Binding WindowTitle}"
+        DataContext="{Binding ApplicationViewModel, Source={StaticResource Locator}}">
     <Grid Margin="15">
         <!-- Держатель страниц-->
-        <ContentControl Content="{Binding ApplicationViewModel.CurrentPage, Source={StaticResource Locator}, 
+        <ContentControl Content="{Binding CurrentPage, 
                         Converter={local:ApplicationPageValueConverter}}"/>
     </Grid>
 </Window>
