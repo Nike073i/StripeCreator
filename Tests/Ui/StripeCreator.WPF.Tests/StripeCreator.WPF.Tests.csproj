@@ -19,4 +19,8 @@
     <Folder Include="Infrastructure\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\UI\StripeCreator.WPF\StripeCreator.WPF.csproj" />
+  </ItemGroup>
+
 </Project>

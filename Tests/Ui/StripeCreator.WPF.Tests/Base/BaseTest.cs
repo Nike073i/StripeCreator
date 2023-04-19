@@ -1,7 +1,8 @@
 ﻿using FlaUI.Core;
+using FlaUI.Core.AutomationElements;
 using FlaUI.UIA3;
 using NUnit.Framework;
-using System;
+using System.IO;
 
 namespace StripeCreator.WPF.Tests.Base
 {
@@ -10,18 +11,32 @@ namespace StripeCreator.WPF.Tests.Base
         protected string ApplicationRelativePath = @"T:\Repositories\Net\StripeCreatorClone\UI\StripeCreator.WPF\bin\Debug\net7.0-windows\";
         protected string ApplicationExec = "StripeCreator.WPF.exe";
 
+        protected Application App { get; private set; }
+        protected UIA3Automation Automation { get; private set; }
+        protected Window CurrentWindow => App.GetMainWindow(Automation);
+
         [SetUp]
         protected void Start()
         {
-            var app = Application.Launch(ApplicationRelativePath + ApplicationExec);
-            using var automation = new UIA3Automation();
-            var window = app.GetMainWindow(automation);
-            Console.WriteLine(window.Title);
+            Directory.SetCurrentDirectory(ApplicationRelativePath);
+            App = Application.Launch(ApplicationRelativePath + ApplicationExec);
+            Automation = new UIA3Automation();
+            DetectComponents();
         }
 
         [TearDown]
         protected void Stop()
         {
+            if (App != null)
+            {
+                Automation.Dispose();
+                Automation = null;
+                App.Kill();
+                App.Dispose();
+                App = null;
+            }
         }
+
+        protected virtual void DetectComponents() {  }
     }
 }
