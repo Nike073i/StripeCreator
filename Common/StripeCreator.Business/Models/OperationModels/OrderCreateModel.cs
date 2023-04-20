@@ -1,9 +1,4 @@
-﻿using StripeCreator.Business.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace StripeCreator.WPF
+﻿namespace StripeCreator.Business.Models.OperationModels
 {
     /// <summary>
     /// Модель для создания заказа

@@ -1,6 +1,7 @@
 ﻿using Moq;
 using NUnit.Framework;
 using StripeCreator.Business.Models;
+using StripeCreator.Business.Models.OperationModels;
 using StripeCreator.Business.Repositories;
 using StripeCreator.Business.Services;
 using StripeCreator.Business.Tests.Infrastructure.Helpers.Models;
@@ -16,7 +17,8 @@ namespace StripeCreator.Business.Tests.Services
             var clientId = ClientHelper.TestId;
             var orderProducts = new List<OrderProduct> { OrderProductHelper.CreateOrderProduct() };
             var contactData = ContactDataHelper.CreateContactData();
-            async Task<Order> createAsync() => await saleService!.CreateOrderAsync(clientId, orderProducts, contactData);
+            var orderModel = new OrderCreateModel(clientId, contactData, orderProducts);
+            async Task<Order> createAsync() => await saleService!.CreateOrderAsync(orderModel);
             Assert.ThrowsAsync<ArgumentException>(createAsync);
         }
 
@@ -38,7 +40,8 @@ namespace StripeCreator.Business.Tests.Services
             var orderProducts = new List<OrderProduct> { new OrderProduct(product.Id!.Value, 15) };
             var contactData = ContactDataHelper.CreateContactData();
 
-            var newOrder = await saleService!.CreateOrderAsync(client.Id!.Value, orderProducts, contactData);
+            var orderCreateModel = new OrderCreateModel(client.Id!.Value, contactData, orderProducts);
+            var newOrder = await saleService!.CreateOrderAsync(orderCreateModel);
 
             Assert.Multiple(() =>
             {
