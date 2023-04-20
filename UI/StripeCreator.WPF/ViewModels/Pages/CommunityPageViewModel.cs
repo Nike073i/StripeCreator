@@ -1,8 +1,9 @@
 ﻿using FontAwesome5;
-using StripeCreator.WPF.Services;
+using StripeCreator.VK.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -252,7 +253,8 @@ namespace StripeCreator.WPF
             try
             {
                 var data = await _communityService.GetAllAsync();
-                Markets = new ObservableCollection<MarketViewModel>(data);
+                var marketViewModels = data.Select(market => new MarketViewModel(market));
+                Markets = new ObservableCollection<MarketViewModel>(marketViewModels);
             }
             catch (Exception ex)
             {

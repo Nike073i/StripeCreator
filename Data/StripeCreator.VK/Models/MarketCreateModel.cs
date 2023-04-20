@@ -1,6 +1,4 @@
-﻿using StripeCreator.VK.Models;
-
-namespace StripeCreator.WPF
+﻿namespace StripeCreator.VK.Models
 {
     /// <summary>Модель для создания нового товара</summary>
     public class MarketCreateModel

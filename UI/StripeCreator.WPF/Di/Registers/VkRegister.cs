@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using StripeCreator.VK.Models;
 using StripeCreator.VK.Repositories;
-using StripeCreator.WPF.Services;
+using StripeCreator.VK.Services;
 using System;
 
 namespace StripeCreator.WPF
