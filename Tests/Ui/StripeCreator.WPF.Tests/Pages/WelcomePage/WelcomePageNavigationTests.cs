@@ -11,17 +11,27 @@ namespace StripeCreator.WPF.Tests.Pages.WelcomePage
         private MenuUiHelper _menu;
 
         [Test]
+        public void LoadPage_Success()
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(CurrentWindow, Is.Not.Null);
+                Assert.That(CurrentWindow.Title, Is.EqualTo(PageTitles.WelcomePageTitle));
+                Assert.That(CurrentWindow.IsEnabled, Is.True);
+            });
+        }
+
+        [Test]
         public void ToImageProcessingPageNavigation_Success()
         {
             var toImageProcessingMenuItem = _menu.GetMenuByIndex((int)WelcomePageMenuItems.ImageProcessingPage);
             toImageProcessingMenuItem.UiElement.Click();
 
-            var currentWindow = CurrentWindow;
             Assert.Multiple(() =>
             {
-                Assert.That(currentWindow, Is.Not.Null);
-                Assert.That(currentWindow.Title, Is.EqualTo(PageTitles.ImageProcessingPageTitle));
-                Assert.That(currentWindow.IsEnabled, Is.True);
+                Assert.That(CurrentWindow, Is.Not.Null);
+                Assert.That(CurrentWindow.Title, Is.EqualTo(PageTitles.ImageProcessingPageTitle));
+                Assert.That(CurrentWindow.IsEnabled, Is.True);
             });
         }
 
@@ -31,12 +41,11 @@ namespace StripeCreator.WPF.Tests.Pages.WelcomePage
             var toDataPageMenuItem = _menu.GetMenuByIndex((int)WelcomePageMenuItems.DataPage);
             toDataPageMenuItem.UiElement.Click();
 
-            var currentWindow = CurrentWindow;
             Assert.Multiple(() =>
             {
-                Assert.That(currentWindow, Is.Not.Null);
-                Assert.That(currentWindow.Title, Is.EqualTo(PageTitles.DataPageTitle));
-                Assert.That(currentWindow.IsEnabled, Is.True);
+                Assert.That(CurrentWindow, Is.Not.Null);
+                Assert.That(CurrentWindow.Title, Is.EqualTo(PageTitles.DataPageTitle));
+                Assert.That(CurrentWindow.IsEnabled, Is.True);
             });
         }
 
@@ -46,12 +55,11 @@ namespace StripeCreator.WPF.Tests.Pages.WelcomePage
             var toOrderPageMenuItem = _menu.GetMenuByIndex((int)WelcomePageMenuItems.OrderPage);
             toOrderPageMenuItem.UiElement.Click();
 
-            var currentWindow = CurrentWindow;
             Assert.Multiple(() =>
             {
-                Assert.That(currentWindow, Is.Not.Null);
-                Assert.That(currentWindow.Title, Is.EqualTo(PageTitles.OrderPageTitle));
-                Assert.That(currentWindow.IsEnabled, Is.True);
+                Assert.That(CurrentWindow, Is.Not.Null);
+                Assert.That(CurrentWindow.Title, Is.EqualTo(PageTitles.OrderPageTitle));
+                Assert.That(CurrentWindow.IsEnabled, Is.True);
             });
         }
 
@@ -61,12 +69,11 @@ namespace StripeCreator.WPF.Tests.Pages.WelcomePage
             var toReportPageMenuItem = _menu.GetMenuByIndex((int)WelcomePageMenuItems.ReportPage);
             toReportPageMenuItem.UiElement.Click();
 
-            var currentWindow = CurrentWindow;
             Assert.Multiple(() =>
             {
-                Assert.That(currentWindow, Is.Not.Null);
-                Assert.That(currentWindow.Title, Is.EqualTo(PageTitles.ReportPageTitle));
-                Assert.That(currentWindow.IsEnabled, Is.True);
+                Assert.That(CurrentWindow, Is.Not.Null);
+                Assert.That(CurrentWindow.Title, Is.EqualTo(PageTitles.ReportPageTitle));
+                Assert.That(CurrentWindow.IsEnabled, Is.True);
             });
         }
 
@@ -76,12 +83,11 @@ namespace StripeCreator.WPF.Tests.Pages.WelcomePage
             var toCommunityPageMenuItem = _menu.GetMenuByIndex((int)WelcomePageMenuItems.CommunityPage);
             toCommunityPageMenuItem.UiElement.Click();
 
-            var currentWindow = CurrentWindow;
             Assert.Multiple(() =>
             {
-                Assert.That(currentWindow, Is.Not.Null);
-                Assert.That(currentWindow.Title, Is.EqualTo(PageTitles.CommunityPageTitle));
-                Assert.That(currentWindow.IsEnabled, Is.True);
+                Assert.That(CurrentWindow, Is.Not.Null);
+                Assert.That(CurrentWindow.Title, Is.EqualTo(PageTitles.CommunityPageTitle));
+                Assert.That(CurrentWindow.IsEnabled, Is.True);
             });
         }
 
@@ -91,8 +97,7 @@ namespace StripeCreator.WPF.Tests.Pages.WelcomePage
             var toSchemePageMenuItem = _menu.GetMenuByIndex((int)WelcomePageMenuItems.SchemePageAction);
             toSchemePageMenuItem.UiElement.Click();
 
-            var window = CurrentWindow;
-            var openDialogWindow = window.ModalWindows.First();
+            var openDialogWindow = CurrentWindow.ModalWindows.First();
 
             Assert.Multiple(() =>
             {
@@ -105,8 +110,7 @@ namespace StripeCreator.WPF.Tests.Pages.WelcomePage
         protected override void DetectComponents()
         {
             base.DetectComponents();
-            var window = CurrentWindow;
-            var welcomePage = window.FindFirstChild(opt => opt.ByClassName(nameof(WelcomePage)));
+            var welcomePage = CurrentWindow.FindFirstChild(opt => opt.ByClassName(nameof(WelcomePage)));
             var actionMenuControl = welcomePage.FindFirstChild(opt => opt.ByClassName(nameof(ActionMenuControl)));
             var actionMenuItems = actionMenuControl.FindAllChildren(opt => opt.ByClassName(nameof(ActionMenuItemControl)));
             var menuItems = actionMenuItems.Select((item, index) => new MenuItemUiHelper(item, index));
