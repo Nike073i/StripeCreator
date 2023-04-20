@@ -1,18 +1,13 @@
-﻿using StripeCreator.Core.Models;
+﻿using ImageMagick;
+using StripeCreator.Core.Models;
 using StripeCreator.Stripe.Models;
-using StripeCreator.Stripe.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Media.Imaging;
 
-namespace StripeCreator.WPF.Services
+namespace StripeCreator.Stripe.Services
 {
     /// <summary>
     /// Сервис работы с изображением и схематизацией
     /// </summary>
-    public class ImageService
+    public class ImageFacade
     {
         #region Constants
 
@@ -38,7 +33,7 @@ namespace StripeCreator.WPF.Services
         /// Конструктор с полной инициализацией
         /// </summary>
         /// <param name="imageKeeper">Хранитель изображения</param>
-        public ImageService(IDataKeeper<Image> imageKeeper)
+        public ImageFacade(IDataKeeper<Image> imageKeeper)
         {
             _imageKeeper = imageKeeper;
         }
@@ -93,9 +88,8 @@ namespace StripeCreator.WPF.Services
         /// <returns>Размер изображения</returns>
         public static Size GetImageSize(string imagePath)
         {
-            var decoder = BitmapDecoder.Create(new Uri(imagePath), BitmapCreateOptions.None, BitmapCacheOption.None);
-            var frame = decoder.Frames[0];
-            return new Size(frame.PixelWidth, frame.PixelHeight);
+            var image = new MagickImageInfo(imagePath);
+            return new Size(image.Width, image.Height);
         }
 
         #endregion
