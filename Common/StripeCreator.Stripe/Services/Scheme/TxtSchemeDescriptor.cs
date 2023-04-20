@@ -37,6 +37,7 @@ namespace StripeCreator.Stripe.Services
             using var pixels = magickImage.GetPixels();
             var data = new List<string>();
             var stringBuilder = new StringBuilder();
+
             // Мб тут не foreach, а типа while dowhile.
             foreach (var pixel in pixels)
             {
@@ -47,27 +48,64 @@ namespace StripeCreator.Stripe.Services
                 }
                 var color = new Color(pixel.ToColor()!.ToHexString());
                 var colorIndex = colors[color];
-                stringBuilder.Append(string.Format("[ {0,-3} ]", colorIndex));
+                stringBuilder.Append(string.Format("[{0,-3}]", colorIndex));
             }
             data.Add(stringBuilder.ToString());
-            // Нету данных по отступу
+
+            if (indent != null && indent.Size > 0)
+                data = AddSchemeIndent(data, indent, colors[indent.Color], scheme.Width, scheme.Height);
+
+            //data = AddNumeration(data);
+
+            data.Add(Environment.NewLine);
             return data.ToArray();
+        }
+
+        private List<string> AddSchemeIndent(List<string> schemeData, Indent indent, int colorIndex, int schemeWitdh, int schemeHeight)
+        {
+            var indentSize = indent.Size;
+            var newWidth = schemeWitdh + indentSize * 2;
+            // Формируем боковые отступы
+            var sidePadding = string.Concat(Enumerable.Repeat(string.Format("[{0,-3}]", colorIndex), indentSize));
+
+            // Формируем полную строку 
+            var rowIndent = string.Concat(Enumerable.Repeat(string.Format("[{0,-3}]", colorIndex), newWidth));
+
+            var mainIndent = Enumerable.Repeat(rowIndent, indentSize).ToArray();
+
+            var data = new List<string>();
+
+            // Добавляем верхний отступ
+            data.AddRange(mainIndent);
+            // Добавляем боковые отступы 
+            foreach (var line in schemeData)
+            {
+                var newLine = string.Concat(sidePadding, line, sidePadding);
+                data.Add(newLine);
+            }
+            // Добавляем нижний отступ
+            data.AddRange(mainIndent);
+            return data;
         }
 
         private string[] GetDescriptionOfColors(Dictionary<Color, int> colors)
         {
             var data = new List<string>();
             // Добавляем строку заголовков
-            data.Add("| Индекс |    Код    |");
+            data.Add("+-----+-----------+");
+            data.Add("|  №  |    Код    |");
+
             // Вносим данные по цветам
             var pairs = colors.OrderBy(pair => pair.Value).ToList();
             for (int i = 0; i < pairs.Count; i++)
             {
                 var color = pairs[i].Key;
-                var index = string.Format("| {0,-6} |", i);
+                var index = string.Format("| {0,-3} |", pairs[i].Value);
                 var code = string.Format(" {0,-9} |", color.HexValue);
                 data.Add(index + code);
             }
+            // Добавляем рамку таблицы
+            data.Add("+-----------------+");
             return data.ToArray();
         }
 

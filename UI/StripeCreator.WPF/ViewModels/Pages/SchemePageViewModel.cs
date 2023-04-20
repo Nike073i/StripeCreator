@@ -330,6 +330,7 @@ namespace StripeCreator.WPF
                 new(EFontAwesomeIcon.Solid_Eye, "Отобразить схему", ShowSchemeCommand),
                 new(EFontAwesomeIcon.Solid_Save, "Сохранить схему", SaveCommand),
                 new(EFontAwesomeIcon.Solid_Image, "Сохранить как изображение", SaveImageCommand),
+                new(EFontAwesomeIcon.Solid_FilePrescription, "Сохранить описание схемы", CreateSchemeDecriptionCommand),
                 new(EFontAwesomeIcon.Solid_Ruler, "Расчет материалов", MaterialCalculateCommand),
                 new(EFontAwesomeIcon.Solid_RubleSign, "Расчет стоимости", PriceCalculateCommand),
                 new(EFontAwesomeIcon.Solid_ArrowLeft, "В меню", MenuCommand),
@@ -571,15 +572,12 @@ namespace StripeCreator.WPF
             Scheme.Indent = indent;
             try
             {
-                //await Task.Run(async () =>
-                //{
-                //    var image = GetSchemeVisualization(clothColor, false);
-                //    await _imageKeeper.SaveAsync(path, image);
-                //});
+                await Task.Run(() => _schemeDescriptor.SaveDescription(path, Scheme));
+                await _uiManager.ShowInfo(new("Сохранено", "Описание сохранено успешно"));
             }
             catch (Exception ex)
             {
-                //await _uiManager.ShowError(new("Ошибка визуализации схемы", ex.Message));
+                await _uiManager.ShowError(new("Ошибка создания описания схемы", ex.Message));
             }
         }
 
