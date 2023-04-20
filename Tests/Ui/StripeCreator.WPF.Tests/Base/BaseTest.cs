@@ -21,6 +21,7 @@ namespace StripeCreator.WPF.Tests.Base
             Directory.SetCurrentDirectory(ApplicationRelativePath);
             App = Application.Launch(ApplicationRelativePath + ApplicationExec);
             Automation = new UIA3Automation();
+            Preparation();
             DetectComponents();
         }
 
@@ -38,5 +39,7 @@ namespace StripeCreator.WPF.Tests.Base
         }
 
         protected virtual void DetectComponents() { }
+
+        protected virtual void Preparation() { }
     }
 }
