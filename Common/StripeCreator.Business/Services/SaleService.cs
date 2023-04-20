@@ -1,5 +1,6 @@
 using StripeCreator.Business.Enums;
 using StripeCreator.Business.Models;
+using StripeCreator.Business.Models.OperationModels;
 using StripeCreator.Business.Repositories;
 
 namespace StripeCreator.Business.Services
@@ -57,13 +58,13 @@ namespace StripeCreator.Business.Services
         /// <param name="price">Стоимость заказа, указанная вручную</param>
         /// <returns>Новый заказ</returns>
         /// <exception cref="ArgumentException">Возникает, если клиент с указанным <paramref name="clientId"/> не найден</exception>
-        public async Task<Order> CreateOrderAsync(Guid clientId, IEnumerable<OrderProduct> orderProducts, ContactData contactData, decimal? price = null)
+        public async Task<Order> CreateOrderAsync(OrderCreateModel orderCreateModel)
         {
-            var client = await _clientRepository.GetByIdAsync(clientId);
+            var client = await _clientRepository.GetByIdAsync(orderCreateModel.ClientId);
             if (client == null)
-                throw new ArgumentException($"Клиент с указанным Id - {clientId} не найден");
-            var totalPrice = price ?? await _orderPriceCalculator.CalculatePriceAsync(orderProducts);
-            var order = new Order(clientId, totalPrice, orderProducts, contactData);
+                throw new ArgumentException($"Клиент с указанным Id - {orderCreateModel.ClientId} не найден");
+            var totalPrice = orderCreateModel.OrderPrice ?? await _orderPriceCalculator.CalculatePriceAsync(orderCreateModel.OrderProducts);
+            var order = new Order(orderCreateModel.ClientId, totalPrice, orderCreateModel.OrderProducts, orderCreateModel.ContactData);
             return await _orderRepository.SaveAsync(order);
         }
 

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using StripeCreator.VK.Models;
 using System;
 using System.Windows.Input;
 
@@ -36,7 +37,7 @@ namespace StripeCreator.WPF
 
         #region Public methods
 
-        public PublishMessageModel? GetData() => ValidateData() ? TryCreateOrderModel() : null;
+        public PublishMessageModel? GetData() => ValidateData() ? TryCreatePublishMessageModel() : null;
 
         #endregion
 
@@ -62,7 +63,7 @@ namespace StripeCreator.WPF
         /// <returns>PublishMessageModel - если модель создана успешно
         /// null - если указанны некорректные данные
         /// </returns>
-        private PublishMessageModel? TryCreateOrderModel()
+        private PublishMessageModel? TryCreatePublishMessageModel()
         {
             try
             {

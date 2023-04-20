@@ -1,4 +1,5 @@
 ﻿using StripeCreator.Business.Models;
+using StripeCreator.Business.Models.OperationModels;
 using StripeCreator.Stripe.Models;
 using StripeCreator.VK.Models;
 using System.Collections.Generic;

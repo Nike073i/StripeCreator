@@ -2,7 +2,7 @@
 using StripeCreator.Core.Models;
 using StripeCreator.Stripe.Models;
 using StripeCreator.Stripe.Repositories;
-using StripeCreator.WPF.Services;
+using StripeCreator.Stripe.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -37,7 +37,7 @@ namespace StripeCreator.WPF
         /// <summary>
         /// Сервис работы с изображением
         /// </summary>
-        private readonly ImageService _imageService;
+        private readonly ImageFacade _imageFacade;
 
         /// <summary>
         /// Репозиторий тканей
@@ -167,10 +167,10 @@ namespace StripeCreator.WPF
         /// <param name="imageService">Сервис работы с изображением</param>
         /// <param name="clothRepository">Репозиторий тканей</param>
         /// <param name="uiManager">Менеджер интерактивного взаимодействия</param>
-        public ImageProcessingPageViewModel(ApplicationViewModel applicationViewModel, ImageService imageService, IClothRepository clothRepository, IUiManager uiManager)
+        public ImageProcessingPageViewModel(ApplicationViewModel applicationViewModel, ImageFacade imageService, IClothRepository clothRepository, IUiManager uiManager)
         {
             _applicationViewModel = applicationViewModel;
-            _imageService = imageService;
+            _imageFacade = imageService;
             _clothRepository = clothRepository;
             _uiManager = uiManager;
             SelectedClothCount = ClothCounts.First();
@@ -235,8 +235,8 @@ namespace StripeCreator.WPF
             };
             if (dialog.ShowDialog() == false) return;
             ImagePath = dialog.FileName;
-            var imageSize = ImageService.GetImageSize(ImagePath);
-            AvailableStripeSizes = ImageService.GetAvailableStripeSizes(imageSize.Width, imageSize.Height);
+            var imageSize = ImageFacade.GetImageSize(ImagePath);
+            AvailableStripeSizes = ImageFacade.GetAvailableStripeSizes(imageSize.Width, imageSize.Height);
         }
 
         /// <summary>
@@ -250,7 +250,7 @@ namespace StripeCreator.WPF
             var maxSize = Math.Max(stripeSize.Width, stripeSize.Height);
             try
             {
-                var schemeTemplate = await _imageService.CreateSchemaTemplate(ImagePath!, count, maxSize,
+                var schemeTemplate = await _imageFacade.CreateSchemaTemplate(ImagePath!, count, maxSize,
                     SelectedResizeMethod!.Method,
                     SelectedReductiveMethod!.Method, ReductiveCount,
                     IsColorNormalizeSet);

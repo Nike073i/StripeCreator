@@ -1,14 +1,9 @@
-﻿using ImageMagick;
-using StripeCreator.VK.Models;
+﻿using StripeCreator.VK.Models;
 using StripeCreator.VK.Repositories;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+using System.Drawing;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
-namespace StripeCreator.WPF.Services
+namespace StripeCreator.VK.Services
 {
     /// <summary>Сервис для работы с сообществом во "ВКонтакте"</summary>
     public class CommunityService
@@ -40,11 +35,7 @@ namespace StripeCreator.WPF.Services
 
         /// <summary>Запрос на получение всех товаров в виде ViewModel</summary>
         /// <returns>Список ViewModel сущностей</returns>
-        public async Task<IEnumerable<MarketViewModel>> GetAllAsync()
-        {
-            var markets = await _marketRepository.GetAllAsync();
-            return markets.Select(market => new MarketViewModel(market));
-        }
+        public async Task<IEnumerable<Market>> GetAllAsync() => await _marketRepository.GetAllAsync();
 
         /// <summary>Запрос на добавление товара</summary>
         /// <param name="createModel">ViewModel сохраняемого товара</param>
@@ -55,7 +46,7 @@ namespace StripeCreator.WPF.Services
                 throw new ArgumentException($"Изображение по пути {photoPath} не найдено");
             if (!Regex.IsMatch(Path.GetFileNameWithoutExtension(photoPath), Photo.PhotoNamePattern))
                 throw new ArgumentException($"В названии изображения могут быть только латинские буквы и цифры");
-            var imageInfo = new MagickImageInfo(photoPath);
+            var imageInfo = GetImageSize(photoPath);
             if (imageInfo.Width < Photo.ImageMinWidth || imageInfo.Width > Photo.ImageMaxWidth)
                 throw new ArgumentException($"Ширина изображения должна быть от {Photo.ImageMinWidth} до {Photo.ImageMaxWidth}");
             if (imageInfo.Height < Photo.ImageMinHeight || imageInfo.Height > Photo.ImageMaxHeight)
@@ -88,13 +79,19 @@ namespace StripeCreator.WPF.Services
                     throw new ArgumentException($"Изображение по пути {photoPath} не найдено");
                 if (!Regex.IsMatch(Path.GetFileNameWithoutExtension(photoPath), Photo.PhotoNamePattern))
                     throw new ArgumentException($"В названии изображения могут быть только латинские буквы и цифры");
-                var imageInfo = new MagickImageInfo(photoPath);
+                var imageInfo = GetImageSize(photoPath);
                 if (imageInfo.Width < Photo.ImageMinWidth || imageInfo.Width > Photo.ImageMaxWidth)
                     throw new ArgumentException($"Ширина изображения должна быть от {Photo.ImageMinWidth} до {Photo.ImageMaxWidth}");
                 if (imageInfo.Height < Photo.ImageMinHeight || imageInfo.Height > Photo.ImageMaxHeight)
                     throw new ArgumentException($"Высота изображения должна быть от {Photo.ImageMinHeight} до {Photo.ImageMaxHeight}");
             }
             return _wallRepository.PostAsync(publishModel.Message, photoPath);
+        }
+
+        private Size GetImageSize(string photoPath)
+        {
+            var bitmap = new Bitmap(photoPath);
+            return bitmap.Size;
         }
 
         #endregion

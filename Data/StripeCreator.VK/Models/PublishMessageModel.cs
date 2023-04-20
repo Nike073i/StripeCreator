@@ -1,4 +1,4 @@
-﻿namespace StripeCreator.WPF
+﻿namespace StripeCreator.VK.Models
 {
     /// <summary>Модель для публикации записи</summary>
     public class PublishMessageModel

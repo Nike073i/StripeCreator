@@ -1,5 +1,6 @@
 ﻿using StripeCreator.Business.Enums;
 using StripeCreator.Business.Models;
+using StripeCreator.Business.Models.OperationModels;
 using StripeCreator.Business.Repositories;
 using StripeCreator.Business.Services;
 using System;
@@ -62,7 +63,7 @@ namespace StripeCreator.WPF
         /// <returns>Созданный заказ</returns>
         public async Task<OrderViewModel> CreateAsync(OrderCreateModel orderModel)
         {
-            var newOrder = await _saleService.CreateOrderAsync(orderModel.ClientId, orderModel.OrderProducts, orderModel.ContactData, orderModel.OrderPrice);
+            var newOrder = await _saleService.CreateOrderAsync(orderModel);
             return CreateViewModel(newOrder);
         }
 
