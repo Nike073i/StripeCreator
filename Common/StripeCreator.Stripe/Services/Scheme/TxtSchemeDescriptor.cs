@@ -37,23 +37,26 @@ namespace StripeCreator.Stripe.Services
                 colors.TryAdd(indent.Color, colors.Count + 1);
             }
 
-            using var magickImage = MagickImageExtensions.CreateMagickImage(template);
-            using var pixels = magickImage.GetPixels();
             var data = new List<string>();
             var stringBuilder = new StringBuilder();
 
-            // Мб тут не foreach, а типа while dowhile.
-            foreach (var pixel in pixels)
+            using (var magickImage = MagickImageExtensions.CreateMagickImage(template))
+            using (var pixels = magickImage.GetPixels())
             {
-                if (pixel.X == 0 && pixel.Y != 0)
+                // Мб тут не foreach, а типа while dowhile.
+                foreach (var pixel in pixels)
                 {
-                    data.Add(stringBuilder.ToString());
-                    stringBuilder.Clear();
+                    if (pixel.X == 0 && pixel.Y != 0)
+                    {
+                        data.Add(stringBuilder.ToString());
+                        stringBuilder.Clear();
+                    }
+                    var color = new Color(pixel.ToColor()!.ToHexString());
+                    var colorIndex = colors[color];
+                    stringBuilder.Append(string.Format(SchemeCellFormat, colorIndex));
                 }
-                var color = new Color(pixel.ToColor()!.ToHexString());
-                var colorIndex = colors[color];
-                stringBuilder.Append(string.Format(SchemeCellFormat, colorIndex));
             }
+
             data.Add(stringBuilder.ToString());
 
             if (indent != null && indent.Size > 0)
