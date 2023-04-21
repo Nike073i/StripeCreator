@@ -4,7 +4,10 @@ using NUnit.Framework;
 using NUnit.Framework.Internal;
 using StripeCreator.WPF.Tests.Base;
 using StripeCreator.WPF.Tests.Pages.WelcomePage;
+using System;
+using System.IO;
 using System.Linq;
+using System.Resources;
 using System.Windows.Controls;
 using Button = System.Windows.Controls.Button;
 using MenuItemUiHelper = StripeCreator.WPF.Tests.UiElements.Menu.MenuItem;
@@ -40,6 +43,38 @@ namespace StripeCreator.WPF.Tests.Pages.ImageProcessingPageTests
                 Assert.That(CurrentWindow, Is.Not.Null);
                 Assert.That(CurrentWindow.Title, Is.EqualTo(PageTitles.WelcomePageTitle));
                 Assert.That(CurrentWindow.IsEnabled, Is.True);
+            });
+        }
+
+        [Test]
+        public void SelectImageForProcessingNavigation_Success()
+        {
+            var selectImageButton = _processingOptionsGroupBox.FindFirstChild(cond =>
+                new AndCondition(cond.ByClassName(nameof(Button)),
+                cond.ByName(ImageProcessingPageUiElementSelectors.SelectImageButtonName)));
+            selectImageButton.Click();
+
+            var openDialogWindow = CurrentWindow.ModalWindows.First();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(openDialogWindow, Is.Not.Null);
+                Assert.That(openDialogWindow.Title, Is.EqualTo("Открытие"));
+                Assert.That(openDialogWindow.IsEnabled, Is.True);
+            });
+        }
+
+        [Test]
+        public void ToProcessWithoutImage_Fail()
+        {
+            var toProcessButton = _processingOptionsGroupBox.FindFirstChild(cond =>
+                new AndCondition(cond.ByClassName(nameof(Button)),
+                cond.ByName(ImageProcessingPageUiElementSelectors.ToProcessImageButtonName)));
+            
+            Assert.Multiple(() =>
+            {
+                Assert.That(CurrentWindow, Is.Not.Null);
+                Assert.That(toProcessButton.IsEnabled, Is.False);
             });
         }
 
