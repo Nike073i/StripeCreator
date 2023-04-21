@@ -9,8 +9,6 @@ namespace StripeCreator.Stripe.Services
     public class TxtSchemeDescriptor : ISchemeDescriptor
     {
         private readonly string SchemeCellFormat = "[{0,-3}]";
-        private const int CellNumberingLength = 5;
-        private readonly string CellNumberingFormat = $"{{0,-{CellNumberingLength}}}";
 
         public void SaveDescription(string path, Scheme scheme)
         {
@@ -37,19 +35,19 @@ namespace StripeCreator.Stripe.Services
                 colors.TryAdd(indent.Color, colors.Count + 1);
             }
 
-            var data = PrintCells(colors, template);
+            var schemeDescription = PrintCells(colors, template);
 
             if (indent != null && indent.Size > 0)
-                data = AddSchemeIndent(data, indent.Size, colors[indent.Color], scheme.Width);
+                schemeDescription = new IndentDecorator(schemeDescription, scheme.Width, indent.Size, colors[indent.Color], SchemeCellFormat);
 
             var schemeWidth = indent != null ? scheme.Width + indent.Size * 2 : scheme.Width;
-            data = AddNumbering(data, schemeWidth);
+            schemeDescription = new NumberingDecorator(schemeDescription, schemeWidth);
 
-            data = data.Append(Environment.NewLine);
-            return data.ToArray();
+            var data = schemeDescription.GetData();
+            return data.Append(Environment.NewLine).ToArray();
         }
 
-        private IEnumerable<string> PrintCells(Dictionary<Color, int> colors, Image template)
+        private ISchemeDescription PrintCells(Dictionary<Color, int> colors, Image template)
         {
             var data = new List<string>();
             var stringBuilder = new StringBuilder();
@@ -70,52 +68,7 @@ namespace StripeCreator.Stripe.Services
                 }
             }
             data.Add(stringBuilder.ToString());
-            return data;
-        }
-
-        private IEnumerable<string> AddNumbering(IEnumerable<string> schemeData, int schemeWitdh)
-        {
-            var stringBuilder = new StringBuilder();
-            stringBuilder.Append(new string(' ', CellNumberingLength));
-            for (int i = 0; i < schemeWitdh; i++)
-                stringBuilder.Append(string.Format(CellNumberingFormat, i));
-            var upperNumbering = stringBuilder.ToString();
-            var data = new List<string> { upperNumbering };
-
-            foreach (var (item, index) in schemeData.Select((item, index) => (item, index)))
-            {
-                var newLine = string.Concat(string.Format(CellNumberingFormat, index), item);
-                data.Add(newLine);
-            }
-            return data;
-        }
-
-        private IEnumerable<string> AddSchemeIndent(IEnumerable<string> schemeData, int indentSize, int colorIndex, int schemeWitdh)
-        {
-            var newWidth = schemeWitdh + indentSize * 2;
-            // Формируем боковые отступы
-            var sidePadding = string.Concat(Enumerable.Repeat(string.Format(SchemeCellFormat, colorIndex), indentSize));
-
-            // Формируем полную строку 
-            var rowIndent = string.Concat(Enumerable.Repeat(string.Format(SchemeCellFormat, colorIndex), newWidth));
-
-            var mainIndent = Enumerable.Repeat(rowIndent, indentSize).ToArray();
-
-            var data = new List<string>();
-
-            // Добавляем верхний отступ
-            data.AddRange(mainIndent);
-
-            // Добавляем боковые отступы 
-            foreach (var line in schemeData)
-            {
-                var newLine = string.Concat(sidePadding, line, sidePadding);
-                data.Add(newLine);
-            }
-
-            // Добавляем нижний отступ
-            data.AddRange(mainIndent);
-            return data;
+            return new SchemeDescription(data);
         }
 
         private string[] GetDescriptionOfColors(Dictionary<Color, int> colors)
