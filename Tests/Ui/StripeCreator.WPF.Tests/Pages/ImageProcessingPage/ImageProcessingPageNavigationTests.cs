@@ -4,10 +4,7 @@ using NUnit.Framework;
 using NUnit.Framework.Internal;
 using StripeCreator.WPF.Tests.Base;
 using StripeCreator.WPF.Tests.Pages.WelcomePage;
-using System;
-using System.IO;
 using System.Linq;
-using System.Resources;
 using System.Windows.Controls;
 using Button = System.Windows.Controls.Button;
 using MenuItemUiHelper = StripeCreator.WPF.Tests.UiElements.Menu.MenuItem;
@@ -70,7 +67,7 @@ namespace StripeCreator.WPF.Tests.Pages.ImageProcessingPageTests
             var toProcessButton = _processingOptionsGroupBox.FindFirstChild(cond =>
                 new AndCondition(cond.ByClassName(nameof(Button)),
                 cond.ByName(ImageProcessingPageUiElementSelectors.ToProcessImageButtonName)));
-            
+
             Assert.Multiple(() =>
             {
                 Assert.That(CurrentWindow, Is.Not.Null);
