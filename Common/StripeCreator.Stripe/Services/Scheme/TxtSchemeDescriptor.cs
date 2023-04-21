@@ -53,17 +53,37 @@ namespace StripeCreator.Stripe.Services
             data.Add(stringBuilder.ToString());
 
             if (indent != null && indent.Size > 0)
-                data = AddSchemeIndent(data, indent, colors[indent.Color], scheme.Width, scheme.Height);
+                data = AddSchemeIndent(data, indent.Size, colors[indent.Color], scheme.Width);
 
-            //data = AddNumeration(data);
+            var schemeWidth = indent != null ? scheme.Width + indent.Size * 2 : scheme.Width;
+            data = AddNumbering(data, schemeWidth);
 
             data.Add(Environment.NewLine);
             return data.ToArray();
         }
 
-        private List<string> AddSchemeIndent(List<string> schemeData, Indent indent, int colorIndex, int schemeWitdh, int schemeHeight)
+        private List<string> AddNumbering(List<string> schemeData, int schemeWitdh)
         {
-            var indentSize = indent.Size;
+            var stringBuilder = new StringBuilder();
+            stringBuilder.Append("     ");
+            for (int i = 0; i < schemeWitdh; i++)
+                stringBuilder.Append(string.Format("{0,-5}", i));
+            var upperNumbering = stringBuilder.ToString();
+            var data = new List<string>
+            {
+                upperNumbering
+            };
+
+            for (int i = 0; i < schemeData.Count(); i++)
+            {
+                var newLine = string.Concat(string.Format("{0,-5}", i), schemeData[i]);
+                data.Add(newLine);
+            }
+            return data;
+        }
+
+        private List<string> AddSchemeIndent(List<string> schemeData, int indentSize, int colorIndex, int schemeWitdh)
+        {
             var newWidth = schemeWitdh + indentSize * 2;
             // Формируем боковые отступы
             var sidePadding = string.Concat(Enumerable.Repeat(string.Format("[{0,-3}]", colorIndex), indentSize));
