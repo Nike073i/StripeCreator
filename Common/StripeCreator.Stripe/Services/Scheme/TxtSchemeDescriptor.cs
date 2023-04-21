@@ -8,6 +8,10 @@ namespace StripeCreator.Stripe.Services
 {
     public class TxtSchemeDescriptor : ISchemeDescriptor
     {
+        private readonly string SchemeCellFormat = "[{0,-3}]";
+        private const int CellNumberingLength = 5;
+        private readonly string CellNumberingFormat = $"{{0,-{CellNumberingLength}}}";
+
         public void SaveDescription(string path, Scheme scheme)
         {
             var data = CreateDescription(scheme);
@@ -48,7 +52,7 @@ namespace StripeCreator.Stripe.Services
                 }
                 var color = new Color(pixel.ToColor()!.ToHexString());
                 var colorIndex = colors[color];
-                stringBuilder.Append(string.Format("[{0,-3}]", colorIndex));
+                stringBuilder.Append(string.Format(SchemeCellFormat, colorIndex));
             }
             data.Add(stringBuilder.ToString());
 
@@ -65,18 +69,18 @@ namespace StripeCreator.Stripe.Services
         private List<string> AddNumbering(List<string> schemeData, int schemeWitdh)
         {
             var stringBuilder = new StringBuilder();
-            stringBuilder.Append("     ");
+            stringBuilder.Append(new string(' ', CellNumberingLength));
             for (int i = 0; i < schemeWitdh; i++)
-                stringBuilder.Append(string.Format("{0,-5}", i));
+                stringBuilder.Append(string.Format(CellNumberingFormat, i));
             var upperNumbering = stringBuilder.ToString();
             var data = new List<string>
             {
                 upperNumbering
             };
 
-            for (int i = 0; i < schemeData.Count(); i++)
+            for (int i = 0; i < schemeData.Count; i++)
             {
-                var newLine = string.Concat(string.Format("{0,-5}", i), schemeData[i]);
+                var newLine = string.Concat(string.Format(CellNumberingFormat, i), schemeData[i]);
                 data.Add(newLine);
             }
             return data;
@@ -86,10 +90,10 @@ namespace StripeCreator.Stripe.Services
         {
             var newWidth = schemeWitdh + indentSize * 2;
             // Формируем боковые отступы
-            var sidePadding = string.Concat(Enumerable.Repeat(string.Format("[{0,-3}]", colorIndex), indentSize));
+            var sidePadding = string.Concat(Enumerable.Repeat(string.Format(SchemeCellFormat, colorIndex), indentSize));
 
             // Формируем полную строку 
-            var rowIndent = string.Concat(Enumerable.Repeat(string.Format("[{0,-3}]", colorIndex), newWidth));
+            var rowIndent = string.Concat(Enumerable.Repeat(string.Format(SchemeCellFormat, colorIndex), newWidth));
 
             var mainIndent = Enumerable.Repeat(rowIndent, indentSize).ToArray();
 
