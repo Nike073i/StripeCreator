@@ -1,4 +1,4 @@
-﻿namespace StripeCreator.WPF
+﻿namespace StripeCreator.WPF.ViewModels.Entities.Client
 {
     /// <summary>
     /// Класс view-model представления формирования сущности клиента для design-mode
