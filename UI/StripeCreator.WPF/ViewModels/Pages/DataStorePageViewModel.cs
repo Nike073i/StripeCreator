@@ -1,4 +1,5 @@
 ﻿using FontAwesome5;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -24,13 +25,14 @@ namespace StripeCreator.WPF
         /// Заголовок меню действий
         /// </summary>
         private readonly string _header = "Справочники";
-
         /// <summary>
         /// ViewModel приложения
         /// </summary>
         private readonly ApplicationViewModel _applicationViewModel;
 
         #region Services
+
+        private readonly IServiceProvider _serviceProvider;
 
         /// <summary>
         /// Сервис работы с ViewModel доменных сущностей
@@ -172,7 +174,7 @@ namespace StripeCreator.WPF
         /// <param name="applicationViewModel">ViewModel приложения</param>
         /// <param name="uiManager">Менеджер интерактивного взаимодействия</param>
         public DataStorePageViewModel(ApplicationViewModel applicationViewModel, IUiManager uiManager,
-            ClientService clientService, ThreadService threadService, ClothService clothService, ProductService productService)
+            ClientService clientService, ThreadService threadService, ClothService clothService, ProductService productService, IServiceProvider serviceProvider)
         {
             _applicationViewModel = applicationViewModel;
             _uiManager = uiManager;
@@ -180,10 +182,11 @@ namespace StripeCreator.WPF
             _threadService = threadService;
             _clothService = clothService;
             _productService = productService;
+            _serviceProvider = serviceProvider;
 
 
             // Инициализация команд
-            ShowThreadStoreCommand = new RelayCommand(async param => await ShowThreadStore(param));
+            ShowThreadStoreCommand = new RelayCommand(ShowThreadStore);
             ShowClothStoreCommand = new RelayCommand(async param => await ShowClothStore(param));
             ShowClientStoreCommand = new RelayCommand(async param => await ShowClientStore(param));
             ShowProductStoreCommand = new RelayCommand(async param => await ShowProductStore(param));
@@ -228,17 +231,20 @@ namespace StripeCreator.WPF
         /// Показать список хранимых нитей
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private async Task ShowThreadStore(object? parameter)
+        private void ShowThreadStore(object? parameter)
         {
-            try
+            var getAllThreadCommand = _serviceProvider.GetRequiredService<GetAllThreadsCommand>();
+            getAllThreadCommand.DataLoaded += (sender, data) =>
             {
-                DataService = _threadService;
+                Entities = new ObservableCollection<IEntityViewModel>(data);
                 DataHeader = "Нити";
-            }
-            catch (Exception ex)
+            };
+            getAllThreadCommand.DataLoadingError += (sender, message) =>
             {
-                await _uiManager.ShowError(new("Ошибка загрузки нитей", ex.Message));
-            }
+                Task.Run(async () =>
+                await _uiManager.ShowError(new("Ошибка загрузки нитей", message)));
+            };
+            getAllThreadCommand.Execute(parameter);
         }
 
         /// <summary>
