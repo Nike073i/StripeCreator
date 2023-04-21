@@ -81,6 +81,7 @@ namespace StripeCreator.WPF
                 .AddServices()
                 .AddVkServices(host.Configuration.GetSection("VK"))
                 .AddVkRepositories()
+                .AddCommands()
                 .AddPagesViewModel();
         }
 

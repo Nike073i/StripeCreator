@@ -1,12 +1,12 @@
 using System;
-using System.Windows.Input;
 
 namespace StripeCreator.WPF
 {
+
     /// <summary>
     /// Команда с ретранслированным действием
     /// </summary>
-    public class RelayCommand : ICommand
+    public class RelayCommand : BaseCommand
     {
         #region Private fields
 
@@ -32,7 +32,6 @@ namespace StripeCreator.WPF
         /// Конструктор с полной инициализацией
         /// </summary>
         /// <param name="executeAction">Действие для выполнения</param>
-        /// <param name="canExecute">Проверка готовности команды</param>
         public RelayCommand(Action<object?> executeAction)
         {
             _executeAction = executeAction;
@@ -40,17 +39,11 @@ namespace StripeCreator.WPF
 
         #endregion
 
-        #region Interface implementations
+        #region Override methods
 
-        public event EventHandler? CanExecuteChanged
-        {
-            add { CommandManager.RequerySuggested += value; }
-            remove { CommandManager.RequerySuggested -= value; }
-        }
+        public override bool CanExecute(object? parameter) => CanExecutePredicate is null || CanExecutePredicate(parameter);
 
-        public bool CanExecute(object? parameter) => CanExecutePredicate is null || CanExecutePredicate(parameter);
-
-        public void Execute(object? parameter)
+        public override void Execute(object? parameter)
         {
             _executeAction(parameter);
         }
