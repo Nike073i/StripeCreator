@@ -261,6 +261,7 @@ namespace StripeCreator.WPF
             RefreshCommand.Execute(parameter);
 
             var saveCommand = CommandLocator.SaveClientCommand;
+
             addCommand.DataSaved = data =>
             {
                 Entities?.Add(data);
