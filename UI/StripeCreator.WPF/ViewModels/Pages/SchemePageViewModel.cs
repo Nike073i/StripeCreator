@@ -452,8 +452,13 @@ namespace StripeCreator.WPF
             {
                 await Task.Run(async () =>
                 {
+                    var fileName = dialog.FileName;
                     var image = GetSchemeVisualization(clothColor, false);
-                    await _imageKeeper.SaveAsync(dialog.FileName, image);
+                    await _imageKeeper.SaveAsync(fileName, image);
+                    if (await _uiManager.ShowConfirm(new("Схема", "Создать текстовое описание схемы?")))
+                    {
+                        CreateSchemeDecriptionCommand.Execute($"{fileName}-desc.txt");
+                    }
                 });
             }
             catch (Exception ex)
