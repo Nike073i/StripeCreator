@@ -14,7 +14,11 @@ namespace StripeCreator.WPF
         /// <returns>Коллекция сервисов</returns>
         public static IServiceCollection AddCommands(this IServiceCollection services)
         {
-            services.AddTransient<GetAllThreadsCommand>();
+            services.AddScoped<GetAllThreadsCommand>();
+            services.AddScoped<GetAllClothsCommand>();
+            services.AddScoped<GetAllClientsCommand>();
+            services.AddScoped<SaveClientCommand>();
+            services.AddScoped<GetAllProductsCommand>();
             return services;
         }
     }

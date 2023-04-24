@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace StripeCreator.WPF
 {
-    public class GetAllThreadsCommand : BaseCommand
+    public class GetAllClothsCommand : BaseCommand
     {
-        private readonly IThreadRepository _threadRepository;
+        private readonly IClothRepository _clothRepository;
 
         public Action<IEnumerable<IEntityViewModel>>? DataLoaded { get; set; }
         public Action<string>? DataLoadingError { get; set; }
 
-        public GetAllThreadsCommand(IThreadRepository threadRepository)
+        public GetAllClothsCommand(IClothRepository clothRepository)
         {
-            _threadRepository = threadRepository;
+            _clothRepository = clothRepository;
         }
 
         public override bool CanExecute(object? parameter) => true;
@@ -26,8 +26,8 @@ namespace StripeCreator.WPF
             {
                 try
                 {
-                    var data = await _threadRepository.GetAllAsync();
-                    DataLoaded?.Invoke(data.Select(thread => new ThreadViewModel(thread)));
+                    var data = await _clothRepository.GetAllAsync();
+                    DataLoaded?.Invoke(data.Select(cloth => new ClothViewModel(cloth)));
                 }
                 catch (Exception ex)
                 {

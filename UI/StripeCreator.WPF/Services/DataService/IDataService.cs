@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace StripeCreator.WPF
@@ -9,12 +8,6 @@ namespace StripeCreator.WPF
     /// </summary>
     public interface IDataService
     {
-        /// <summary>
-        /// Запрос на получение всех сущностей в виде ViewModel
-        /// </summary>
-        /// <returns>Список ViewModel сущностей</returns>
-        Task<IEnumerable<IEntityViewModel>> GetAllAsync();
-
         /// <summary>
         /// Запрос на сохранение сущности в виде ViewModel
         /// </summary>

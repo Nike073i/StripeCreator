@@ -1,4 +1,4 @@
-﻿using StripeCreator.Stripe.Repositories;
+﻿using StripeCreator.Business.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace StripeCreator.WPF
 {
-    public class GetAllThreadsCommand : BaseCommand
+    public class GetAllClientsCommand : BaseCommand
     {
-        private readonly IThreadRepository _threadRepository;
+        private readonly IClientRepository _clientRepository;
 
         public Action<IEnumerable<IEntityViewModel>>? DataLoaded { get; set; }
         public Action<string>? DataLoadingError { get; set; }
 
-        public GetAllThreadsCommand(IThreadRepository threadRepository)
+        public GetAllClientsCommand(IClientRepository clientRepository)
         {
-            _threadRepository = threadRepository;
+            _clientRepository = clientRepository;
         }
 
         public override bool CanExecute(object? parameter) => true;
@@ -26,8 +26,8 @@ namespace StripeCreator.WPF
             {
                 try
                 {
-                    var data = await _threadRepository.GetAllAsync();
-                    DataLoaded?.Invoke(data.Select(thread => new ThreadViewModel(thread)));
+                    var data = await _clientRepository.GetAllAsync();
+                    DataLoaded?.Invoke(data.Select(client => new ClientViewModel(client)));
                 }
                 catch (Exception ex)
                 {

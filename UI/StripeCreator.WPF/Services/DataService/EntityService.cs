@@ -37,19 +37,6 @@ namespace StripeCreator.WPF
 
         #region Interface implementations
 
-        public async Task<IEnumerable<IEntityViewModel>> GetAllAsync()
-        {
-            try
-            {
-                var storedEntities = await _repository.GetAllAsync();
-                return storedEntities.Select(CreateViewModel);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"При запросе всех записей возникла ошибка - {ex.Message}", ex.InnerException);
-            }
-        }
-
         public async Task<Guid> RemoveAsync(IEntityViewModel entity)
         {
             var entityId = entity.GetEntityId();

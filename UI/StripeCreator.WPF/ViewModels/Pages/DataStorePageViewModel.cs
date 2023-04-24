@@ -1,5 +1,4 @@
 ﻿using FontAwesome5;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -32,32 +31,10 @@ namespace StripeCreator.WPF
 
         #region Services
 
-        private readonly IServiceProvider _serviceProvider;
-
         /// <summary>
         /// Сервис работы с ViewModel доменных сущностей
         /// </summary>
         private IDataService? _dataService;
-
-        /// <summary>
-        /// Сервис работы с клиентами
-        /// </summary>
-        private readonly ClientService _clientService;
-
-        /// <summary>
-        /// Сервис работы с нитями
-        /// </summary>
-        private readonly ThreadService _threadService;
-
-        /// <summary>
-        /// Сервис работы с тканями
-        /// </summary>
-        private readonly ClothService _clothService;
-
-        /// <summary>
-        /// Сервис работы с продуктами
-        /// </summary>
-        private readonly ProductService _productService;
 
         #endregion
 
@@ -94,7 +71,7 @@ namespace StripeCreator.WPF
             set
             {
                 _dataService = value;
-                RefreshCommand.Execute(null);
+                RefreshCommand?.Execute(null);
             }
         }
 
@@ -128,7 +105,7 @@ namespace StripeCreator.WPF
         /// <summary>
         /// Команда добавления новой сущности
         /// </summary>
-        public ICommand AddCommand { get; }
+        public ICommand? AddCommand { get; private set; }
 
         /// <summary>
         /// Команда редактирования сущности
@@ -143,17 +120,17 @@ namespace StripeCreator.WPF
         /// <summary>
         /// Команда обновления списка хранимых сущностей
         /// </summary>
-        public ICommand RefreshCommand { get; }
+        public ICommand? RefreshCommand { get; private set; }
 
         /// <summary>
         /// Предикат для команд обращения к сервису
         /// </summary>
-        public bool ServiceAvailable => _dataService != null;
+        public bool ServiceAvailable => true;
 
         /// <summary>
         /// Предикат для команд изменений сущности
         /// </summary>
-        public bool EditingEnabled => ServiceAvailable && SelectedEntity != null;
+        public bool EditingEnabled => true;
 
         #endregion
 
@@ -173,28 +150,19 @@ namespace StripeCreator.WPF
         /// </summary>
         /// <param name="applicationViewModel">ViewModel приложения</param>
         /// <param name="uiManager">Менеджер интерактивного взаимодействия</param>
-        public DataStorePageViewModel(ApplicationViewModel applicationViewModel, IUiManager uiManager,
-            ClientService clientService, ThreadService threadService, ClothService clothService, ProductService productService, IServiceProvider serviceProvider)
+        public DataStorePageViewModel(ApplicationViewModel applicationViewModel, IUiManager uiManager)
         {
             _applicationViewModel = applicationViewModel;
             _uiManager = uiManager;
-            _clientService = clientService;
-            _threadService = threadService;
-            _clothService = clothService;
-            _productService = productService;
-            _serviceProvider = serviceProvider;
-
 
             // Инициализация команд
             ShowThreadStoreCommand = new RelayCommand(ShowThreadStore);
-            ShowClothStoreCommand = new RelayCommand(async param => await ShowClothStore(param));
-            ShowClientStoreCommand = new RelayCommand(async param => await ShowClientStore(param));
-            ShowProductStoreCommand = new RelayCommand(async param => await ShowProductStore(param));
+            ShowClothStoreCommand = new RelayCommand(ShowClothStore);
+            ShowClientStoreCommand = new RelayCommand(ShowClientStore);
+            ShowProductStoreCommand = new RelayCommand(ShowProductStore);
 
-            AddCommand = new RelayCommand(async param => await OnExecutedAddCommand(param)) { CanExecutePredicate = CanExecuteAddCommand };
             EditCommand = new RelayCommand(async param => await OnExecutedEditCommand(param)) { CanExecutePredicate = CanExecuteEditCommand };
             RemoveCommand = new RelayCommand(async param => await OnExecutedRemoveCommand(param)) { CanExecutePredicate = CanExecuteRemoveCommand };
-            RefreshCommand = new RelayCommand(async param => await OnExecutedRefreshCommand(param)) { CanExecutePredicate = CanExecuteRefreshCommand };
 
             ActionMenuViewModel = new(_header, GetSideMenuItems());
         }
@@ -233,101 +201,99 @@ namespace StripeCreator.WPF
         /// <param name="parameter">Параметр команды</param>
         private void ShowThreadStore(object? parameter)
         {
-            var getAllThreadCommand = _serviceProvider.GetRequiredService<GetAllThreadsCommand>();
-            getAllThreadCommand.DataLoaded += (sender, data) =>
+            if (RefreshCommand is GetAllThreadsCommand) return;
+
+            var getAllThreadCommand = CommandLocator.GetAllThreadsCommand;
+            getAllThreadCommand.DataLoaded = data =>
             {
                 Entities = new ObservableCollection<IEntityViewModel>(data);
                 DataHeader = "Нити";
             };
-            getAllThreadCommand.DataLoadingError += (sender, message) =>
+            getAllThreadCommand.DataLoadingError = message =>
             {
-                Task.Run(async () =>
-                await _uiManager.ShowError(new("Ошибка загрузки нитей", message)));
+                Task.Run(async () => await _uiManager.ShowError(new("Ошибка загрузки нитей", message)));
             };
-            getAllThreadCommand.Execute(parameter);
+            RefreshCommand = getAllThreadCommand;
+            RefreshCommand.Execute(parameter);
         }
 
         /// <summary>
         /// Показать список хранимых тканей
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private async Task ShowClothStore(object? parameter)
+        private void ShowClothStore(object? parameter)
         {
-            try
+            if (RefreshCommand is GetAllClothsCommand) return;
+            var getAllCommand = CommandLocator.GetAllClothsCommand;
+            getAllCommand.DataLoaded = data =>
             {
-                DataService = _clothService;
+                Entities = new ObservableCollection<IEntityViewModel>(data);
                 DataHeader = "Ткани";
-            }
-            catch (Exception ex)
+            };
+            getAllCommand.DataLoadingError = message =>
             {
-                await _uiManager.ShowError(new("Ошибка загрузки тканей", ex.Message));
-            }
+                Task.Run(async () =>
+                await _uiManager.ShowError(new("Ошибка загрузки тканей", message)));
+            };
+            RefreshCommand = getAllCommand;
+            RefreshCommand.Execute(parameter);
         }
 
         /// <summary>
-        /// Показать список хранимых нитей
+        /// Показать список хранимых клиентов
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private async Task ShowClientStore(object? parameter)
+        private void ShowClientStore(object? parameter)
         {
-            try
+            if (RefreshCommand is GetAllClientsCommand) return;
+            var getAllCommand = CommandLocator.GetAllClientsCommand;
+            getAllCommand.DataLoaded = data =>
             {
-                DataService = _clientService;
+                Entities = new ObservableCollection<IEntityViewModel>(data);
                 DataHeader = "Клиенты";
-            }
-            catch (Exception ex)
+            };
+            getAllCommand.DataLoadingError = message =>
             {
-                await _uiManager.ShowError(new("Ошибка загрузки клиентов", ex.Message));
-            }
+                Task.Run(async () =>
+                await _uiManager.ShowError(new("Ошибка загрузки клиентов", message)));
+            };
+            RefreshCommand = getAllCommand;
+            RefreshCommand.Execute(parameter);
+
+            var saveCommand = CommandLocator.SaveClientCommand;
+            addCommand.DataSaved = data =>
+            {
+                Entities?.Add(data);
+            };
+            addCommand.DataSavingError = message =>
+            {
+                Task.Run(async () => await _uiManager.ShowError(new("Ошибка добавления клиента", message)));
+            };
+
+            AddCommand = addCommand;
         }
 
         /// <summary>
         /// Показать список хранимых продуктов
         /// </summary>
         /// <param name="parameter">Параметр команды</param>
-        private async Task ShowProductStore(object? parameter)
+        private void ShowProductStore(object? parameter)
         {
-            try
+            if (RefreshCommand is GetAllProductsCommand) return;
+            var getAllCommand = CommandLocator.GetAllProductsCommand;
+            getAllCommand.DataLoaded = data =>
             {
-                DataService = _productService;
+                Entities = new ObservableCollection<IEntityViewModel>(data);
                 DataHeader = "Продукция";
-            }
-            catch (Exception ex)
+            };
+            getAllCommand.DataLoadingError = message =>
             {
-                await _uiManager.ShowError(new("Ошибка загрузки продукции", ex.Message));
-            }
+                Task.Run(async () =>
+                await _uiManager.ShowError(new("Ошибка загрузки продукции", message)));
+            };
+            RefreshCommand = getAllCommand;
+            RefreshCommand.Execute(parameter);
         }
-
-        /// <summary>
-        /// Добавить новую хранимую сущность
-        /// </summary>
-        /// <param name="parameter">Параметр команды</param>
-        private async Task OnExecutedAddCommand(object? parameter)
-        {
-            var formationViewModel = DataService!.CreateFormationViewModel();
-            var formationData = await _uiManager.FormationEntity(formationViewModel);
-            if (formationData == null)
-            {
-                await _uiManager.ShowInfo(new("Отмена", "Создание записи отменено"));
-                return;
-            }
-            try
-            {
-                var newEntity = await DataService.SaveAsync(formationData);
-                Entities?.Add(newEntity);
-            }
-            catch (Exception ex)
-            {
-                await _uiManager.ShowError(new("Ошибка добавления сущности", ex.Message));
-            }
-        }
-
-        /// <summary>
-        /// Проверка вызова команды добавления данных
-        /// </summary>
-        /// <param name="parameter"></param>
-        /// <returns></returns>
-        private bool CanExecuteAddCommand(object? parameter) => ServiceAvailable;
 
         /// <summary>
         /// Редактировать выбранную хранимую сущность
@@ -388,30 +354,6 @@ namespace StripeCreator.WPF
         /// <param name="parameter"></param>
         /// <returns></returns>
         private bool CanExecuteRemoveCommand(object? parameter) => EditingEnabled;
-
-        /// <summary>
-        /// Обновить список хранимых сущностей
-        /// </summary>
-        /// <param name="parameter">Параметр команды</param>
-        private async Task OnExecutedRefreshCommand(object? parameter)
-        {
-            try
-            {
-                var data = await _dataService!.GetAllAsync();
-                Entities = new ObservableCollection<IEntityViewModel>(data);
-            }
-            catch (Exception ex)
-            {
-                await _uiManager.ShowError(new("Ошибка загрузки данных", ex.Message));
-            }
-        }
-
-        /// <summary>
-        /// Проверка вызова команды обновления данных
-        /// </summary>
-        /// <param name="parameter"></param>
-        /// <returns></returns>
-        private bool CanExecuteRefreshCommand(object? parameter) => ServiceAvailable;
 
         #endregion
 
