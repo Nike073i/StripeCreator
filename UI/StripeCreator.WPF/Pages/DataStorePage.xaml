@@ -28,10 +28,14 @@
                                    VerticalAlignment="Top" />
 
         <!-- Материалы -->
-        <GroupBox Header="{Binding DataHeader}" Grid.Column="1" Margin="3">
+        <GroupBox Header="{Binding DataHeader}" 
+                  Grid.Column="1" Margin="3" 
+                  AutomationProperties.HelpText="DataManagementGroupBox">
             <DockPanel>
                 <UniformGrid DockPanel.Dock="Bottom">
-                    <Button fa:Awesome.Content="Solid_Plus" Command="{Binding AddCommand}"/>
+                    <Button fa:Awesome.Content="Solid_Plus" 
+                            Command="{Binding AddCommand}"
+                            AutomationProperties.HelpText="AddButton"/>
                     <Button fa:Awesome.Content="Solid_Pen" Command="{Binding EditCommand}"/>
                     <Button fa:Awesome.Content="Solid_Trash" Command="{Binding RemoveCommand}"/>
                     <Button fa:Awesome.Content="Solid_SyncAlt" Command="{Binding RefreshCommand}"/>
