@@ -64,7 +64,7 @@
                                    Style="{StaticResource GridDataTitleTextBlock}"
                                    Margin="5" Grid.Column="0"/>
                         <TextBlock VerticalAlignment="Center"
-                                   Grid.Column="1" Text="{Binding Status}" 
+                                   Grid.Column="1" Text="{Binding Status, Converter={local:OrderStatusValueConverter}}" 
                                    Style="{StaticResource ValueTextBlock}"/>
                     </Grid>
                 </StackPanel>

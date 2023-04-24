@@ -27,7 +27,7 @@
                       SelectedItem="{Binding SelectedOrder}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Дата заказа" Binding="{Binding DateCreated, StringFormat=dd.MM.yyyy}"/>
-                    <DataGridTextColumn Header="Статус заказа" Binding="{Binding Status}"/>
+                    <DataGridTextColumn Header="Статус заказа" Binding="{Binding Status, Converter={local:OrderStatusValueConverter}}"/>
                     <DataGridTextColumn Header="Стоимость" Binding="{Binding Price}"/>
                     <DataGridTextColumn Header="Телефон клиента" Binding="{Binding ContactNumber}"/>
                 </DataGrid.Columns>

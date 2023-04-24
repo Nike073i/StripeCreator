@@ -2,6 +2,7 @@
 using MigraDoc.DocumentObjectModel.Shapes.Charts;
 using MigraDoc.DocumentObjectModel.Tables;
 using MigraDoc.Rendering;
+using StripeCreator.Business.Extensions;
 using StripeCreator.Statistic.Extensions;
 using StripeCreator.Statistic.Models;
 using System.Text;
@@ -186,7 +187,7 @@ namespace StripeCreator.Statistic.Reports
                         order.ContactData.ContactNumber,
                         order.ContactData.Email,
                         order.Price.ToString(),
-                        order.Status.ToString(),
+                        order.Status.ConvertToString(),
                     };
                     table.CreateRow(cells);
                 }
@@ -229,7 +230,7 @@ namespace StripeCreator.Statistic.Reports
             dataSeries.DataLabel.Position = DataLabelPosition.OutsideEnd;
 
             var labelSeries = chart.XValues.AddXSeries();
-            labelSeries.Add(data.Select(i => i.Status.ToString()).ToArray());
+            labelSeries.Add(data.Select(i => i.Status.ConvertToString()).ToArray());
 
             Section.Add(chart);
             Section.AddIndent(SpaceAfterCm);
