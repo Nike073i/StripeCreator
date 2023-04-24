@@ -1,4 +1,4 @@
-﻿namespace StripeCreator.WPF.Tests.Pages.OrderStorePage
+﻿namespace StripeCreator.WPF.Tests.Pages.OrderPage
 {
     internal class OrderPageUiElementSelectors
     {

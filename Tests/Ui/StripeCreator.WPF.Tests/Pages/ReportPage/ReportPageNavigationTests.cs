@@ -5,9 +5,9 @@ using System.Linq;
 using MenuItemUiHelper = StripeCreator.WPF.Tests.UiElements.Menu.MenuItem;
 using MenuUiHelper = StripeCreator.WPF.Tests.UiElements.Menu.Menu;
 
-namespace StripeCreator.WPF.Tests.Pages.OrderPage
+namespace StripeCreator.WPF.Tests.Pages.ReportPage
 {
-    internal class OrderPageNavigationTests : BaseTest
+    internal class ReportPageNavigationTests : BaseTest
     {
         private MenuUiHelper _menu;
 
@@ -17,16 +17,15 @@ namespace StripeCreator.WPF.Tests.Pages.OrderPage
             Assert.Multiple(() =>
             {
                 Assert.That(CurrentWindow, Is.Not.Null);
-                Assert.That(CurrentWindow.Title, Is.EqualTo(PageTitles.OrderPageTitle));
+                Assert.That(CurrentWindow.Title, Is.EqualTo(PageTitles.ReportPageTitle));
                 Assert.That(CurrentWindow.IsEnabled, Is.True);
             });
         }
 
-
         [Test]
         public void ToMainMenuNavigation_Success()
         {
-            var toMainMenuButton = _menu.GetMenuByIndex((int)OrderPageMenuItems.ToMainMenu);
+            var toMainMenuButton = _menu.GetMenuByIndex((int)ReportPageMenuItems.ToMainMenu);
             toMainMenuButton.UiElement.Click();
 
             Assert.Multiple(() =>
@@ -38,16 +37,18 @@ namespace StripeCreator.WPF.Tests.Pages.OrderPage
         }
 
         [Test]
-        public void CreateNewOrder_Success()
+        public void Report_Success()
         {
-            var createButton = _menu.GetMenuByIndex((int)OrderPageMenuItems.Create);
+            var createButton = _menu.GetMenuByIndex((int)ReportPageMenuItems.CreateReport);
             createButton.UiElement.Click();
+
+            var openDialogWindow = CurrentWindow.ModalWindows.First();
 
             Assert.Multiple(() =>
             {
-                Assert.That(CurrentWindow, Is.Not.Null);
-                Assert.That(CurrentWindow.Title, Is.EqualTo(OrderPageUiElementSelectors.CreateOrderWindowTitle));
-                Assert.That(CurrentWindow.IsEnabled, Is.True);
+                Assert.That(openDialogWindow, Is.Not.Null);
+                Assert.That(openDialogWindow.Title, Is.EqualTo("Сохранение"));
+                Assert.That(openDialogWindow.IsEnabled, Is.True);
             });
         }
 
@@ -59,15 +60,15 @@ namespace StripeCreator.WPF.Tests.Pages.OrderPage
             var actionMenuItems = actionMenuControl.FindAllChildren(opt => opt.ByClassName(nameof(ActionMenuItemControl)));
             var menuItems = actionMenuItems.Select((item, index) => new MenuItemUiHelper(item, index));
             var menu = new MenuUiHelper(actionMenuControl, menuItems);
-            var toDataPageMenuItem = menu.GetMenuByIndex((int)WelcomePageMenuItems.OrderPage);
+            var toDataPageMenuItem = menu.GetMenuByIndex((int)WelcomePageMenuItems.ReportPage);
             toDataPageMenuItem.UiElement.Click();
         }
 
         protected override void DetectComponents()
         {
             base.DetectComponents();
-            var orderPage = CurrentWindow.FindFirstChild(opt => opt.ByClassName(nameof(OrderPage)));
-            var mainGroupBox = orderPage.FindFirstChild();
+            var reportPage = CurrentWindow.FindFirstChild(opt => opt.ByClassName(nameof(ReportPage)));
+            var mainGroupBox = reportPage.FindFirstChild();
             var actionMenuControl = mainGroupBox.FindFirstChild(cond => cond.ByClassName(nameof(ActionMenuControl)));
             var actionMenuItems = actionMenuControl.FindAllChildren(opt => opt.ByClassName(nameof(ActionMenuItemControl)));
             var menuItems = actionMenuItems.Select((item, index) => new MenuItemUiHelper(item, index));
