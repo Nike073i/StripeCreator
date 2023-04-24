@@ -45,7 +45,7 @@
                     <Border Background="{StaticResource DarkColorBrush}" 
                             Padding="10" Margin="5">
                         <StackPanel>
-                            <TextBlock Style="{StaticResource HeaderTextBlock}" Text="Метод дискретизации"/>
+                            <TextBlock Style="{StaticResource HeaderTextBlock}" Text="Метод уменьшения размера"/>
                             <ComboBox ItemsSource="{Binding ResizeMethods}" 
                                       SelectedItem="{Binding SelectedResizeMethod}" />
                         </StackPanel>

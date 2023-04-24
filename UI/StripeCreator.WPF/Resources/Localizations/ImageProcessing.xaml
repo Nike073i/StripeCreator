@@ -3,17 +3,41 @@
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
     <!-- Методы дискретизации -->
     <system:String x:Key="ResizeMethod_Adaptive_Label">Адаптивный</system:String>
-    <system:String x:Key="ResizeMethod_Adaptive_Description">Описание адаптивного метода</system:String>
+    <system:String x:Key="ResizeMethod_Adaptive_Description">
+        Уменьшение размера изображения при помощи адаптивного метода сохраняет 
+        четкие границы объектов, используя алгоритм триангуляции 
+        (Участки изображения разбиваются на треугольники)
+    </system:String>
+    
     <system:String x:Key="ResizeMethod_Sample_Label">Репликация</system:String>
-    <system:String x:Key="ResizeMethod_Sample_Description">Описание метода репликации</system:String>
+    <system:String x:Key="ResizeMethod_Sample_Description">
+        Уменьшение размера изображения при помощи метода репликации приводит 
+        к удалению строк и столбцов одинаковых или похожих цветов. 
+        Таким образом происходит масштабирование с сохранением исходной цветовой палитры
+    </system:String>
+    
     <system:String x:Key="ResizeMethod_Scale_Label">Усреднение</system:String>
-    <system:String x:Key="ResizeMethod_Scale_Description">Описание метода усреднения</system:String>
+    <system:String x:Key="ResizeMethod_Scale_Description">
+        Уменьшение размера изображения при помощи метода усреднения создает 
+        новую цветовую палитру, состоящую из усредненных цветов
+    </system:String>
+    
     <system:String x:Key="ResizeMethod_Liquid_Label">Резьба по шву</system:String>
-    <system:String x:Key="ResizeMethod_Liquid_Description">Описание метода резьбы по шву</system:String>
+    <system:String x:Key="ResizeMethod_Liquid_Description">
+        Метод уменьшения размера "Резьба по шву" учитывает содержимое изображение и сжимает менее важные участки.  
+    </system:String>
     
     <!-- Методы уменьшения цветов -->
     <system:String x:Key="ReductiveMethod_Quantization_Label">Квантизация</system:String>
-    <system:String x:Key="ReductiveMethod_Quantization_Description">Описание квантизации</system:String>
+    <system:String x:Key="ReductiveMethod_Quantization_Description">
+        Квантизация - метод уменьшения количества цветов в исходном наборе до указанного предела, 
+        сохраняя при этом его визуальное качество.
+    </system:String>
+    
     <system:String x:Key="ReductiveMethod_Posterization_Label">Постеризация</system:String>
-    <system:String x:Key="ReductiveMethod_Posterization_Description">Описание постеризации</system:String>
+    <system:String x:Key="ReductiveMethod_Posterization_Description">
+        Постеризация - метод уменьшения количества каналов каждого цвета изображения до указанного предела. 
+        В результате постеризации изображение становится более абстрактным, с ярко выраженными контурами 
+        и отчетливыми разделами однотонных областей.
+    </system:String>
 </ResourceDictionary>

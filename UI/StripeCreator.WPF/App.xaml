@@ -19,6 +19,7 @@
                 <ResourceDictionary Source="Resources/Styles/ToggleButtons.xaml"/>
                 <ResourceDictionary Source="Resources/Styles/Expanders.xaml"/>
                 <ResourceDictionary Source="Resources/Styles/Images.xaml"/>
+                <ResourceDictionary Source="Resources/Styles/ToolTips.xaml"/>
                 <ResourceDictionary Source="Resources/Styles/Xceed.xaml"/>
                 <ResourceDictionary Source="Resources/Styles/OxyPlot.xaml"/>
                 
