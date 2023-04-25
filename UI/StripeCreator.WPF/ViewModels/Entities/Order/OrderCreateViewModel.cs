@@ -30,7 +30,7 @@ namespace StripeCreator.WPF
         /// <summary>
         /// Сервис работы с клеинтами
         /// </summary>
-        private readonly ClientService _clientService;
+        private readonly ClientFacade _clientFacade;
 
         /// <summary>
         /// Сервис подсчета стоимости заказа
@@ -54,7 +54,7 @@ namespace StripeCreator.WPF
         /// <summary>
         /// Список доступных клиентов
         /// </summary>
-        public ObservableCollection<ClientViewModel> Clients { get; set; }
+        public ObservableCollection<ClientViewModel> Clients { get; set; } = new ObservableCollection<ClientViewModel>();
 
         /// <summary>
         /// Выбранный клиент
@@ -78,7 +78,7 @@ namespace StripeCreator.WPF
         /// <summary>
         /// Список доступных продуктов для добавления
         /// </summary>
-        public IEnumerable<Product> Products { get; set; }
+        public IEnumerable<Product> Products { get; set; } = new List<Product>();
 
         /// <summary>
         /// Выбранный продукт для добавления
@@ -152,14 +152,11 @@ namespace StripeCreator.WPF
         /// <summary>
         /// Конструктор с полной инициализацией
         /// </summary>
-        public OrderCreateViewModel(IUiManager uiManager, ClientService clientService, OrderPriceCalculator orderPriceCalculator,
-            IEnumerable<Client> clients, IEnumerable<Product> products)
+        public OrderCreateViewModel(IUiManager uiManager, ClientFacade clientFacade, OrderPriceCalculator orderPriceCalculator)
         {
             _uiManager = uiManager;
-            _clientService = clientService;
+            _clientFacade = clientFacade;
             _orderPriceCalculator = orderPriceCalculator;
-            Clients = new ObservableCollection<ClientViewModel>(clients.Select(client => new ClientViewModel(client)));
-            Products = products;
             OrderLines = new ObservableCollection<OrderProductViewModel>();
 
             // Инициализация комманд
@@ -263,20 +260,16 @@ namespace StripeCreator.WPF
         /// <param name="obj"></param>
         private async Task OnExecutedCreateClientCommand(object? obj)
         {
-            var formationViewModel = new ClientFormationViewModel();
-            var formationData = await _uiManager.FormationEntity(formationViewModel);
-            if (formationData == null)
-            {
-                await _uiManager.ShowInfo(new("Отмена", "Создание клиента отменено"));
-                return;
-            }
             try
             {
-                var newClient = await _clientService.SaveAsync(formationData);
-                if (newClient is not ClientViewModel clientViewModel)
-                    throw new InvalidOperationException();
-                Clients.Add(clientViewModel);
-                SelectedClient = clientViewModel;
+                var newEntity = await _clientFacade.CreateAsync();
+                if (newEntity is not ClientViewModel newClient || newClient == null)
+                {
+                    await _uiManager.ShowInfo(new("Отмена", "Создание клиента отменено"));
+                    return;
+                }
+                Clients.Add(newClient);
+                SelectedClient = newClient;
             }
             catch (Exception ex)
             {

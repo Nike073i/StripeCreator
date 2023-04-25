@@ -40,7 +40,7 @@ namespace StripeCreator.WPF
         /// <summary>
         /// Конструктор по умолчанию
         /// </summary>
-        public OrderCreateDesignViewModel() : base(null!, null!, null!, _designClients, _designProducts)
+        public OrderCreateDesignViewModel()
         {
             SelectedClient = new ClientViewModel(_designClients.FirstOrDefault()!);
             SelectedProduct = _designProducts.FirstOrDefault();

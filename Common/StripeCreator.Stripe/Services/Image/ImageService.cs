@@ -7,7 +7,7 @@ namespace StripeCreator.Stripe.Services
     /// <summary>
     /// Сервис работы с изображением и схематизацией
     /// </summary>
-    public class ImageFacade
+    public class ImageService
     {
         #region Constants
 
@@ -33,7 +33,7 @@ namespace StripeCreator.Stripe.Services
         /// Конструктор с полной инициализацией
         /// </summary>
         /// <param name="imageKeeper">Хранитель изображения</param>
-        public ImageFacade(IDataKeeper<Image> imageKeeper)
+        public ImageService(IDataKeeper<Image> imageKeeper)
         {
             _imageKeeper = imageKeeper;
         }

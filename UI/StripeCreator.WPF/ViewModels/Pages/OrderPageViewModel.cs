@@ -26,19 +26,9 @@ namespace StripeCreator.WPF
         private readonly IUiManager _uiManager;
 
         /// <summary>
-        /// Сервис работы с заказами
+        /// Фасад работы с заказами
         /// </summary>
-        private readonly OrderService _orderService;
-
-        /// <summary>
-        /// Репозиторий продукции
-        /// </summary>
-        private readonly IProductRepository _productRepository;
-
-        /// <summary>
-        /// Репозиторий клиентов
-        /// </summary>
-        private readonly IClientRepository _clientRepository;
+        private readonly OrderFacade _orderFacade;
 
         /// <summary>
         /// ViewModel приложения
@@ -121,15 +111,11 @@ namespace StripeCreator.WPF
         /// <param name="applicationViewModel">ViewModel приложения</param>
         /// <param name="uiManager">Менеджер интерактивного взаимодействия</param>
         /// <param name="orderService">Сервис работы с заказами</param>
-        /// <param name="productRepository">Репозиторий продуктов</param>
-        /// <param name="clientRepository">Репозиторий клиентов</param>
-        public OrderPageViewModel(ApplicationViewModel applicationViewModel, IUiManager uiManager, OrderService orderService, IProductRepository productRepository, IClientRepository clientRepository)
+        public OrderPageViewModel(ApplicationViewModel applicationViewModel, IUiManager uiManager, OrderFacade orderService)
         {
             _applicationViewModel = applicationViewModel;
             _uiManager = uiManager;
-            _orderService = orderService;
-            _productRepository = productRepository;
-            _clientRepository = clientRepository;
+            _orderFacade = orderService;
 
             Orders = new ObservableCollection<OrderViewModel>();
 
@@ -175,15 +161,12 @@ namespace StripeCreator.WPF
         {
             try
             {
-                var products = await _productRepository.GetAllAsync();
-                var clients = await _clientRepository.GetAllAsync();
-                var orderCreateModel = await _uiManager.CreateOrder(products, clients);
-                if (orderCreateModel == null)
+                var newOrder = await _orderFacade.CreateAsync();
+                if (newOrder == null)
                 {
                     await _uiManager.ShowInfo(new("Отмена", "Создание заказа отменено"));
                     return;
                 }
-                var newOrder = await _orderService.CreateAsync(orderCreateModel);
                 Orders.Add(newOrder);
             }
             catch (Exception ex)
@@ -200,18 +183,8 @@ namespace StripeCreator.WPF
         {
             try
             {
-                var order = SelectedOrder!.Entity;
-                var client = await _clientRepository.GetByIdAsync(order.ClientId) ??
-                    throw new InvalidOperationException("Клиент с указанным Id не найден");
-                var orderProducts = new List<OrderProductViewModel>();
-                foreach (var orderProduct in order.Products)
-                {
-                    var product = await _productRepository.GetByIdAsync(orderProduct.ProductId);
-                    if (product == null) continue;
-                    orderProducts.Add(new OrderProductViewModel(product, orderProduct.Quantity));
-                }
-                var orderDetailViewModel = new OrderDetailViewModel(order, client, orderProducts);
-                await _uiManager.ShowOrderDetail(orderDetailViewModel);
+                var order = SelectedOrder!;
+                await _orderFacade.GetOrderInfo(order);
             }
             catch (Exception ex)
             {
@@ -233,7 +206,7 @@ namespace StripeCreator.WPF
         {
             try
             {
-                var changedOrder = await _orderService.UpdateStatus(SelectedOrder!);
+                var changedOrder = await _orderFacade.UpdateStatus(SelectedOrder!);
                 Orders[Orders.IndexOf(SelectedOrder!)] = changedOrder;
             }
             catch (Exception ex)
@@ -256,7 +229,7 @@ namespace StripeCreator.WPF
         {
             try
             {
-                var changedOrder = await _orderService.CancelOrder(SelectedOrder!);
+                var changedOrder = await _orderFacade.CancelOrder(SelectedOrder!);
                 Orders[Orders.IndexOf(SelectedOrder!)] = changedOrder;
             }
             catch (Exception ex)
@@ -279,7 +252,7 @@ namespace StripeCreator.WPF
         {
             try
             {
-                var orders = await _orderService.GetAllAsync();
+                var orders = await _orderFacade.GetAllAsync();
                 Orders = new ObservableCollection<OrderViewModel>(orders);
             }
             catch (Exception ex)

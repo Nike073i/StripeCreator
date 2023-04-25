@@ -20,20 +20,22 @@ namespace StripeCreator.WPF
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
             services.AddTransient<ClientService>();
-            services.AddTransient<IUiManager, DialogUiManager>();
             services.AddTransient<ProductService>();
-            services.AddTransient<ThreadService>();
             services.AddTransient<ClothService>();
             services.AddTransient<OrderPriceCalculator>();
-            services.AddTransient<SaleService>();
             services.AddTransient<OrderService>();
+            services.AddTransient<ThreadService>();
             services.AddTransient<StatisticService>();
             services.AddTransient<ReportService>();
+
+            services.AddTransient<IUiManager, DialogUiManager>();
+
             services.AddTransient<IDataKeeper<Image>, ImageKeeper>();
-            services.AddTransient<ImageFacade>();
+            services.AddTransient<ImageService>();
             services.AddTransient<SchemeVisualizer>();
             services.AddTransient<IDataKeeper<Scheme>, SchemeKeeper>();
             services.AddTransient<ISchemeDescriptor, TxtSchemeDescriptor>();
+
             return services;
         }
     }

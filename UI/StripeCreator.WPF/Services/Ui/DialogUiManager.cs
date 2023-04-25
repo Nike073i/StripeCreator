@@ -1,11 +1,12 @@
 ﻿using StripeCreator.Business.Models;
 using StripeCreator.Business.Models.OperationModels;
-using StripeCreator.Business.Services;
 using StripeCreator.Stripe.Models;
 using StripeCreator.Stripe.Services;
 using StripeCreator.VK.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,34 +18,6 @@ namespace StripeCreator.WPF
     /// </summary>
     public class DialogUiManager : IUiManager
     {
-        #region Private fields
-
-        /// <summary>
-        /// Сервис работы с клиентами
-        /// </summary>
-        private readonly ClientService _clientService;
-
-        /// <summary>
-        /// Сервис расчета стоимости заказа
-        /// </summary>
-        private readonly OrderPriceCalculator _orderPriceCalculator;
-
-        #endregion
-
-        #region Constructors
-
-        /// <summary>
-        /// Конструктор с полной инициализацией
-        /// </summary>
-        /// <param name="clientService">Сервис клиентов</param>
-        public DialogUiManager(ClientService clientService, OrderPriceCalculator orderPriceCalculator)
-        {
-            _clientService = clientService;
-            _orderPriceCalculator = orderPriceCalculator;
-        }
-
-        #endregion
-
         #region Interface implementations
 
         public Task ShowInfo(MessageBoxDialogViewModel viewModel)
@@ -99,14 +72,16 @@ namespace StripeCreator.WPF
         public Task<OrderCreateModel?> CreateOrder(IEnumerable<Product> products, IEnumerable<Client> clients)
         {
             DialogWindow window = new();
-            var createOrderViewModel = new OrderCreateViewModel(this, _clientService, _orderPriceCalculator, clients, products);
+            var orderCreateViewModel = IoC.GetRequiredService<OrderCreateViewModel>();
+            orderCreateViewModel.Clients = new ObservableCollection<ClientViewModel>(clients.Select(client => new ClientViewModel(client)));
+            orderCreateViewModel.Products = products;
             OrderCreateModel? createOrderModel = null;
             async void okAction(object? param)
             {
-                var newViewModel = createOrderViewModel.GetData();
+                var newViewModel = orderCreateViewModel.GetData();
                 if (newViewModel == null)
                 {
-                    await ShowError(new("Ошибка заполнения полей", createOrderViewModel.ErrorString));
+                    await ShowError(new("Ошибка заполнения полей", orderCreateViewModel.ErrorString));
                     return;
                 }
                 createOrderModel = newViewModel;
@@ -120,7 +95,7 @@ namespace StripeCreator.WPF
                 window.Close();
             }
 
-            var createOrderView = new OrderCreateView(createOrderViewModel);
+            var createOrderView = new OrderCreateView(orderCreateViewModel);
             string title = "Создание заказа";
             string caption = "Новый заказ";
 

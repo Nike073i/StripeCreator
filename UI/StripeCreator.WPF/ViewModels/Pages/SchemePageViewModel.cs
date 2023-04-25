@@ -45,12 +45,12 @@ namespace StripeCreator.WPF
         /// <summary>
         /// Репозиторий тканей
         /// </summary>
-        private readonly IClothRepository _clothRepository;
+        private readonly ClothService _clothService;
 
         /// <summary>
         /// Репозиторий нитей
         /// </summary>
-        private readonly IThreadRepository _threadRepository;
+        private readonly ThreadService _threadService;
 
         /// <summary>
         /// Визуализатор схемы
@@ -285,8 +285,8 @@ namespace StripeCreator.WPF
             IDataKeeper<Image> imageKeeper,
             IDataKeeper<Scheme> schemeKeeper,
             IUiManager uiManager,
-            IClothRepository clothRepository,
-            IThreadRepository threadRepository,
+            ClothService clothService,
+            ThreadService threadService,
             ISchemeDescriptor schemeDescriptor)
         {
             _applicationViewModel = applicationViewModel;
@@ -294,8 +294,8 @@ namespace StripeCreator.WPF
             _imageKeeper = imageKeeper;
             _schemeKeeper = schemeKeeper;
             _uiManager = uiManager;
-            _clothRepository = clothRepository;
-            _threadRepository = threadRepository;
+            _clothService = clothService;
+            _threadService = threadService;
             _schemeDescriptor = schemeDescriptor;
 
             //Инициализация комманд
@@ -489,13 +489,13 @@ namespace StripeCreator.WPF
         {
             try
             {
-                var threads = await _threadRepository.GetAllAsync();
+                var threads = await _threadService.GetAllAsync();
                 if (!threads.Any())
                 {
                     await _uiManager.ShowError(new("Ошибка расчета", "В хранилище отсутствуют нити"));
                     return;
                 }
-                var cloths = await _clothRepository.GetAllAsync();
+                var cloths = await _clothService.GetAllAsync();
                 if (!cloths.Any())
                 {
                     await _uiManager.ShowError(new("Ошибка расчета", "В хранилище отсутствуют ткани"));

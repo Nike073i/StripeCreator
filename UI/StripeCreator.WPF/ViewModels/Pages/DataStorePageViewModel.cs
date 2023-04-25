@@ -35,27 +35,27 @@ namespace StripeCreator.WPF
         /// <summary>
         /// Сервис работы с ViewModel доменных сущностей
         /// </summary>
-        private IDataService? _dataService;
+        private IDataFacade? _dataFacade;
 
         /// <summary>
         /// Сервис работы с клиентами
         /// </summary>
-        private readonly ClientService _clientService;
+        private readonly ClientFacade _clientFacade;
 
         /// <summary>
         /// Сервис работы с нитями
         /// </summary>
-        private readonly ThreadService _threadService;
+        private readonly ThreadFacade _threadFacade;
 
         /// <summary>
         /// Сервис работы с тканями
         /// </summary>
-        private readonly ClothService _clothService;
+        private readonly ClothFacade _clothFacade;
 
         /// <summary>
         /// Сервис работы с продуктами
         /// </summary>
-        private readonly ProductService _productService;
+        private readonly ProductFacade _productFacade;
 
         #endregion
 
@@ -86,12 +86,12 @@ namespace StripeCreator.WPF
         /// <summary>
         /// Сервис работы с сущностью
         /// </summary>
-        public IDataService? DataService
+        public IDataFacade? DataFacade
         {
-            get => _dataService;
+            get => _dataFacade;
             set
             {
-                _dataService = value;
+                _dataFacade = value;
                 RefreshCommand.Execute(null);
             }
         }
@@ -146,7 +146,7 @@ namespace StripeCreator.WPF
         /// <summary>
         /// Предикат для команд обращения к сервису
         /// </summary>
-        public bool ServiceAvailable => _dataService != null;
+        public bool ServiceAvailable => _dataFacade != null;
 
         /// <summary>
         /// Предикат для команд изменений сущности
@@ -172,14 +172,14 @@ namespace StripeCreator.WPF
         /// <param name="applicationViewModel">ViewModel приложения</param>
         /// <param name="uiManager">Менеджер интерактивного взаимодействия</param>
         public DataStorePageViewModel(ApplicationViewModel applicationViewModel, IUiManager uiManager,
-            ClientService clientService, ThreadService threadService, ClothService clothService, ProductService productService)
+            ClientFacade clientService, ThreadFacade threadService, ClothFacade clothService, ProductFacade productService)
         {
             _applicationViewModel = applicationViewModel;
             _uiManager = uiManager;
-            _clientService = clientService;
-            _threadService = threadService;
-            _clothService = clothService;
-            _productService = productService;
+            _clientFacade = clientService;
+            _threadFacade = threadService;
+            _clothFacade = clothService;
+            _productFacade = productService;
 
 
             // Инициализация команд
@@ -232,7 +232,7 @@ namespace StripeCreator.WPF
         {
             try
             {
-                DataService = _threadService;
+                DataFacade = _threadFacade;
                 DataHeader = "Нити";
             }
             catch (Exception ex)
@@ -249,7 +249,7 @@ namespace StripeCreator.WPF
         {
             try
             {
-                DataService = _clothService;
+                DataFacade = _clothFacade;
                 DataHeader = "Ткани";
             }
             catch (Exception ex)
@@ -266,7 +266,7 @@ namespace StripeCreator.WPF
         {
             try
             {
-                DataService = _clientService;
+                DataFacade = _clientFacade;
                 DataHeader = "Клиенты";
             }
             catch (Exception ex)
@@ -283,7 +283,7 @@ namespace StripeCreator.WPF
         {
             try
             {
-                DataService = _productService;
+                DataFacade = _productFacade;
                 DataHeader = "Продукция";
             }
             catch (Exception ex)
@@ -298,16 +298,14 @@ namespace StripeCreator.WPF
         /// <param name="parameter">Параметр команды</param>
         private async Task OnExecutedAddCommand(object? parameter)
         {
-            var formationViewModel = DataService!.CreateFormationViewModel();
-            var formationData = await _uiManager.FormationEntity(formationViewModel);
-            if (formationData == null)
-            {
-                await _uiManager.ShowInfo(new("Отмена", "Создание записи отменено"));
-                return;
-            }
             try
             {
-                var newEntity = await DataService.SaveAsync(formationData);
+                var newEntity = await DataFacade!.CreateAsync();
+                if (newEntity == null)
+                {
+                    await _uiManager.ShowInfo(new("Отмена", "Создание записи отменено"));
+                    return;
+                }
                 Entities?.Add(newEntity);
             }
             catch (Exception ex)
@@ -331,17 +329,15 @@ namespace StripeCreator.WPF
         {
             if (Entities is null || SelectedEntity is null)
                 throw new InvalidOperationException(NonSelectedEntityError);
-            var formationViewModel = DataService!.CreateFormationViewModel(SelectedEntity);
-            var changedEntity = await _uiManager.FormationEntity(formationViewModel);
-            if (changedEntity == null)
-            {
-                await _uiManager.ShowInfo(new("Отмена", "Редактирование записи отменено"));
-                return;
-            }
             try
             {
-                var newEntity = await DataService.SaveAsync(changedEntity);
-                Entities[Entities.IndexOf(SelectedEntity)] = newEntity;
+                var changedEntity = await DataFacade!.EditAsync(SelectedEntity);
+                if (changedEntity == null)
+                {
+                    _ = _uiManager.ShowInfo(new("Отмена", "Редактирование записи отменено"));
+                    return;
+                }
+                Entities[Entities.IndexOf(SelectedEntity)] = changedEntity;
             }
             catch (Exception ex)
             {
@@ -366,7 +362,7 @@ namespace StripeCreator.WPF
                 throw new InvalidOperationException(NonSelectedEntityError);
             try
             {
-                var removeId = await _dataService!.RemoveAsync(SelectedEntity);
+                var removeId = await DataFacade!.RemoveAsync(SelectedEntity);
                 await _uiManager.ShowInfo(new MessageBoxDialogViewModel("Удалено успешно", $"Удалена сущность с Id {removeId}"));
                 Entities?.Remove(SelectedEntity);
             }
@@ -391,7 +387,7 @@ namespace StripeCreator.WPF
         {
             try
             {
-                var data = await _dataService!.GetAllAsync();
+                var data = await DataFacade!.GetAllAsync();
                 Entities = new ObservableCollection<IEntityViewModel>(data);
             }
             catch (Exception ex)

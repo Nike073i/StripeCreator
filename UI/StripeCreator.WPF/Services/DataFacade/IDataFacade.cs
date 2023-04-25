@@ -7,7 +7,7 @@ namespace StripeCreator.WPF
     /// <summary>
     /// Интерфейс взаимодействия с сущностями в виде ViewModel
     /// </summary>
-    public interface IDataService
+    public interface IDataFacade
     {
         /// <summary>
         /// Запрос на получение всех сущностей в виде ViewModel
@@ -16,11 +16,17 @@ namespace StripeCreator.WPF
         Task<IEnumerable<IEntityViewModel>> GetAllAsync();
 
         /// <summary>
-        /// Запрос на сохранение сущности в виде ViewModel
+        /// Запрос на создание сущности
         /// </summary>
-        /// <param name="entity">ViewModel сохраняемой сущности</param>
         /// <returns>ViewModel сохраненной сущности</returns>
-        Task<IEntityViewModel> SaveAsync(IEntityViewModel entity);
+        Task<IEntityViewModel?> CreateAsync();
+
+        /// <summary>
+        /// Запрос на изменение сущности
+        /// </summary>
+        /// <param name="entity">ViewModel изменяемой сущности</param>
+        /// <returns>ViewModel сохраненной сущности</returns>
+        Task<IEntityViewModel?> EditAsync(IEntityViewModel entity);
 
         /// <summary>
         /// Запрос на удаление сущности по ее ViewModel
@@ -28,12 +34,5 @@ namespace StripeCreator.WPF
         /// <param name="entity">ViewMOdel удаляемой сущности</param>
         /// <returns>Идентификатор удаленной сущности</returns>
         Task<Guid> RemoveAsync(IEntityViewModel entity);
-
-        /// <summary>
-        /// Создание модели формирования сущности
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <returns>Модель формирования сущности</returns>
-        EntityFormationViewModel CreateFormationViewModel(IEntityViewModel? entity = null);
     }
 }
