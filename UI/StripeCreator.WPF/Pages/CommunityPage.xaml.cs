@@ -7,7 +7,7 @@
         private void Initialize()
         {
             InitializeComponent();
-            App.SetWindowSize(1200, 700);
+            App.SetWindowSize(1200, 870);
         }
     }
 }
