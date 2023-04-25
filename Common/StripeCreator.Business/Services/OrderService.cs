@@ -5,11 +5,10 @@ using StripeCreator.Business.Repositories;
 
 namespace StripeCreator.Business.Services
 {
-
     /// <summary>
     /// Сервис работы с заказами
     /// </summary>
-    public class SaleService
+    public class OrderService
     {
         #region Private fields
 
@@ -38,7 +37,7 @@ namespace StripeCreator.Business.Services
         /// <param name="orderPriceCalculator">Калькулятор стоимости заказа</param>
         /// <param name="clientRepository">Репозиторий клиентов</param>
         /// <param name="orderRepository">Репозиторий заказов</param>
-        public SaleService(OrderPriceCalculator orderPriceCalculator, IClientRepository clientRepository, IOrderRepository orderRepository)
+        public OrderService(OrderPriceCalculator orderPriceCalculator, IClientRepository clientRepository, IOrderRepository orderRepository)
         {
             _orderPriceCalculator = orderPriceCalculator;
             _clientRepository = clientRepository;
@@ -49,15 +48,19 @@ namespace StripeCreator.Business.Services
 
         #region Public methods
 
+        public async Task<IEnumerable<Order>> GetAllAsync() => await _orderRepository.GetAllAsync();
+
+        public async Task<Order?> GetByIdAsync(Guid id) => await _orderRepository.GetByIdAsync(id);
+
+        public async Task<IEnumerable<Order>> GetByClientIdAsync(Guid clientId) => await _orderRepository.GetByClientIdAsync(clientId);
+
+        public async Task<IEnumerable<Order>> GetByStatusAsync(OrderStatus status) => await _orderRepository.GetByStatusAsync(status);
+
         /// <summary>
         /// Создание нового заказа
         /// </summary>
-        /// <param name="clientId">Идентификатор клиента</param>
-        /// <param name="orderProducts">Список заказанной продукции</param>
-        /// <param name="contactData">Контактная информация получателя</param>
-        /// <param name="price">Стоимость заказа, указанная вручную</param>
         /// <returns>Новый заказ</returns>
-        /// <exception cref="ArgumentException">Возникает, если клиент с указанным <paramref name="clientId"/> не найден</exception>
+        /// <exception cref="ArgumentException">Возникает, если клиент с указанным <paramref name="orderCreateModel.ClientId"/> не найден</exception>
         public async Task<Order> CreateOrderAsync(OrderCreateModel orderCreateModel)
         {
             var client = await _clientRepository.GetByIdAsync(orderCreateModel.ClientId);

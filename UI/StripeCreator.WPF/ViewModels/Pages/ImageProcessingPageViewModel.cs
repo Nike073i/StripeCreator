@@ -37,12 +37,12 @@ namespace StripeCreator.WPF
         /// <summary>
         /// Сервис работы с изображением
         /// </summary>
-        private readonly ImageFacade _imageFacade;
+        private readonly ImageService _imageFacade;
 
         /// <summary>
-        /// Репозиторий тканей
+        /// Сервис тканей
         /// </summary>
-        private readonly IClothRepository _clothRepository;
+        private readonly ClothService _clothService;
 
         /// <summary>
         /// Менеджер интерактивного взаимодействия
@@ -165,13 +165,13 @@ namespace StripeCreator.WPF
         /// </summary>
         /// <param name="applicationViewModel">ViewModel приложения</param>
         /// <param name="imageService">Сервис работы с изображением</param>
-        /// <param name="clothRepository">Репозиторий тканей</param>
+        /// <param name="clothService">Репозиторий тканей</param>
         /// <param name="uiManager">Менеджер интерактивного взаимодействия</param>
-        public ImageProcessingPageViewModel(ApplicationViewModel applicationViewModel, ImageFacade imageService, IClothRepository clothRepository, IUiManager uiManager)
+        public ImageProcessingPageViewModel(ApplicationViewModel applicationViewModel, ImageService imageService, ClothService clothService, IUiManager uiManager)
         {
             _applicationViewModel = applicationViewModel;
             _imageFacade = imageService;
-            _clothRepository = clothRepository;
+            _clothService = clothService;
             _uiManager = uiManager;
             SelectedClothCount = ClothCounts.First();
 
@@ -235,8 +235,8 @@ namespace StripeCreator.WPF
             };
             if (dialog.ShowDialog() == false) return;
             ImagePath = dialog.FileName;
-            var imageSize = ImageFacade.GetImageSize(ImagePath);
-            AvailableStripeSizes = ImageFacade.GetAvailableStripeSizes(imageSize.Width, imageSize.Height);
+            var imageSize = ImageService.GetImageSize(ImagePath);
+            AvailableStripeSizes = ImageService.GetAvailableStripeSizes(imageSize.Width, imageSize.Height);
         }
 
         /// <summary>
@@ -283,7 +283,7 @@ namespace StripeCreator.WPF
         {
             try
             {
-                Cloths = await _clothRepository.GetAllAsync();
+                Cloths = await _clothService.GetAllAsync();
             }
             catch (Exception ex)
             {

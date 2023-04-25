@@ -8,17 +8,17 @@ using StripeCreator.Business.Tests.Infrastructure.Helpers.Models;
 
 namespace StripeCreator.Business.Tests.Services
 {
-    internal class SaleServiceTests
+    internal class OrderServiceTests
     {
         [Test]
         public void Create_Order_ClientNotFound()
         {
-            var saleService = GetSaleService();
+            var orderService = GetOrderService();
             var clientId = ClientHelper.TestId;
             var orderProducts = new List<OrderProduct> { OrderProductHelper.CreateOrderProduct() };
             var contactData = ContactDataHelper.CreateContactData();
             var orderModel = new OrderCreateModel(clientId, contactData, orderProducts);
-            async Task<Order> createAsync() => await saleService!.CreateOrderAsync(orderModel);
+            async Task<Order> createAsync() => await orderService!.CreateOrderAsync(orderModel);
             Assert.ThrowsAsync<ArgumentException>(createAsync);
         }
 
@@ -36,12 +36,12 @@ namespace StripeCreator.Business.Tests.Services
             var orderRepository = new Mock<IOrderRepository>();
             orderRepository.Setup(repos => repos.SaveAsync(It.IsAny<Order>())).ReturnsAsync((Order order) => order);
 
-            var saleService = GetSaleService(productRepository.Object, clientRepository.Object, orderRepository.Object);
+            var orderService = GetOrderService(productRepository.Object, clientRepository.Object, orderRepository.Object);
             var orderProducts = new List<OrderProduct> { new OrderProduct(product.Id!.Value, 15) };
             var contactData = ContactDataHelper.CreateContactData();
 
             var orderCreateModel = new OrderCreateModel(client.Id!.Value, contactData, orderProducts);
-            var newOrder = await saleService!.CreateOrderAsync(orderCreateModel);
+            var newOrder = await orderService!.CreateOrderAsync(orderCreateModel);
 
             Assert.Multiple(() =>
             {
@@ -56,13 +56,13 @@ namespace StripeCreator.Business.Tests.Services
         [Test]
         public void Change_OrderStatus_OrderNotFound()
         {
-            var saleService = GetSaleService();
+            var orderService = GetOrderService();
             var orderId = OrderHelper.TestId;
-            async Task<Order> changeStatus() => await saleService!.SendOrderAsync(orderId);
+            async Task<Order> changeStatus() => await orderService!.SendOrderAsync(orderId);
             Assert.ThrowsAsync<ArgumentException>(changeStatus);
         }
 
-        private static SaleService GetSaleService(IProductRepository? productRepository = null,
+        private static OrderService GetOrderService(IProductRepository? productRepository = null,
                                                   IClientRepository? clientRepository = null,
                                                   IOrderRepository? orderRepository = null)
         {
@@ -70,7 +70,7 @@ namespace StripeCreator.Business.Tests.Services
             var orderCalculator = new OrderPriceCalculator(productRepository);
             clientRepository ??= new Mock<IClientRepository>().Object;
             orderRepository ??= new Mock<IOrderRepository>().Object;
-            return new SaleService(orderCalculator, clientRepository, orderRepository);
+            return new OrderService(orderCalculator, clientRepository, orderRepository);
         }
     }
 }
