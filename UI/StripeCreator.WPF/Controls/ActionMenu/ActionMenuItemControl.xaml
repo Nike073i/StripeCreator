@@ -36,7 +36,7 @@
                                        Text="{Binding ActionText}" 
                                        Grid.Column="1" 
                                        Foreground="{StaticResource RegularColorBrush}" 
-                                       VerticalAlignment="Center" HorizontalAlignment="Left" 
+                                       VerticalAlignment="Center" HorizontalAlignment="Stretch" 
                                        Padding="10 5"/>
                         </Grid>
                         <ControlTemplate.Triggers>

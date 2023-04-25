@@ -1,4 +1,4 @@
-﻿namespace StripeCreator.WPF.Tests.Pages
+﻿namespace StripeCreator.WPF.Tests.Pages.WelcomePage
 {
     internal enum WelcomePageMenuItems
     {
