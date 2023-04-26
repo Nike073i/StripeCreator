@@ -19,4 +19,10 @@
     <ProjectReference Include="..\..\..\UI\StripeCreator.WPF\StripeCreator.WPF.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Resources\peijah.sch">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
