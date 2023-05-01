@@ -1,5 +1,6 @@
 using ImageMagick;
 using StripeCreator.Stripe.Extensions;
+using StripeCreator.Stripe.Interfaces;
 using StripeCreator.Stripe.Models;
 
 namespace StripeCreator.Stripe.Services

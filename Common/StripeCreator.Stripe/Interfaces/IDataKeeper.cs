@@ -1,4 +1,4 @@
-namespace StripeCreator.Stripe.Services
+namespace StripeCreator.Stripe.Interfaces
 {
     /// <summary>
     /// Интерфейс хранителя данных

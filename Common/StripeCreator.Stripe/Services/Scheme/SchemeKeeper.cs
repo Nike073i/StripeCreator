@@ -1,4 +1,5 @@
-﻿using StripeCreator.Stripe.Models;
+﻿using StripeCreator.Stripe.Interfaces;
+using StripeCreator.Stripe.Models;
 using System.Runtime.Serialization.Formatters.Binary;
 
 namespace StripeCreator.Stripe.Services

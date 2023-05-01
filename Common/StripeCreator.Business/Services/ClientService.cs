@@ -1,5 +1,4 @@
-﻿using StripeCreator.Business.Enums;
-using StripeCreator.Business.Models;
+﻿using StripeCreator.Business.Models;
 using StripeCreator.Business.Repositories;
 
 namespace StripeCreator.Business.Services
