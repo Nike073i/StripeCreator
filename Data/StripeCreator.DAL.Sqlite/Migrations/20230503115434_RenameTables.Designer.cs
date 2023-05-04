@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StripeCreator.DAL;
 
@@ -10,9 +11,11 @@ using StripeCreator.DAL;
 namespace StripeCreator.DAL.Sqlite.Migrations
 {
     [DbContext(typeof(StripeCreatorDb))]
-    partial class StripeCreatorDbModelSnapshot : ModelSnapshot
+    [Migration("20230503115434_RenameTables")]
+    partial class RenameTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.2");
