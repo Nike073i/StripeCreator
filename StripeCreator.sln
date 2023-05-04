@@ -33,15 +33,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StripeCreator.Business.Test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StripeCreator.Stripe.Tests", "Tests\Common\StripeCreator.Stripe.Tests\StripeCreator.Stripe.Tests.csproj", "{F6E0130A-1ECA-4F90-8C59-062D1DD1EDFC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StripeCreator.DAL.Sqlite", "Data\StripeCreator.DAL.Sqlite\StripeCreator.DAL.Sqlite.csproj", "{567FD47E-35A8-4970-97A6-D7081AA91825}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StripeCreator.DAL.Sqlite", "Data\StripeCreator.DAL.Sqlite\StripeCreator.DAL.Sqlite.csproj", "{567FD47E-35A8-4970-97A6-D7081AA91825}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ui", "Ui", "{24022345-9E25-48DC-B82B-724818966D4E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StripeCreator.WPF.Tests", "Tests\Ui\StripeCreator.WPF.Tests\StripeCreator.WPF.Tests.csproj", "{FAB13E35-616B-44E8-B852-D2AF08AA9E94}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StripeCreator.WPF.Tests", "Tests\Ui\StripeCreator.WPF.Tests\StripeCreator.WPF.Tests.csproj", "{FAB13E35-616B-44E8-B852-D2AF08AA9E94}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{BF531F80-07E6-4B75-8CA3-C37A50982776}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StripeCreator.DAL.Tests", "Tests\Data\StripeCreator.DAL.Tests\StripeCreator.DAL.Tests.csproj", "{F5483520-34F5-4BBC-99D7-A39A0FA92DD7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StripeCreator.DAL.Tests", "Tests\Data\StripeCreator.DAL.Tests\StripeCreator.DAL.Tests.csproj", "{F5483520-34F5-4BBC-99D7-A39A0FA92DD7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
