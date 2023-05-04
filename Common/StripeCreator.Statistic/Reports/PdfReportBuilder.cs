@@ -158,6 +158,7 @@ namespace StripeCreator.Statistic.Reports
         /// <param name="data">Данные по ежедневной выручке</param>
         private void InsertOrderIncome(IEnumerable<OrderIncomeDataModel> data)
         {
+            if (!data.Any()) return;
             var titleParagraph = new Paragraph();
             titleParagraph.AddText("Данные по выручке");
             titleParagraph.Format.Alignment = ParagraphAlignment.Center;
