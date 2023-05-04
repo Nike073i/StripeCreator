@@ -11,7 +11,17 @@ namespace StripeCreator.DAL
         /// Конструктор с опциями подключения к БД
         /// </summary>
         /// <param name="options">Опции подключения к БД</param>
-        public StripeCreatorDb(DbContextOptions<StripeCreatorDb> options) : base(options) {  }
+        public StripeCreatorDb(DbContextOptions<StripeCreatorDb> options) : base(options) { }
+
+        #endregion
+
+        #region Public properties
+
+        public DbSet<DbClient> Clients { get; set; }
+        public DbSet<DbOrder> Orders { get; set; }
+        public DbSet<DbProduct> Products { get; set; }
+        public DbSet<DbCloth> Cloths { get; set; }
+        public DbSet<DbThread> Threads { get; set; }
 
         #endregion
 
@@ -36,8 +46,8 @@ namespace StripeCreator.DAL
                 .WithOne(order => order.Client)
                 .HasForeignKey(order => order.ClientId);
 
-            #endregion  
-            
+            #endregion
+
             #region Сущность заказа
 
             // Связь заказа с клиентом

@@ -46,7 +46,7 @@ namespace StripeCreator.DAL.Models
         protected DbOrderProduct() { }
 
         /// <summary>
-        /// Конструктор с полной инициализацией
+        /// Конструктор для создания связки
         /// </summary>
         /// <param name="productId">Идентификатор продукта</param>
         /// <param name="quantity">Количество продукции в заказе</param>
@@ -54,6 +54,18 @@ namespace StripeCreator.DAL.Models
         {
             ProductId = productId;
             Quantity = quantity;
+        }
+
+        /// <summary>
+        /// Конструктор с полной инициализацией
+        /// </summary>
+        /// <param name="productId">Идентификатор продукта</param>
+        /// <param name="quantity">Количество продукции в заказе</param>
+        /// <param name="orderId">Идентификатор заказа</param>
+        public DbOrderProduct(Guid productId, int quantity, Guid orderId, Guid id) : this(productId, quantity)
+        {
+            OrderId = orderId;
+            Id = id;
         }
 #nullable enable
 

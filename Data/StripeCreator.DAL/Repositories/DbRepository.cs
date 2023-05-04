@@ -61,10 +61,10 @@ namespace StripeCreator.DAL.Repositories
 
         #region Interface implementations
 
-        public async Task<IEnumerable<TEntity>> GetAllAsync() => await Items.Select(dmModel => Mapper.MapToDomainModel(dmModel))
+        public virtual async Task<IEnumerable<TEntity>> GetAllAsync() => await Items.Select(dmModel => Mapper.MapToDomainModel(dmModel))
                                                                             .ToListAsync();
 
-        public async Task<IEnumerable<TEntity>> GetAsync(int skip, int take)
+        public virtual async Task<IEnumerable<TEntity>> GetAsync(int skip, int take)
         {
             if (skip < 0)
                 throw new ArgumentOutOfRangeException(nameof(skip), "Количество пропускаемых элементов не может быть < 0");
@@ -76,13 +76,13 @@ namespace StripeCreator.DAL.Repositories
                             .ToListAsync();
         }
 
-        public async Task<TEntity?> GetByIdAsync(Guid id)
+        public virtual async Task<TEntity?> GetByIdAsync(Guid id)
         {
             var storedEntity = await Items.FirstOrDefaultAsync(x => x.Id == id);
             return storedEntity != null ? Mapper.MapToDomainModel(storedEntity) : null;
         }
 
-        public async Task<Guid> RemoveAsync(Guid id)
+        public virtual async Task<Guid> RemoveAsync(Guid id)
         {
             var entity = await Items.FirstOrDefaultAsync(x => x.Id == id);
             if (entity == null)
@@ -92,7 +92,7 @@ namespace StripeCreator.DAL.Repositories
             return id;
         }
 
-        public async Task<TEntity> SaveAsync(TEntity entity)
+        public virtual async Task<TEntity> SaveAsync(TEntity entity)
         {
             var storedEntity = await Items.FirstOrDefaultAsync(x => x.Id == entity.Id);
             if (storedEntity == null)
