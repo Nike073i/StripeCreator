@@ -32,7 +32,7 @@ namespace StripeCreator.VK.Repositories
                 AccessToken = vkParameters.AccessToken
             });
             if (!VkApi.IsAuthorized)
-                throw new InvalidOperationException("Авторизация не пройдена");
+                throw new UnauthorizedAccessException("Авторизация не пройдена");
             GroupId = vkParameters.GroupId;
         }
 

@@ -7,13 +7,6 @@ namespace StripeCreator.VK.Repositories
     /// <summary>Репозиторий записей сообщества</summary>
     public class VkWallRepository : VkRepository
     {
-        #region Constants
-
-        /// <summary>Минимальная длина сообщения для публикации</summary>
-        private const int WallPostMinLength = 10;
-
-        #endregion
-
         #region Constructors
 
         /// <summary>Конструктор с полной инициализацией</summary>
@@ -27,14 +20,11 @@ namespace StripeCreator.VK.Repositories
         /// <summary>Добавить запись в сообщество</summary>
         /// <param name="message">Сообщение к публикации</param>
         /// <param name="photoPath">Абсолютный путь к изображению</param>
-        /// <exception cref="ArgumentNullException">Возникает, если указано сообщение с некорректной длиной</exception>
-        /// <exception cref="ArgumentException">Возникает, если изображение по указанному пути не найдено</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Возникает, если указано сообщение с некорректной длиной</exception>
+        /// <exception cref="FileNotFoundException">Возникает, если изображение по указанному пути не найдено</exception>
         /// <exception cref="InvalidOperationException">Возникает, если произошла ошибка запроса к API</exception>
         public async Task PostAsync(string message, string? photoPath = null)
         {
-            if (string.IsNullOrWhiteSpace(message) || message.Length < WallPostMinLength)
-                throw new ArgumentNullException(nameof(message),
-                    $"Указано сообщение с длиной меньше < {WallPostMinLength}");
             var postParams = new WallPostParams
             {
                 OwnerId = -GroupId,
@@ -44,8 +34,6 @@ namespace StripeCreator.VK.Repositories
             if (photoPath != null)
             {
                 var photoInfo = new FileInfo(photoPath);
-                if (!photoInfo.Exists)
-                    throw new ArgumentException($"Изображение по пути {photoPath} не найдено");
                 var uploadServer = await VkApi.Photo.GetWallUploadServerAsync(GroupId);
                 using var httpClient = new HttpClient();
                 var imageBytes = await File.ReadAllBytesAsync(photoPath);

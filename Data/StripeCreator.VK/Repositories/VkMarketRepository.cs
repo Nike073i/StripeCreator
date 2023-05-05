@@ -22,13 +22,10 @@ namespace StripeCreator.VK.Repositories
         /// <summary>Добавить товар в сообщество</summary>
         /// <param name="market">Новый товар</param>
         /// <param name="photoPath">Абсолютный путь к изображению</param>
-        /// <exception cref="ArgumentException">Возникает, если изображение по указанному пути не найдено</exception>
         /// <exception cref="InvalidOperationException">Возникает, если произошла ошибка запроса к API</exception>
         public async Task AddAsync(Market market, string photoPath)
         {
             var photoInfo = new FileInfo(photoPath);
-            if (!photoInfo.Exists)
-                throw new ArgumentException($"Изображение по пути {photoPath} не найдено");
             var uploadServer = await VkApi.Photo.GetMarketUploadServerAsync(GroupId);
             using var httpClient = new HttpClient();
             var imageBytes = await File.ReadAllBytesAsync(photoPath);
@@ -64,20 +61,18 @@ namespace StripeCreator.VK.Repositories
         /// true - редактирование прошло успешно,
         /// false - редактирование отменено</returns>
         /// <exception cref="ArgumentException">Возникает, если у товара <paramref name="market"/> отсутствуют необходимые поля</exception>
-        public async Task<bool> EditAsync(Market market)
+        public Task<bool> EditAsync(Market market)
         {
-            var itemId = market.Id ?? throw new ArgumentException("Отсутствует идентификатор у товара");
-            var photo = market.MainPhoto ?? throw new ArgumentException("Отсутствует изображение у товара");
-            return await VkApi.Markets.EditAsync(new MarketProductParams
+            return VkApi.Markets.EditAsync(new MarketProductParams
             {
                 OwnerId = -GroupId,
-                ItemId = itemId,
+                ItemId = market.Id,
                 CategoryId = market.Category.Id,
                 Name = market.Title,
                 Description = market.Description,
                 Price = market.Price,
                 OldPrice = 1,
-                MainPhotoId = photo.Id,
+                MainPhotoId = market.MainPhoto!.Id,
             });
         }
 
@@ -86,8 +81,7 @@ namespace StripeCreator.VK.Repositories
         /// <returns>Результат удаления товара.
         /// true - удаление прошло успешно,
         /// false - удаление отменено</returns>
-        public async Task<bool> RemoveAsync(long id) =>
-            await VkApi.Markets.DeleteAsync(-GroupId, id);
+        public Task<bool> RemoveAsync(long id) => VkApi.Markets.DeleteAsync(-GroupId, id);
 
         /// <summary>Получить все товары в сообществе</summary>
         /// <returns>Список товаров сообщества</returns>
