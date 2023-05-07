@@ -70,17 +70,17 @@ namespace StripeCreator.DAL
 
             // Связь заказа-продукции с заказом
             modelBuilder.Entity<DbOrderProduct>()
-                .HasOne(orderProduct => orderProduct.DbOrder)
-                .WithMany(order => order.Products)
-                .HasForeignKey(orderProduct => orderProduct.OrderId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasKey(x => new { x.OrderId, x.ProductId });
 
-
-            // Связь заказа-продукции с продукцией
             modelBuilder.Entity<DbOrderProduct>()
-                .HasOne(orderProduct => orderProduct.DbProduct)
-                .WithMany(product => product.OrderProducts)
-                .HasForeignKey(orderProduct => orderProduct.ProductId)
+                .HasOne(x => x.DbOrder)
+                .WithMany(x => x.Products)
+                .HasForeignKey(x => x.OrderId);
+
+            modelBuilder.Entity<DbOrderProduct>()
+                .HasOne(x => x.DbProduct)
+                .WithMany()
+                .HasForeignKey(x => x.ProductId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             #endregion
