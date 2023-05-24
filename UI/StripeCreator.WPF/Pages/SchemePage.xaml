@@ -8,6 +8,7 @@
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d" 
              xmlns:xceed="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:paz="clr-namespace:Wpf.Controls.PanAndZoom;assembly=Wpf.Controls.PanAndZoom"
              d:DesignHeight="800" d:DesignWidth="1300"
              d:DataContext="{x:Static local:SchemePageDesignViewModel.Instance}">
     <Grid Margin="-15 0 0 0">
@@ -139,11 +140,14 @@
         <!-- Визуализация схемы-->
         <GroupBox Header="Схема" Grid.Column="2"
                   Margin="5" Padding="0">
-                <Image VerticalAlignment="Center" HorizontalAlignment="Center"
+            <paz:ZoomBorder ZoomSpeed="1.2"
+                        Background="{StaticResource DarkColorBrush}" ClipToBounds="True"
+                        Grid.Row="4" Grid.Column="1">
+                <Image RenderOptions.BitmapScalingMode="NearestNeighbor"
                        Source="{Binding SchemeData, 
                                         TargetNullValue={StaticResource DefaultSchemeVisualization}, 
                                         FallbackValue={StaticResource DefaultSchemeVisualization}}"/>
-
+            </paz:ZoomBorder>
         </GroupBox>
 
         <!-- Редактирование схемы -->
