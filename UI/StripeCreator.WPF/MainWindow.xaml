@@ -8,7 +8,8 @@
         d:Height="450" d:Width="600"
         Background="{StaticResource DarkColorBrush}"
         Title="{Binding WindowTitle}"
-        DataContext="{Binding ApplicationViewModel, Source={StaticResource Locator}}">
+        DataContext="{Binding ApplicationViewModel, Source={StaticResource Locator}}"
+        WindowStartupLocation="CenterScreen">
     <Grid Margin="15">
         <!-- Держатель страниц-->
         <ContentControl Content="{Binding CurrentPage, 

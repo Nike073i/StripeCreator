@@ -8,6 +8,10 @@
         /// <summary>
         /// Конструктор с полной инициализацией
         /// </summary>
-        public DialogWindow() => InitializeComponent();
+        public DialogWindow()
+        {
+            Owner = App.Current.MainWindow;
+            InitializeComponent();
+        }
     }
 }

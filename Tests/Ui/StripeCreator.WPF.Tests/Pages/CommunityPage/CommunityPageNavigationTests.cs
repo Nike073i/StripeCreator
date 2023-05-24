@@ -42,11 +42,12 @@ namespace StripeCreator.WPF.Tests.Pages.CommunityPage
             var createButton = _menu.GetMenuByIndex((int)CommunityPageMenuItems.Add);
             createButton.UiElement.Click();
 
+            var openDialogWindow = CurrentWindow.ModalWindows.First();
             Assert.Multiple(() =>
             {
-                Assert.That(CurrentWindow, Is.Not.Null);
-                Assert.That(CurrentWindow.Title.Contains(CommunityPageUiElementSelectors.CreateMarketWindowTitle));
-                Assert.That(CurrentWindow.IsEnabled, Is.True);
+                Assert.That(openDialogWindow, Is.Not.Null);
+                Assert.That(openDialogWindow.Title.Contains(CommunityPageUiElementSelectors.CreateMarketWindowTitle));
+                Assert.That(openDialogWindow.IsEnabled, Is.True);
             });
         }
 
@@ -55,12 +56,12 @@ namespace StripeCreator.WPF.Tests.Pages.CommunityPage
         {
             var postButton = _menu.GetMenuByIndex((int)CommunityPageMenuItems.Post);
             postButton.UiElement.Click();
-
+            var openDialogWindow = CurrentWindow.ModalWindows.First();
             Assert.Multiple(() =>
             {
-                Assert.That(CurrentWindow, Is.Not.Null);
-                Assert.That(CurrentWindow.Title.Contains(CommunityPageUiElementSelectors.PublishMessageWindowTitle));
-                Assert.That(CurrentWindow.IsEnabled, Is.True);
+                Assert.That(openDialogWindow, Is.Not.Null);
+                Assert.That(openDialogWindow.Title.Contains(CommunityPageUiElementSelectors.PublishMessageWindowTitle));
+                Assert.That(openDialogWindow.IsEnabled, Is.True);
             });
         }
 

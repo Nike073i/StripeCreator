@@ -80,11 +80,12 @@ namespace StripeCreator.WPF.Tests.Pages.SchemePage
             var calculateButton = _menu.GetMenuByIndex((int)SchemePageMenuItems.CalculateMaterials);
             calculateButton.UiElement.Click();
 
+            var openDialogWindow = CurrentWindow.ModalWindows.First();
             Assert.Multiple(() =>
             {
-                Assert.That(CurrentWindow, Is.Not.Null);
-                Assert.That(CurrentWindow.Title, Is.EqualTo(SchemePageUiElementSelectors.CalculateMaterialsWindowTitle));
-                Assert.That(CurrentWindow.IsEnabled, Is.True);
+                Assert.That(openDialogWindow, Is.Not.Null);
+                Assert.That(openDialogWindow.Title.Contains(SchemePageUiElementSelectors.CalculateMaterialsWindowTitle));
+                Assert.That(openDialogWindow.IsEnabled, Is.True);
             });
         }
 

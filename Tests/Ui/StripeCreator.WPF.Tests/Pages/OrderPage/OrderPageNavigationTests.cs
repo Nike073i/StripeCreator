@@ -43,11 +43,12 @@ namespace StripeCreator.WPF.Tests.Pages.OrderPage
             var createButton = _menu.GetMenuByIndex((int)OrderPageMenuItems.Create);
             createButton.UiElement.Click();
 
+            var openDialogWindow = CurrentWindow.ModalWindows.First();
             Assert.Multiple(() =>
             {
-                Assert.That(CurrentWindow, Is.Not.Null);
-                Assert.That(CurrentWindow.Title, Is.EqualTo(OrderPageUiElementSelectors.CreateOrderWindowTitle));
-                Assert.That(CurrentWindow.IsEnabled, Is.True);
+                Assert.That(openDialogWindow, Is.Not.Null);
+                Assert.That(openDialogWindow.Title.Contains(OrderPageUiElementSelectors.CreateOrderWindowTitle));
+                Assert.That(openDialogWindow.IsEnabled, Is.True);
             });
         }
 

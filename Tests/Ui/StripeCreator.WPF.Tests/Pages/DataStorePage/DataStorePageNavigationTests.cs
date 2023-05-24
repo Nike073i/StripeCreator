@@ -107,11 +107,12 @@ namespace StripeCreator.WPF.Tests.Pages.DataStorePage
                 cond.ByHelpText(DataStorePageUiElementSelectors.AddButtonHelpText)));
             addButton.Click();
 
+            var openDialogWindow = CurrentWindow.ModalWindows.First();
             Assert.Multiple(() =>
             {
-                Assert.That(CurrentWindow, Is.Not.Null);
-                Assert.That(CurrentWindow.Title.Contains(DataStorePageUiElementSelectors.FormationWindowTitlePrefix));
-                Assert.That(CurrentWindow.IsEnabled, Is.True);
+                Assert.That(openDialogWindow, Is.Not.Null);
+                Assert.That(openDialogWindow.Title.Contains(DataStorePageUiElementSelectors.FormationWindowTitlePrefix));
+                Assert.That(openDialogWindow.IsEnabled, Is.True);
             });
         }
 
