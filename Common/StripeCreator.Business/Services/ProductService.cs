@@ -12,12 +12,24 @@ namespace StripeCreator.Business.Services
             _productRepository = productRepository;
         }
 
-        public async Task<Product> SaveAsync(Product entity) => await _productRepository.SaveAsync(entity);
+        public Task<Product> SaveAsync(Product entity) => _productRepository.SaveAsync(entity);
 
-        public async Task<Guid> RemoveAsync(Guid id) => await _productRepository.RemoveAsync(id);
+        public async Task<Guid> RemoveAsync(Guid id)
+        {
+            try
+            {
+                return await _productRepository.RemoveAsync(id);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    "Возможно вы пытаетесь удалить данные продукции, которая уже используется в одном из заказов",
+                    ex.InnerException);
+            }
+        }
 
-        public async Task<IEnumerable<Product>> GetAllAsync() => await _productRepository.GetAllAsync();
+        public Task<IEnumerable<Product>> GetAllAsync() => _productRepository.GetAllAsync();
 
-        public async Task<Product?> GetByIdAsync(Guid id) => await _productRepository.GetByIdAsync(id);
+        public Task<Product?> GetByIdAsync(Guid id) => _productRepository.GetByIdAsync(id);
     }
 }
