@@ -13,7 +13,7 @@ namespace StripeCreator.Stripe.Services
         /// <summary>
         /// Длина стежка в метрах
         /// </summary>
-        public static readonly double StitchLength = 0.005;
+        public static readonly double StitchLength = 0.003;
 
         #endregion
 
