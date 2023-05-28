@@ -2,6 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:business="clr-namespace:StripeCreator.Business.Models;assembly=StripeCreator.Business"
                     xmlns:stripe="clr-namespace:StripeCreator.Stripe.Models;assembly=StripeCreator.Stripe"
+                    xmlns:local="clr-namespace:StripeCreator.WPF"
                     >
     <!-- Клиенты -->
     <DataTemplate DataType="{x:Type business:Client}">
@@ -26,8 +27,16 @@
             <Run Text=","/>
             <Run Text="{Binding Count}"/>
             <Run Text="-"/>
-            <Run Text="{Binding Type}"/>
+            <Run Text="{Binding Type, Converter={local:ClothTypeValueConverter}}"/>
         </TextBlock>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type stripe:ClothType}">
+        <TextBlock Text="{Binding Converter={local:ClothTypeValueConverter}}"/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type stripe:ThreadType}">
+        <TextBlock Text="{Binding Converter={local:ThreadTypeValueConverter}}"/>
     </DataTemplate>
 
     <!-- Нить -->
@@ -37,7 +46,7 @@
             <Run Text=","/>
             <Run Text="{Binding Weight}"/>
             <Run Text="-"/>
-            <Run Text="{Binding Type}"/>
+            <Run Text="{Binding Type, Converter={local:ThreadTypeValueConverter}}"/>
         </TextBlock>
     </DataTemplate>
 </ResourceDictionary>

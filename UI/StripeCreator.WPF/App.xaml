@@ -28,6 +28,7 @@
                 <ResourceDictionary Source="Resources/Templates/DomainEntities.xaml"/>
                 <ResourceDictionary Source="Resources/Templates/ColorTemplates.xaml"/>
                 <ResourceDictionary Source="Resources/Templates/ProcessingMethodsTemplates.xaml"/>
+                <ResourceDictionary Source="Resources/Templates/EmbroideryTemplates.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <local:ViewModelLocator x:Key="Locator"/>
         </ResourceDictionary>

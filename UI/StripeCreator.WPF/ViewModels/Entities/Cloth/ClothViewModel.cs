@@ -1,4 +1,5 @@
-﻿using StripeCreator.Stripe.Models;
+﻿using StripeCreator.Stripe.Extensions;
+using StripeCreator.Stripe.Models;
 using System.Collections.Generic;
 
 namespace StripeCreator.WPF
@@ -30,7 +31,7 @@ namespace StripeCreator.WPF
                     new("Стоимость", Entity.Price.ToString()),
                     new("Производитель", Entity.Manufacturer),
                     new("Код цвета", Entity.Color.HexValue),
-                    new("Тип", Entity.Type.ToString()),
+                    new("Тип", Entity.Type.ConvertToString()),
                     new("Каунт", Entity.Count.ToString())
                 };
 

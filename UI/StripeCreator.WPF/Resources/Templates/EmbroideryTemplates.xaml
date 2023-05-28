@@ -1,0 +1,11 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:stripe="clr-namespace:StripeCreator.Stripe.Models;assembly=StripeCreator.Stripe"
+                    xmlns:local="clr-namespace:StripeCreator.WPF">
+    <DataTemplate DataType="{x:Type stripe:EmbroideryMethod}">
+        <TextBlock Text="{Binding Converter={local:EmbroideryMethodValueConverter}}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type stripe:EmbroideryType}">
+        <TextBlock Text="{Binding Converter={local:EmbroideryTypeValueConverter}}"/>
+    </DataTemplate>
+</ResourceDictionary>

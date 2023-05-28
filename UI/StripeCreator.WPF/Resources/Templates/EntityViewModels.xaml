@@ -47,7 +47,7 @@
                        FontWeight="Bold" Text="{Binding Entity.Name}"/>
             <StackPanel Orientation="Horizontal" Grid.Row="1">
                 <TextBlock Text="{Binding Entity.Manufacturer}"/>                
-                <TextBlock Text="{Binding Entity.Type}"/>
+                <TextBlock Text="{Binding Entity.Type, Converter={local:ThreadTypeValueConverter}}"/>
             </StackPanel>
         </Grid>
     </DataTemplate>
@@ -66,7 +66,7 @@
                        FontWeight="Bold" Text="{Binding Entity.Name}"/>
             <StackPanel Orientation="Horizontal" Grid.Row="1">
                 <TextBlock Text="{Binding Entity.Manufacturer}"/>
-                <TextBlock Text="{Binding Entity.Type}"/>
+                <TextBlock Text="{Binding Entity.Type, Converter={local:ClothTypeValueConverter}}"/>
             </StackPanel>
         </Grid>
     </DataTemplate>
