@@ -1,7 +1,6 @@
 ﻿using Microsoft.Win32;
 using StripeCreator.Core.Models;
 using StripeCreator.Stripe.Models;
-using StripeCreator.Stripe.Repositories;
 using StripeCreator.Stripe.Services;
 using System;
 using System.Collections.Generic;
@@ -250,11 +249,14 @@ namespace StripeCreator.WPF
             var maxSize = Math.Max(stripeSize.Width, stripeSize.Height);
             try
             {
-                var schemeTemplate = await _imageFacade.CreateSchemaTemplate(ImagePath!, count, maxSize,
-                    SelectedResizeMethod!.Method,
-                    SelectedReductiveMethod!.Method, ReductiveCount,
-                    IsColorNormalizeSet);
-                _applicationViewModel.GoToPage(ApplicationPage.Scheme, (schemeTemplate, count));
+                await Task.Run(async () =>
+                {
+                    var schemeTemplate = await _imageFacade.CreateSchemaTemplate(ImagePath!, count, maxSize,
+                        SelectedResizeMethod!.Method,
+                        SelectedReductiveMethod!.Method, ReductiveCount,
+                        IsColorNormalizeSet);
+                    _applicationViewModel.GoToPage(ApplicationPage.Scheme, (schemeTemplate, count));
+                });
             }
             catch (Exception ex)
             {
